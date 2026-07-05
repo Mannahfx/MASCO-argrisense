@@ -189,9 +189,14 @@ app.post('/api/sync', async (req, res) => {
   }
 });
 
+// Health check for Render
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'FMN AgriSense Backend', timestamp: new Date().toISOString() });
+});
+
 // Initialize DB and start server
 initDatabase().then(() => {
-  app.listen(port, () => {
-    console.log(`FMN AgriSense backend listening at http://localhost:${port}`);
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`FMN AgriSense backend listening at http://0.0.0.0:${port}`);
   });
 });

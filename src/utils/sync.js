@@ -1,6 +1,11 @@
 // Client-side synchronization utility for local-first state and backend sync
 
-const API_BASE = 'http://localhost:5000/api';
+// Auto-detect: use Render backend in production, localhost in development
+const API_BASE = import.meta.env.VITE_API_URL || (
+  window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api' 
+    : 'https://fmn-agrisense-backend.onrender.com/api'
+);
 
 // --- Local Storage Helpers ---
 export function getLocalProfile() {
