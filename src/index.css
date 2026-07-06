@@ -62,21 +62,22 @@ html, body, #root {
   align-items: center; 
   justify-content: center; 
   min-height: 100vh; 
-  padding: 20px; 
+  padding: 0; 
+  background-color: var(--bg-app);
 }
 
-/* Beautiful phone simulator */
+/* Fits full screen natively, max-width keeps layout clean and centered on desktops */
 .phone { 
-  width: 390px; 
-  height: 844px; 
+  width: 100%; 
+  max-width: 500px;
+  height: 100vh; 
   background: var(--bg-screen); 
-  border-radius: 48px; 
   overflow: hidden; 
-  box-shadow: var(--shadow-md), 0 0 0 12px #10162f;
   display: flex; 
   flex-direction: column; 
   position: relative; 
-  border: 1px solid rgba(255, 255, 255, 0.1); 
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   transform: translate3d(0,0,0);
 }
 

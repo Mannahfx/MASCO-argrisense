@@ -409,8 +409,8 @@ function ScanScreen({ go, startAnalyzing }) {
                   }}/>
                 })}
                 <div style={{textAlign:'center', padding:20}}>
-                  <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(77, 138, 255, 0.08)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                    <Ic n="leaf" s={42} c="var(--text-highlight)"/>
+                  <div style={{ width: 100, height: 100, display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                    <img src="/cassava_leaf_guide.png" alt="Cassava Leaf Guide" style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 0.8 }}/>
                   </div>
                   <div style={{color:'var(--text-secondary)',fontSize:14,fontWeight:600,fontFamily:'var(--font-display)'}}>Position Cassava Leaf</div>
                   <div style={{color:'var(--text-muted)',fontSize:11,marginTop:6,lineHeight:1.5}}>Ensure leaf details are clearly visible<br/>within the scanning brackets</div>
@@ -1531,19 +1531,35 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
-      <div className="phone">
-        <div className="status-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>{time}</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span>FMN AgriSense</span>
-            {syncStatus === 'syncing' && <span title="Syncing..." style={{ color: '#FFD54F', fontSize: 11 }}>🔄</span>}
-            {syncStatus === 'synced' && <span title="Synced to FMN Cloud" style={{ color: '#4CAF50', fontSize: 11 }}>☁️</span>}
-            {syncStatus === 'offline' && <span title="Offline mode" style={{ color: '#FF9800', fontSize: 11 }}>📶</span>}
-            {syncStatus === 'error' && <span title="Sync Error" style={{ color: '#F44336', fontSize: 11 }}>⚠️</span>}
+    <div className="app-shell" style={{ padding: 0 }}>
+      <div className="phone" style={{ 
+        width: '100%', 
+        maxWidth: '500px', 
+        height: '100vh', 
+        borderRadius: 0, 
+        boxShadow: 'none', 
+        border: 'none' 
+      }}>
+        {/* Sleek top status/nav bar instead of phone simulator status bar */}
+        <div style={{
+          background: 'rgba(10, 17, 40, 0.95)',
+          backdropFilter: 'blur(10px)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '14px 20px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          flexShrink: 0
+        }}>
+          <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}>FMN AgriSense</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {syncStatus === 'syncing' && <span style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>🔄 Syncing</span>}
+            {syncStatus === 'synced' && <span style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>☁️ Reconciled</span>}
+            {syncStatus === 'offline' && <span style={{ background: 'rgba(249,115,22,0.12)', color: '#f97316', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>📶 Local Mode</span>}
+            {syncStatus === 'error' && <span style={{ background: 'rgba(239,68,68,0.12)', color: '#ef4444', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>⚠️ Sync Error</span>}
           </span>
-          <span>●●●</span>
         </div>
+
         <div style={{flex:1,overflow:'hidden',display:'flex',flexDirection:'column'}}>
           {renderScreen()}
         </div>
@@ -1551,7 +1567,7 @@ export default function App() {
           <nav className="bottom-nav">
             {NAV.map(n=>(
               <button key={n.id} onClick={()=>go(n.id)} className={`nav-item${activeNav===n.id?' active':''}`}>
-                <Ic n={n.icon} s={22} c={activeNav===n.id?'var(--blue)':'var(--text3)'}/>
+                <Ic n={n.icon} s={22} c={activeNav===n.id?'var(--text-highlight)':'var(--text-muted)'}/>
                 {n.label}
               </button>
             ))}
