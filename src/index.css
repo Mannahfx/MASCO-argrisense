@@ -59,25 +59,20 @@ html, body, #root {
 
 .app-shell { 
   display: flex; 
-  align-items: center; 
-  justify-content: center; 
   min-height: 100vh; 
   padding: 0; 
   background-color: var(--bg-app);
 }
 
-/* Fits full screen natively, max-width keeps layout clean and centered on desktops */
+/* Full-screen responsive layout */
 .phone { 
   width: 100%; 
-  max-width: 500px;
   height: 100vh; 
   background: var(--bg-screen); 
   overflow: hidden; 
   display: flex; 
   flex-direction: column; 
   position: relative; 
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
   transform: translate3d(0,0,0);
 }
 

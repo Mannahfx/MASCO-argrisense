@@ -1531,18 +1531,11 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell" style={{ padding: 0 }}>
-      <div className="phone" style={{ 
-        width: '100%', 
-        maxWidth: '500px', 
-        height: '100vh', 
-        borderRadius: 0, 
-        boxShadow: 'none', 
-        border: 'none' 
-      }}>
-        {/* Sleek top status/nav bar instead of phone simulator status bar */}
+    <div className="app-shell">
+      <div className="phone">
+        {/* Top app bar */}
         <div style={{
-          background: 'rgba(10, 17, 40, 0.95)',
+          background: 'rgba(6, 17, 10, 0.95)',
           backdropFilter: 'blur(10px)',
           display: 'flex',
           justifyContent: 'space-between',
@@ -1551,12 +1544,10 @@ export default function App() {
           borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
           flexShrink: 0
         }}>
-          <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}>FMN AgriSense</span>
+          <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}>🌿 FMN AgriSense</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             {syncStatus === 'syncing' && <span style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>🔄 Syncing</span>}
-            {syncStatus === 'synced' && <span style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>☁️ Reconciled</span>}
-            {syncStatus === 'offline' && <span style={{ background: 'rgba(249,115,22,0.12)', color: '#f97316', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>📶 Local Mode</span>}
-            {syncStatus === 'error' && <span style={{ background: 'rgba(239,68,68,0.12)', color: '#ef4444', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>⚠️ Sync Error</span>}
+            {syncStatus === 'synced' && <span style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>☁️ Synced</span>}
           </span>
         </div>
 
