@@ -6,25 +6,25 @@
 
 :root {
   /* Brand color palette */
-  --primary-base: 220;
-  --primary: hsl(var(--primary-base), 85%, 25%);       /* #0a2561 */
-  --primary-light: hsl(var(--primary-base), 75%, 45%); /* #2860d3 */
+  --primary-base: 142;
+  --primary: hsl(var(--primary-base), 70%, 14%);       /* #062211 */
+  --primary-light: hsl(var(--primary-base), 72%, 40%); /* #1db163 */
   --accent-base: 12;
   --accent: hsl(var(--accent-base), 90%, 52%);         /* #ea3c1a */
   --accent-light: hsl(var(--accent-base), 100%, 96%);  /* #fef0ec */
   
   /* Modern clean neutral colors */
-  --bg-app: #030816;
-  --bg-screen: #0a1128;
-  --surface: rgba(255, 255, 255, 0.05);
-  --surface-hover: rgba(255, 255, 255, 0.09);
-  --card: rgba(13, 22, 49, 0.7);
-  --card-border: rgba(255, 255, 255, 0.08);
+  --bg-app: #020704;
+  --bg-screen: #06110a;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --card: rgba(10, 24, 16, 0.75);
+  --card-border: rgba(255, 255, 255, 0.06);
   
-  --text-primary: #f3f5f9;
-  --text-secondary: #a3b3d1;
-  --text-muted: #627293;
-  --text-highlight: #4d8aff;
+  --text-primary: #f3f9f6;
+  --text-secondary: #a8bfae;
+  --text-muted: #5e7f6d;
+  --text-highlight: #10b981;
   
   /* Typography */
   --font-display: 'Outfit', sans-serif;
@@ -39,7 +39,7 @@
   /* Shadows & Glows */
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.6);
-  --glow-primary: 0 0 20px rgba(77, 138, 255, 0.2);
+  --glow-primary: 0 0 20px rgba(16, 185, 129, 0.2);
   --glow-accent: 0 0 20px rgba(234, 60, 26, 0.25);
   
   /* Transition timings */
