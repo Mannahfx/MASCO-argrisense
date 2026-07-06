@@ -191,86 +191,142 @@ function Ic({ n, s=20, c='currentColor' }) {
 function HomeScreen({ go, profile, scans, reminders }) {
   return (
     <div className="screen fade-in">
-      <div style={{background:'linear-gradient(160deg,#001F5B 0%,#003087 100%)',padding:'18px 16px 22px'}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+      <div style={{
+        background: 'linear-gradient(180deg, rgba(13, 22, 49, 0.9) 0%, rgba(10, 17, 40, 0.4) 100%)',
+        padding: '24px 20px 24px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <div>
-            <div style={{color:'#A8C4E8',fontSize:12,fontWeight:600}}>Good morning 👋</div>
-            <div style={{color:'white',fontSize:20,fontWeight:800,marginTop:3}}>{profile.name}</div>
-            <div style={{color:'#90B8E0',fontSize:12,marginTop:3}}>{profile.location}  •  {profile.farmSize}</div>
+            <div style={{color:'var(--text-secondary)',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:1.2}}>Good morning 👋</div>
+            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',marginTop:4,letterSpacing:-0.5}}>{profile.name}</div>
+            <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>{profile.location}  •  {profile.farmSize}</div>
           </div>
-          <button onClick={()=>go('profile')} style={{background:'rgba(255,255,255,0.12)',border:'none',borderRadius:'50%',width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
-            <Ic n="bell" s={20} c="white"/>
+          <button onClick={()=>go('profile')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:42,height:42,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'background-color 0.2s'}}>
+            <Ic n="bell" s={20} c="var(--text-primary)"/>
           </button>
         </div>
-        <div style={{background:'rgba(255,255,255,0.1)',borderRadius:10,padding:'8px 12px',marginTop:12,display:'flex',alignItems:'center',gap:8}}>
-          <Ic n="sun" s={16} c="#FDD835"/>
-          <span style={{color:'white',fontSize:12}}>32°C  •  {profile.state || 'Ogun State'}  •  Low disease risk today</span>
+        <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:14,padding:12,marginTop:16,display:'flex',alignItems:'center',gap:10}}>
+          <Ic n="sun" s={18} c="#FDD835"/>
+          <span style={{color:'var(--text-secondary)',fontSize:12,fontWeight:600}}>32°C  •  {profile.state || 'Ogun State'}  •  Low disease risk today</span>
         </div>
       </div>
 
-      <div className="content">
+      <div className="content" style={{padding:'20px'}}>
         {/* Stats */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:14}}>
-          {[['94%','AI Accuracy','#0044B3'],['5','Diseases','#E8381A'],[scans.length,'Scans','#6A1B9A']].map(([v,l,c])=>(
-            <div key={l} className="card" style={{textAlign:'center'}}>
-              <div style={{fontSize:20,fontWeight:800,color:c}}>{v}</div>
-              <div style={{fontSize:10,color:'var(--text3)',marginTop:2}}>{l}</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginBottom:20}}>
+          {[
+            ['94%', 'AI Accuracy', 'var(--text-highlight)'],
+            ['5', 'Diseases', 'var(--accent)'],
+            [scans.length, 'Scans', '#10b981']
+          ].map(([v,l,c])=>(
+            <div key={l} className="card" style={{textAlign:'center',padding:'14px 6px'}}>
+              <div style={{fontSize:20,fontWeight:800,color:c,fontFamily:'var(--font-display)'}}>{v}</div>
+              <div style={{fontSize:10,color:'var(--text-muted)',fontWeight:700,marginTop:4,textTransform:'uppercase',letterSpacing:0.8}}>{l}</div>
             </div>
           ))}
         </div>
 
         {/* Scan CTA */}
-        <button onClick={()=>go('scan')} style={{width:'100%',background:'linear-gradient(135deg,#003087 0%,#001F5B 100%)',border:'none',borderRadius:18,padding:'18px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',marginBottom:16,boxShadow:'0 8px 24px rgba(0,48,135,0.35)'}}>
-          <div style={{textAlign:'left'}}>
-            <div style={{color:'white',fontSize:18,fontWeight:800}}>Scan Your Plant</div>
-            <div style={{color:'rgba(255,255,255,0.75)',fontSize:12,marginTop:5,lineHeight:1.5}}>Upload a photo for instant AI<br/>disease detection & advice</div>
-            <div style={{background:'rgba(255,255,255,0.15)',borderRadius:20,padding:'4px 12px',display:'inline-block',marginTop:9,color:'white',fontSize:11,fontWeight:600}}>🤖 Real AI — Trained Model</div>
+        <button onClick={()=>go('scan')} className="btn" style={{
+          width:'100%',
+          background:'linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%)',
+          border:'1px solid rgba(255,255,255,0.1)',
+          borderRadius:20,
+          padding:'20px 18px',
+          display:'flex',
+          alignItems:'center',
+          justifyContent:'space-between',
+          cursor:'pointer',
+          marginBottom:20,
+          boxShadow:'0 12px 30px rgba(40,96,211,0.25)',
+          textAlign:'left'
+        }}>
+          <div>
+            <div style={{color:'white',fontSize:20,fontWeight:900,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>Scan Your Plant</div>
+            <div style={{color:'rgba(255,255,255,0.8)',fontSize:12,marginTop:6,lineHeight:1.5,fontWeight:500}}>Upload a photo for instant AI<br/>disease detection & advice</div>
+            <div style={{background:'rgba(255,255,255,0.15)',borderRadius:20,padding:'4px 12px',display:'inline-block',marginTop:12,color:'white',fontSize:11,fontWeight:600}}>🤖 Real AI — Trained Model</div>
           </div>
-          <Ic n="scan" s={52} c="rgba(255,255,255,0.85)"/>
+          <Ic n="scan" s={54} c="rgba(255,255,255,0.9)"/>
         </button>
 
         {/* Quick Actions */}
-        <div style={{fontSize:15,fontWeight:800,marginBottom:10}}>Quick Actions</div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8,marginBottom:16}}>
-          {[['flask','Products','#0044B3','products'],['location','Dealer','#E8381A','dealers'],['bell','Reminders','#6A1B9A','reminders'],['clock','History','#1565C0','history']].map(([ic,lb,col,sc])=>(
-            <button key={lb} onClick={()=>go(sc)} style={{background:'white',border:'none',borderRadius:12,padding:'10px 6px',display:'flex',flexDirection:'column',alignItems:'center',gap:5,cursor:'pointer',boxShadow:'0 2px 8px rgba(0,0,0,0.06)'}}>
-              <div style={{width:40,height:40,borderRadius:12,background:col+'18',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic n={ic} s={20} c={col}/></div>
-              <span style={{fontSize:10,fontWeight:700,color:'var(--text2)',textAlign:'center'}}>{lb}</span>
+        <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:12}}>Quick Actions</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10,marginBottom:20}}>
+          {[
+            ['flask','Products','var(--text-highlight)','products'],
+            ['location','Dealer','var(--accent)','dealers'],
+            ['bell','Reminders','#a855f7','reminders'],
+            ['clock','History','#10b981','history']
+          ].map(([ic,lb,col,sc])=>(
+            <button key={lb} onClick={()=>go(sc)} className="card card-interactive" style={{
+              borderRadius:16,
+              padding:'14px 4px',
+              display:'flex',
+              flexDirection:'column',
+              alignItems:'center',
+              gap:8,
+              cursor:'pointer'
+            }}>
+              <div style={{width:42,height:42,borderRadius:12,background:col+'1a',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic n={ic} s={20} c={col}/></div>
+              <span style={{fontSize:11,fontWeight:700,color:'var(--text-secondary)',textAlign:'center'}}>{lb}</span>
             </button>
           ))}
         </div>
 
         {/* Upcoming */}
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-          <div style={{fontSize:15,fontWeight:800}}>Upcoming Tasks</div>
-          <button onClick={()=>go('reminders')} style={{background:'none',border:'none',color:'var(--lblue)',fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'var(--font)'}}>See all</button>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+          <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>Upcoming Tasks</div>
+          <button onClick={()=>go('reminders')} style={{background:'none',border:'none',color:'var(--text-highlight)',fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'var(--font-display)'}}>See all</button>
         </div>
         {reminders.filter(r=>r.enabled&&(r.nextDue==='Today'||r.nextDue==='Tomorrow')).map(r=>(
-          <div key={r.id} className="card" style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
-            <div style={{width:10,height:10,borderRadius:'50%',background:r.nextDue==='Today'?'var(--lblue)':'var(--accent)',flexShrink:0}}/>
+          <div key={r.id} className="card card-interactive" style={{display:'flex',alignItems:'center',gap:12,marginBottom:10}}>
+            <div style={{width:10,height:10,borderRadius:'50%',background:r.nextDue==='Today'?'var(--text-highlight)':'var(--accent)',flexShrink:0}}/>
             <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:700}}>{r.title}</div>
-              <div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>{r.nextDue}  •  {r.time}</div>
+              <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>{r.title}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)',marginTop:4}}>{r.nextDue}  •  {r.time}</div>
             </div>
-            <span style={{background:r.nextDue==='Today'?'var(--pale)':'var(--accentl)',color:r.nextDue==='Today'?'var(--lblue)':'var(--accent)',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20}}>{r.nextDue}</span>
+            <span style={{
+              background:r.nextDue==='Today'?'rgba(77,138,255,0.15)':'rgba(234,60,26,0.15)',
+              color:r.nextDue==='Today'?'var(--text-highlight)':'var(--accent)',
+              fontSize:11,
+              fontWeight:800,
+              padding:'4px 10px',
+              borderRadius:20
+            }}>{r.nextDue}</span>
           </div>
         ))}
 
         {/* Recent */}
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:8,marginBottom:10}}>
-          <div style={{fontSize:15,fontWeight:800}}>Recent Diagnoses</div>
-          <button onClick={()=>go('history')} style={{background:'none',border:'none',color:'var(--lblue)',fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'var(--font)'}}>See all</button>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12,marginBottom:12}}>
+          <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>Recent Diagnoses</div>
+          <button onClick={()=>go('history')} style={{background:'none',border:'none',color:'var(--text-highlight)',fontSize:12,fontWeight:700,cursor:'pointer',fontFamily:'var(--font-display)'}}>See all</button>
         </div>
         {scans.slice(0,3).map(item=>{
           const d=DISEASES.find(x=>x.id===item.diseaseId)||DISEASES[4]
           return (
-            <button key={item.id} onClick={()=>go('diagnosis',{diseaseId:item.diseaseId})} style={{width:'100%',background:'white',border:'none',borderRadius:12,padding:'12px 14px',display:'flex',alignItems:'center',gap:12,marginBottom:8,cursor:'pointer',textAlign:'left',boxShadow:'0 2px 8px rgba(0,0,0,0.06)'}}>
-              <div style={{width:46,height:46,borderRadius:14,background:d.color+'18',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{d.icon}</div>
+            <button key={item.id} onClick={()=>go('diagnosis',{diseaseId:item.diseaseId})} className="card card-interactive" style={{
+              width:'100%',
+              display:'flex',
+              alignItems:'center',
+              gap:14,
+              marginBottom:10,
+              cursor:'pointer',
+              textAlign:'left'
+            }}>
+              <div style={{width:48,height:48,borderRadius:14,background:d.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{d.icon}</div>
               <div style={{flex:1}}>
-                <div style={{fontSize:13,fontWeight:700}}>{d.name}</div>
-                <div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>{item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
+                <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>{d.name}</div>
+                <div style={{fontSize:12,color:'var(--text-muted)',marginTop:4}}>{item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
               </div>
-              <span style={{background:d.sevBg,color:d.sevColor,fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20}}>{d.severity==='None'?'Healthy':d.severity}</span>
+              <span style={{
+                background:d.severity==='None'?'rgba(16,185,129,0.15)':d.sevBg,
+                color:d.severity==='None'?'#10b981':d.sevColor,
+                fontSize:11,
+                fontWeight:800,
+                padding:'4px 10px',
+                borderRadius:20
+              }}>{d.severity==='None'?'Healthy':d.severity}</span>
             </button>
           )
         })}
@@ -313,70 +369,125 @@ function ScanScreen({ go, startAnalyzing }) {
     }
   }
 
-  const statusLabel = status==='ready' ? '🟢 AI Model Ready' : status==='loading' ? '🟡 ' + (msg||'Analyzing...') : status==='error' ? '🔴 AI Error — check console' : '📷 Upload a cassava leaf photo'
+  const statusLabel = status==='ready' ? '🟢 AI Model Ready' : status==='loading' ? '🟡 ' + (msg||'Analyzing...') : status==='error' ? '🔴 AI Error' : '📷 Position cassava leaf within frame'
 
   return (
     <div className="screen fade-in">
-      <div className="hdr">
-        <div style={{color:'white',fontSize:20,fontWeight:800}}>Scan Plant</div>
-        <div style={{color:'#A8C4E8',fontSize:12,marginTop:2}}>{statusLabel}</div>
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <div style={{color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>Scan Plant</div>
+        <div style={{color:'var(--text-secondary)',fontSize:12,marginTop:4,fontWeight:500}}>{statusLabel}</div>
       </div>
-      <div className="content">
+      <div className="content" style={{padding:'20px'}}>
         {/* Viewfinder */}
-        <div style={{background:preview?'black':'rgba(0,31,91,0.05)',borderRadius:18,aspectRatio:'1',display:'flex',alignItems:'center',justifyContent:'center',border:`2px ${preview?'solid':'dashed'} var(--border)`,marginBottom:14,position:'relative',overflow:'hidden'}}>
+        <div style={{
+          background: preview ? 'black' : 'rgba(255, 255, 255, 0.02)',
+          borderRadius: 24,
+          aspectRatio: '1',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: `1.5px ${preview ? 'solid' : 'dashed'} var(--card-border)`,
+          marginBottom: 16,
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.5)'
+        }}>
           {preview
             ? <img src={preview} alt="preview" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
             : <>
                 {['top-left','top-right','bottom-left','bottom-right'].map(pos=>{
                   const [v,h]=pos.split('-')
-                  return <div key={pos} style={{position:'absolute',[v]:12,[h]:12,width:28,height:28,[`border${v.charAt(0).toUpperCase()+v.slice(1)}`]:'3px solid var(--llight)',[`border${h.charAt(0).toUpperCase()+h.slice(1)}`]:'3px solid var(--llight)',borderRadius:v==='top'?(h==='left'?'4px 0 0 0':'0 4px 0 0'):(h==='left'?'0 0 0 4px':'0 0 4px 0')}}/>
+                  return <div key={pos} style={{
+                    position:'absolute',
+                    [v]:16,
+                    [h]:16,
+                    width:28,
+                    height:28,
+                    [`border${v.charAt(0).toUpperCase()+v.slice(1)}`]:'3px solid var(--text-highlight)',
+                    [`border${h.charAt(0).toUpperCase()+h.slice(1)}`]:'3px solid var(--text-highlight)',
+                    borderRadius: v==='top'?(h==='left'?'4px 0 0 0':'0 4px 0 0'):(h==='left'?'0 0 0 4px':'0 0 4px 0')
+                  }}/>
                 })}
-                <div style={{textAlign:'center'}}>
-                  <Ic n="leaf" s={56} c="var(--border)"/>
-                  <div style={{color:'var(--text3)',fontSize:13,marginTop:10}}>Position cassava leaf<br/>within the frame</div>
+                <div style={{textAlign:'center', padding:20}}>
+                  <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(77, 138, 255, 0.08)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                    <Ic n="leaf" s={42} c="var(--text-highlight)"/>
+                  </div>
+                  <div style={{color:'var(--text-secondary)',fontSize:14,fontWeight:600,fontFamily:'var(--font-display)'}}>Position Cassava Leaf</div>
+                  <div style={{color:'var(--text-muted)',fontSize:11,marginTop:6,lineHeight:1.5}}>Ensure leaf details are clearly visible<br/>within the scanning brackets</div>
                 </div>
               </>
           }
-          {msg&&<div style={{position:'absolute',inset:0,background:'rgba(0,31,91,0.88)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12}}>
-            <div style={{width:40,height:40,borderRadius:'50%',border:'3px solid var(--llight)',borderTopColor:'transparent',animation:'spin 1s linear infinite'}}/>
-            <div style={{color:'white',fontSize:13,fontWeight:700}}>{msg}</div>
+          {msg&&<div style={{
+            position:'absolute',
+            inset:0,
+            background:'rgba(10, 17, 40, 0.95)',
+            display:'flex',
+            flexDirection:'column',
+            alignItems:'center',
+            justifyContent:'center',
+            gap:14
+          }}>
+            <div style={{width:42,height:42,borderRadius:'50%',border:'3px solid var(--text-highlight)',borderTopColor:'transparent',animation:'spin 1s linear infinite'}}/>
+            <div style={{color:'var(--text-primary)',fontSize:14,fontWeight:700}}>{msg}</div>
           </div>}
         </div>
 
         {/* Upload */}
-        <label style={{display:'block',marginBottom:10}}>
+        <label style={{display:'block',marginBottom:16}}>
           <input type="file" accept="image/*" capture="environment" style={{display:'none'}} onChange={handleFile}/>
-          <div className="btn btn-accent" style={{width:'100%',justifyContent:'center',fontSize:15}}>
+          <div className="btn btn-accent" style={{width:'100%',justifyContent:'center',fontSize:15,borderRadius:16,padding:'16px'}}>
             <Ic n="camera" s={18} c="white"/>
             {preview?'Scan a Different Photo':'Upload or Take Photo'}
           </div>
         </label>
 
         {/* AI badge */}
-        <div style={{background:'var(--pale)',borderRadius:10,padding:'8px 12px',display:'flex',alignItems:'center',gap:8,marginBottom:14,border:'1px solid var(--border)'}}>
-          <span style={{fontSize:18}}>🤖</span>
-          <span style={{fontSize:12,color:'var(--blue)',fontWeight:700}}>Powered by real AI — trained on 21,367 cassava images</span>
+        <div className="card" style={{
+          background:'rgba(77, 138, 255, 0.05)',
+          padding:'12px 14px',
+          display:'flex',
+          alignItems:'center',
+          gap:10,
+          marginBottom:16,
+          borderColor:'rgba(77, 138, 255, 0.15)'
+        }}>
+          <span style={{fontSize:20}}>🤖</span>
+          <span style={{fontSize:12,color:'var(--text-secondary)',fontWeight:600,lineHeight:1.4}}>Powered by real AI — trained on 21,367 cassava crop images</span>
         </div>
 
         {/* Tips */}
-        <div className="card" style={{marginBottom:14}}>
-          <div style={{fontWeight:700,fontSize:13,marginBottom:8}}>📸 Photo Tips for Best Results</div>
-          {['Use good natural lighting — avoid shadows','Fill the frame with 1–2 leaves clearly','Keep camera steady — avoid blurry shots','Include stem if symptoms are visible there'].map((t,i)=>(
-            <div key={i} style={{display:'flex',gap:8,marginBottom:6}}>
-              <div style={{width:6,height:6,borderRadius:'50%',background:'var(--lblue)',marginTop:5,flexShrink:0}}/>
-              <span style={{fontSize:12,color:'var(--text2)',lineHeight:1.5}}>{t}</span>
+        <div className="card" style={{marginBottom:16}}>
+          <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:10}}>📸 Photo Tips for Best Results</div>
+          {[
+            'Use good natural lighting — avoid harsh shadows',
+            'Fill the frame with 1–2 leaves clearly',
+            'Keep camera steady — avoid blurry shots',
+            'Include stem if symptoms are visible there'
+          ].map((t,i)=>(
+            <div key={i} style={{display:'flex',gap:10,marginBottom:8,alignItems:'flex-start'}}>
+              <div style={{width:6,height:6,borderRadius:'50%',background:'var(--text-highlight)',marginTop:6,flexShrink:0}}/>
+              <span style={{fontSize:12,color:'var(--text-secondary)',lineHeight:1.5}}>{t}</span>
             </div>
           ))}
         </div>
 
         {/* Samples */}
-        <div style={{fontSize:14,fontWeight:800,marginBottom:4}}>Try a Sample (Demo)</div>
-        <div style={{fontSize:11,color:'var(--text3)',marginBottom:8}}>These use preset results — upload a real photo for actual AI detection</div>
+        <div style={{fontSize:14,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:6}}>Try a Sample (Demo)</div>
+        <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:10}}>These use preset results — upload a real photo for actual AI detection</div>
         <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
           {SAMPLES.map(s=>(
-            <button key={s.id} onClick={()=>startAnalyzing(s.id,null)} style={{background:'white',border:'1.5px solid var(--bdcolor)',borderRadius:12,padding:'10px 12px',cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',gap:4,minWidth:64}}>
-              <span style={{fontSize:26}}>{s.emoji}</span>
-              <span style={{fontSize:10,fontWeight:700,color:'var(--text2)'}}>{s.label}</span>
+            <button key={s.id} onClick={()=>startAnalyzing(s.id,null)} className="card card-interactive" style={{
+              padding:'12px 10px',
+              cursor:'pointer',
+              display:'flex',
+              flexDirection:'column',
+              alignItems:'center',
+              gap:6,
+              flex: 1,
+              minWidth:60
+            }}>
+              <span style={{fontSize:24}}>{s.emoji}</span>
+              <span style={{fontSize:11,fontWeight:800,color:'var(--text-secondary)'}}>{s.label}</span>
             </button>
           ))}
         </div>
@@ -388,21 +499,33 @@ function ScanScreen({ go, startAnalyzing }) {
 // ── ANALYZING ────────────────────────────────────────────────────────────────
 function AnalyzingScreen() {
   return (
-    <div style={{flex:1,background:'#001F5B',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:14,padding:32}}>
-      <div style={{position:'relative',width:110,height:110,display:'flex',alignItems:'center',justifyContent:'center'}}>
-        <div style={{position:'absolute',inset:0,borderRadius:'50%',border:'3px solid rgba(30,111,217,0.3)',animation:'pulse 1.4s ease-in-out infinite'}}/>
-        <div style={{position:'absolute',inset:14,borderRadius:'50%',border:'3px solid rgba(30,111,217,0.5)',animation:'pulse 1.4s ease-in-out 0.2s infinite'}}/>
-        <div style={{width:60,height:60,borderRadius:'50%',background:'rgba(30,111,217,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:28}}>🔬</div>
+    <div style={{
+      flex: 1,
+      background: 'var(--bg-screen)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 16,
+      padding: 32
+    }}>
+      <div style={{position:'relative',width:120,height:120,display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <div style={{position:'absolute',inset:0,borderRadius:'50%',border:'3px solid rgba(77, 138, 255, 0.15)',animation:'pulse 1.4s ease-in-out infinite'}}/>
+        <div style={{position:'absolute',inset:16,borderRadius:'50%',border:'3px solid rgba(77, 138, 255, 0.3)',animation:'pulse 1.4s ease-in-out 0.2s infinite'}}/>
+        <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(77, 138, 255, 0.1)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:30}}>🔬</div>
       </div>
-      <div style={{color:'white',fontSize:22,fontWeight:800}}>Analyzing Plant...</div>
-      <div style={{color:'#A8C4E8',fontSize:13}}>AI model processing your image</div>
-      <div style={{display:'flex',gap:8}}>{[0,1,2].map(i=><div key={i} style={{width:8,height:8,borderRadius:'50%',background:'#1E6FD9',animation:`pulse 1.2s ease-in-out ${i*0.2}s infinite`}}/>)}</div>
-      {['Scanning leaf texture...','Detecting disease patterns...','Matching disease database...'].map((s,i)=>(
-        <div key={i} style={{display:'flex',alignItems:'center',gap:8,alignSelf:'stretch'}}>
-          <div style={{width:14,height:14,borderRadius:'50%',border:'2px solid #1E6FD9',borderTopColor:'transparent',animation:`spin 1s linear ${i*0.3}s infinite`}}/>
-          <span style={{color:'rgba(255,255,255,0.65)',fontSize:13}}>{s}</span>
-        </div>
-      ))}
+      <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>Analyzing Leaf...</div>
+      <div style={{color:'var(--text-secondary)',fontSize:13,textAlign:'center',lineHeight:1.5,marginBottom:8}}>AI model parsing textures and matching patterns</div>
+      <div style={{display:'flex',gap:8,marginBottom:16}}>{[0,1,2].map(i=><div key={i} style={{width:8,height:8,borderRadius:'50%',background:'var(--text-highlight)',animation:`pulse 1.2s ease-in-out ${i*0.2}s infinite`}}/>)}</div>
+      
+      <div style={{alignSelf:'stretch', display:'flex', flexDirection:'column', gap:10}}>
+        {['Scanning leaf texture...', 'Detecting disease patterns...', 'Matching disease database...'].map((s,i)=>(
+          <div key={i} className="card" style={{display:'flex',alignItems:'center',gap:12,padding:'12px 14px',background:'rgba(255,255,255,0.02)'}}>
+            <div style={{width:16,height:16,borderRadius:'50%',border:'2px solid var(--text-highlight)',borderTopColor:'transparent',animation:`spin 1s linear ${i*0.3}s infinite`}}/>
+            <span style={{color:'var(--text-secondary)',fontSize:13,fontWeight:600}}>{s}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -414,67 +537,73 @@ function DiagnosisScreen({ go, diseaseId, aiConfidence, allScores }) {
   const isReal = aiConfidence != null
   return (
     <div className="screen fade-in">
-      <div style={{background:'#001F5B'}}>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 16px 0'}}>
-          <button onClick={()=>go('home')} style={{background:'rgba(255,255,255,0.12)',border:'none',borderRadius:'50%',width:36,height:36,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="white"/></button>
-          <span style={{color:'white',fontWeight:700}}>Diagnosis Result</span>
-          <div style={{width:36}}/>
+      <div style={{
+        background: 'linear-gradient(180deg, rgba(13, 22, 49, 0.9) 0%, rgba(10, 17, 40, 0.4) 100%)',
+        padding: '16px 20px 24px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+          <button onClick={()=>go('home')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <span style={{color:'var(--text-primary)',fontWeight:800,fontFamily:'var(--font-display)',fontSize:16}}>Diagnosis Result</span>
+          <div style={{width:38}}/>
         </div>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:130,fontSize:72}}>{d.icon}</div>
-        <div style={{padding:'0 16px 20px'}}>
-          <span style={{background:d.sevBg,color:d.sevColor,fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:20,display:'inline-block',marginBottom:10}}>{d.severity==='None'?'✅ Healthy':`⚠️ ${d.severity}`}</span>
-          {isReal&&<span style={{background:'rgba(30,111,217,0.2)',color:'#A8C4E8',fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:20,display:'inline-block',marginBottom:10,marginLeft:6}}>🤖 Real AI Result</span>}
-          <div style={{color:'white',fontSize:22,fontWeight:900,lineHeight:1.2}}>{d.name}</div>
-          <div style={{color:'#A8C4E8',fontSize:12,marginTop:4}}>{d.short}</div>
-          <div style={{marginTop:12}}>
-            <div style={{display:'flex',justifyContent:'space-between',marginBottom:5}}>
-              <span style={{color:'rgba(255,255,255,0.65)',fontSize:12}}>AI Confidence</span>
-              <span style={{color:'#1E6FD9',fontSize:12,fontWeight:700}}>{conf}%</span>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:120,fontSize:72,filter:'drop-shadow(0 8px 16px rgba(0,0,0,0.3))'}}>{d.icon}</div>
+        <div style={{padding:'0 4px'}}>
+          <div style={{display:'flex',gap:6,marginBottom:12}}>
+            <span style={{background:d.severity==='None'?'rgba(16,185,129,0.15)':d.sevBg,color:d.severity==='None'?'#10b981':d.sevColor,fontSize:11,fontWeight:800,padding:'4px 12px',borderRadius:20,display:'inline-block'}}>{d.severity==='None'?'✅ Healthy':`⚠️ ${d.severity}`}</span>
+            {isReal&&<span style={{background:'rgba(77,138,255,0.15)',color:'var(--text-highlight)',fontSize:11,fontWeight:800,padding:'4px 12px',borderRadius:20,display:'inline-block'}}>🤖 Real AI Result</span>}
+          </div>
+          <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:900,fontFamily:'var(--font-display)',lineHeight:1.2}}>{d.name}</div>
+          <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:6,lineHeight:1.4}}>{d.short}</div>
+          <div style={{marginTop:16}}>
+            <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+              <span style={{color:'var(--text-muted)',fontSize:12,fontWeight:600,textTransform:'uppercase',letterSpacing:0.5}}>AI Confidence</span>
+              <span style={{color:'var(--text-highlight)',fontSize:13,fontWeight:800}}>{conf}%</span>
             </div>
-            <div style={{height:6,background:'rgba(255,255,255,0.15)',borderRadius:3,overflow:'hidden'}}>
-              <div style={{height:'100%',width:`${conf}%`,background:'#1E6FD9',borderRadius:3}}/>
+            <div style={{height:6,background:'rgba(255,255,255,0.08)',borderRadius:3,overflow:'hidden'}}>
+              <div style={{height:'100%',width:`${conf}%`,background:'linear-gradient(90deg,var(--primary-light) 0%,var(--text-highlight) 100%)',borderRadius:3}}/>
             </div>
           </div>
         </div>
       </div>
-      <div className="content">
-        <div className="card" style={{marginBottom:10}}>
-          <div style={{fontWeight:700,marginBottom:6,fontSize:14}}>About this Condition</div>
-          <div style={{fontSize:13,color:'var(--text2)',lineHeight:1.7}}>{d.desc}</div>
+      <div className="content" style={{padding:'20px'}}>
+        <div className="card" style={{marginBottom:12}}>
+          <div style={{fontWeight:800,marginBottom:8,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>About this Condition</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.7}}>{d.desc}</div>
         </div>
-        <div className="card" style={{marginBottom:14}}>
-          <div style={{fontWeight:700,fontSize:14,marginBottom:10}}>Symptoms Detected</div>
+        <div className="card" style={{marginBottom:16}}>
+          <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:10}}>Symptoms Detected</div>
           {d.symptoms.map((s,i)=>(
-            <div key={i} style={{display:'flex',gap:8,marginBottom:7}}>
+            <div key={i} style={{display:'flex',gap:10,marginBottom:8,alignItems:'flex-start'}}>
               <div style={{width:8,height:8,borderRadius:'50%',background:d.color,marginTop:5,flexShrink:0}}/>
-              <span style={{fontSize:13,color:'var(--text2)',lineHeight:1.5}}>{s}</span>
+              <span style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.5}}>{s}</span>
             </div>
           ))}
         </div>
         {allScores && (
-          <div className="card" style={{marginBottom:10}}>
-            <div style={{fontWeight:700,fontSize:13,marginBottom:10}}>🤖 AI Confidence Breakdown</div>
+          <div className="card" style={{marginBottom:12}}>
+            <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:12}}>🤖 AI Confidence Breakdown</div>
             {Object.entries(allScores).sort(([,a],[,b])=>b-a).map(([id,pct])=>{
               const d2=DISEASES.find(x=>x.id===id)||{name:id,color:'#888',icon:'🌿'}
               return (
-                <div key={id} style={{display:'flex',alignItems:'center',gap:8,marginBottom:7}}>
-                  <span style={{fontSize:16,width:24}}>{d2.icon}</span>
-                  <span style={{fontSize:12,color:'var(--text2)',width:160,flexShrink:0}}>{d2.name}</span>
-                  <div style={{flex:1,height:8,background:'#F0F0F0',borderRadius:4,overflow:'hidden'}}>
-                    <div style={{height:'100%',width:`${pct}%`,background:d2.color,borderRadius:4,transition:'width 0.5s'}}/>
+                <div key={id} style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+                  <span style={{fontSize:18,width:24,textAlign:'center'}}>{d2.icon}</span>
+                  <span style={{fontSize:12,color:'var(--text-secondary)',width:130,flexShrink:0,fontWeight:600}}>{d2.name}</span>
+                  <div style={{flex:1,height:8,background:'rgba(255,255,255,0.06)',borderRadius:4,overflow:'hidden'}}>
+                    <div style={{height:'100%',width:`${pct}%`,background:d2.color,borderRadius:4}}/>
                   </div>
-                  <span style={{fontSize:12,fontWeight:700,color:d2.color,width:34,textAlign:'right'}}>{pct}%</span>
+                  <span style={{fontSize:12,fontWeight:800,color:d2.color,width:34,textAlign:'right'}}>{pct}%</span>
                 </div>
               )
             })}
           </div>
         )}
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
-          <button onClick={()=>go('treatment',{diseaseId})} className="btn btn-primary"><Ic n="medkit" s={15} c="white"/>Treatment</button>
-          <button onClick={()=>go('products',{diseaseId})} className="btn btn-outline"><Ic n="flask" s={15} c="var(--blue)"/>Products</button>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>
+          <button onClick={()=>go('treatment',{diseaseId})} className="btn btn-primary" style={{borderRadius:14,padding:'12px'}}><Ic n="medkit" s={16} c="white"/>Treatment</button>
+          <button onClick={()=>go('products',{diseaseId})} className="btn btn-outline" style={{borderRadius:14,padding:'12px'}}><Ic n="flask" s={16} c="var(--text-primary)"/>Products</button>
         </div>
-        <button onClick={()=>go('dealers')} className="btn" style={{width:'100%',background:'white',color:'var(--accent)',border:'1.5px solid #FFD0C8',marginBottom:8}}><Ic n="location" s={15} c="var(--accent)"/>Find Nearest FMN Dealer</button>
-        <button onClick={()=>go('scan')} className="btn" style={{width:'100%',background:'transparent',color:'var(--text3)'}}><Ic n="scan" s={15} c="var(--text3)"/>Scan another plant</button>
+        <button onClick={()=>go('dealers')} className="btn" style={{width:'100%',background:'rgba(234,60,26,0.08)',color:'var(--accent)',border:'1px solid rgba(234,60,26,0.2)',borderRadius:14,padding:'14px',marginBottom:10}}><Ic n="location" s={16} c="var(--accent)"/>Find Nearest FMN Dealer</button>
+        <button onClick={()=>go('scan')} className="btn" style={{width:'100%',background:'transparent',color:'var(--text-muted)',fontSize:13}}><Ic n="scan" s={15} c="var(--text-muted)"/>Scan another plant</button>
       </div>
     </div>
   )
@@ -489,59 +618,133 @@ function TreatmentScreen({ go, diseaseId }) {
   const pct  = d.treatment.length ? Math.round((done/d.treatment.length)*100) : 0
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
-      <div className="hdr">
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-          <button onClick={()=>go('diagnosis',{diseaseId})} style={{background:'rgba(255,255,255,0.12)',border:'none',borderRadius:'50%',width:36,height:36,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="white"/></button>
-          <div style={{textAlign:'center'}}><div style={{color:'white',fontWeight:800}}>Treatment Plan</div><div style={{color:'#A8C4E8',fontSize:12}}>{d.short}</div></div>
-          <div style={{width:36}}/>
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+          <button onClick={()=>go('diagnosis',{diseaseId})} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <div style={{textAlign:'center'}}>
+            <div style={{color:'var(--text-primary)',fontWeight:800,fontFamily:'var(--font-display)',fontSize:16}}>Treatment Plan</div>
+            <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>{d.short}</div>
+          </div>
+          <div style={{width:38}}/>
         </div>
-        <div style={{display:'flex',justifyContent:'space-between',marginBottom:5}}>
-          <span style={{color:'rgba(255,255,255,0.65)',fontSize:12}}>{done}/{d.treatment.length} steps</span>
-          <span style={{color:'#1E6FD9',fontSize:12,fontWeight:700}}>{pct}%</span>
+        <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+          <span style={{color:'var(--text-muted)',fontSize:12,fontWeight:600}}>{done}/{d.treatment.length} steps completed</span>
+          <span style={{color:'var(--text-highlight)',fontSize:12,fontWeight:800}}>{pct}%</span>
         </div>
-        <div style={{height:6,background:'rgba(255,255,255,0.15)',borderRadius:3,overflow:'hidden'}}>
-          <div style={{height:'100%',width:`${pct}%`,background:'#1E6FD9',borderRadius:3,transition:'width 0.4s'}}/>
+        <div style={{height:6,background:'rgba(255,255,255,0.08)',borderRadius:3,overflow:'hidden'}}>
+          <div style={{height:'100%',width:`${pct}%`,background:'linear-gradient(90deg,var(--primary-light) 0%,var(--text-highlight) 100%)',borderRadius:3,transition:'width 0.4s'}}/>
         </div>
       </div>
-      <div style={{display:'flex',background:'var(--bg)',borderBottom:'1px solid var(--bdcolor)',padding:'4px 14px 0'}}>
+      <div style={{
+        display:'flex',
+        background:'rgba(13, 22, 49, 0.9)',
+        borderBottom:'1px solid rgba(255, 255, 255, 0.05)',
+        padding:'6px 14px 0',
+        flexShrink:0
+      }}>
         {['treatment','prevention','schedule'].map(t=>(
-          <button key={t} onClick={()=>setTab(t)} style={{padding:'8px 12px',border:'none',background:'none',cursor:'pointer',fontFamily:'var(--font)',fontSize:13,fontWeight:700,color:tab===t?'var(--blue)':'var(--text3)',borderBottom:`2.5px solid ${tab===t?'var(--blue)':'transparent'}`,textTransform:'capitalize'}}>{t}</button>
+          <button key={t} onClick={()=>setTab(t)} style={{
+            padding:'10px 16px',
+            border:'none',
+            background:'none',
+            cursor:'pointer',
+            fontFamily:'var(--font-display)',
+            fontSize:13,
+            fontWeight:700,
+            color:tab===t?'var(--text-primary)':'var(--text-muted)',
+            borderBottom:`3px solid ${tab===t?'var(--text-highlight)':'transparent'}`,
+            textTransform:'capitalize',
+            transition:'color 0.2s'
+          }}>{t}</button>
         ))}
       </div>
-      <div className="content" style={{overflowY:'auto'}}>
+      <div className="content" style={{overflowY:'auto', padding:'20px'}}>
         {tab==='treatment'&&<>
-          <div style={{fontSize:12,color:'var(--text3)',marginBottom:12}}>Tap each step to mark as completed.</div>
+          <div style={{fontSize:12,color:'var(--text-muted)',fontWeight:500,marginBottom:12}}>Tap each step below to check it off.</div>
           {d.treatment.map((step,i)=>(
-            <button key={i} onClick={()=>setChecked(p=>({...p,[i]:!p[i]}))} style={{width:'100%',background:checked[i]?'var(--pale)':'white',border:`1.5px solid ${checked[i]?'var(--border)':'transparent'}`,borderRadius:12,padding:12,display:'flex',alignItems:'flex-start',gap:10,marginBottom:8,cursor:'pointer',textAlign:'left',boxShadow:'0 2px 8px rgba(0,0,0,0.06)'}}>
-              <div style={{width:26,height:26,borderRadius:'50%',background:checked[i]?'var(--llight)':'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                {checked[i]?<Ic n="check" s={13} c="white"/>:<span style={{color:'white',fontSize:12,fontWeight:700}}>{i+1}</span>}
+            <button key={i} onClick={()=>setChecked(p=>({...p,[i]:!p[i]}))} className="card card-interactive" style={{
+              width:'100%',
+              background:checked[i]?'rgba(16,185,129,0.06)':'var(--card)',
+              borderColor:checked[i]?'rgba(16,185,129,0.25)':'var(--card-border)',
+              borderRadius:16,
+              padding:14,
+              display:'flex',
+              alignItems:'flex-start',
+              gap:12,
+              marginBottom:10,
+              cursor:'pointer',
+              textAlign:'left'
+            }}>
+              <div style={{
+                width:24,
+                height:24,
+                borderRadius:'50%',
+                background:checked[i]?'#10b981':'rgba(255,255,255,0.06)',
+                border:checked[i]?'none':'1px solid var(--card-border)',
+                display:'flex',
+                alignItems:'center',
+                justifyContent:'center',
+                flexShrink:0
+              }}>
+                {checked[i]?<Ic n="check" s={13} c="white"/>:<span style={{color:'var(--text-secondary)',fontSize:11,fontWeight:800}}>{i+1}</span>}
               </div>
-              <span style={{fontSize:13,color:checked[i]?'var(--text3)':'var(--text)',lineHeight:1.6,textDecoration:checked[i]?'line-through':'none'}}>{step}</span>
+              <span style={{
+                fontSize:13,
+                color:checked[i]?'var(--text-muted)':'var(--text-primary)',
+                lineHeight:1.6,
+                fontWeight:500,
+                textDecoration:checked[i]?'line-through':'none',
+                flex:1
+              }}>{step}</span>
             </button>
           ))}
-          <button onClick={()=>go('products',{diseaseId})} className="btn btn-accent" style={{width:'100%',marginTop:8}}><Ic n="flask" s={15} c="white"/>View FMN Products →</button>
+          <button onClick={()=>go('products',{diseaseId})} className="btn btn-accent" style={{width:'100%',marginTop:8,borderRadius:14}}><Ic n="flask" s={15} c="white"/>View FMN Products →</button>
         </>}
         {tab==='prevention'&&<>
-          <div className="card" style={{marginBottom:12}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}><Ic n="shield" s={20} c="var(--blue)"/><span style={{fontWeight:700,fontSize:14}}>Prevention Strategy</span></div>
-            <p style={{fontSize:13,color:'var(--text2)',lineHeight:1.7}}>{d.prevention}</p>
+          <div className="card" style={{marginBottom:14, background:'rgba(77, 138, 255, 0.03)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}><Ic n="shield" s={20} c="var(--text-highlight)"/><span style={{fontWeight:800,fontSize:14,fontFamily:'var(--font-display)'}}>Prevention Strategy</span></div>
+            <p style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.7,fontWeight:500}}>{d.prevention}</p>
           </div>
-          {['Use certified disease-free planting materials every season','Conduct soil tests before planting','Apply FMN preventive spray from day one','Keep detailed farm records of all treatments','Attend FMN farmer training workshops'].map((t,i)=>(
-            <div key={i} className="card" style={{display:'flex',gap:10,marginBottom:8}}><Ic n="check" s={17} c="var(--blue)"/><span style={{fontSize:13,color:'var(--text2)',lineHeight:1.6}}>{t}</span></div>
+          {[
+            'Use certified disease-free planting materials every season',
+            'Conduct soil tests before planting',
+            'Apply FMN preventive spray from day one',
+            'Keep detailed farm records of all treatments',
+            'Attend FMN farmer training workshops'
+          ].map((t,i)=>(
+            <div key={i} className="card" style={{display:'flex',gap:12,marginBottom:10,alignItems:'flex-start'}}>
+              <div style={{marginTop:3}}><Ic n="check" s={16} c="#10b981"/></div>
+              <span style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.5,fontWeight:500}}>{t}</span>
+            </div>
           ))}
         </>}
         {tab==='schedule'&&[['Day 1',['Remove infected plants','First fungicide treatment']],['Day 3',['Inspect neighbours','Disinfect tools']],['Day 7',['Second spray','Check for new symptoms']],['Day 14',['Repeat treatment','Document recovery']]].map(([day,tasks],i,arr)=>(
           <div key={day} style={{display:'flex',gap:12,marginBottom:4}}>
-            <div style={{display:'flex',flexDirection:'column',alignItems:'center',width:52}}>
-              <div style={{background:i===0?'var(--blue)':'var(--pale)',borderRadius:8,padding:'6px 8px',width:'100%',textAlign:'center'}}>
-                <span style={{fontSize:11,fontWeight:800,color:i===0?'white':'var(--blue)'}}>{day}</span>
+            <div style={{display:'flex',flexDirection:'column',alignItems:'center',width:56}}>
+              <div style={{
+                background:i===0?'var(--text-highlight)':'var(--surface)',
+                border:'1px solid var(--card-border)',
+                borderRadius:10,
+                padding:'6px 8px',
+                width:'100%',
+                textAlign:'center'
+              }}>
+                <span style={{fontSize:11,fontWeight:800,color:i===0?'white':'var(--text-secondary)',fontFamily:'var(--font-display)'}}>{day}</span>
               </div>
-              {i<arr.length-1&&<div style={{width:2,flex:1,background:'var(--border)',margin:'4px 0'}}/>}
+              {i<arr.length-1&&<div style={{width:2,flex:1,background:'var(--card-border)',margin:'6px 0'}}/>}
             </div>
-            <div className="card" style={{flex:1,marginBottom:8}}>
+            <div className="card" style={{flex:1,marginBottom:10}}>
               {tasks.map((t,j)=>(
-                <div key={j} style={{display:'flex',gap:8,alignItems:'center',paddingBottom:j<tasks.length-1?7:0,marginBottom:j<tasks.length-1?7:0,borderBottom:j<tasks.length-1?'1px solid #F0F0F0':'none'}}>
-                  <div style={{width:6,height:6,borderRadius:'50%',background:'var(--blue)',flexShrink:0}}/><span style={{fontSize:13}}>{t}</span>
+                <div key={j} style={{
+                  display:'flex',
+                  gap:10,
+                  alignItems:'center',
+                  paddingBottom:j<tasks.length-1?8:0,
+                  marginBottom:j<tasks.length-1?8:0,
+                  borderBottom:j<tasks.length-1?'1px solid rgba(255,255,255,0.05)':'none'
+                }}>
+                  <div style={{width:6,height:6,borderRadius:'50%',background:'var(--text-highlight)',flexShrink:0}}/>
+                  <span style={{fontSize:13,color:'var(--text-primary)',fontWeight:500}}>{t}</span>
                 </div>
               ))}
             </div>
@@ -561,35 +764,87 @@ function ProductsScreen({ go, diseaseId }) {
   const filtered = filter==='All' ? PRODUCTS : PRODUCTS.filter(p=>p.cat===filter)
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
-      <div className="hdr">
-        <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <button onClick={()=>go('home')} style={{background:'rgba(255,255,255,0.12)',border:'none',borderRadius:'50%',width:36,height:36,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="white"/></button>
-          <div><div style={{color:'white',fontSize:18,fontWeight:800}}>FMN Products</div><div style={{color:'#A8C4E8',fontSize:12}}>Agrochemicals & Fertilizers</div></div>
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <button onClick={()=>go('home')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <div>
+            <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>FMN Products</div>
+            <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>Agrochemicals & Fertilizers</div>
+          </div>
         </div>
       </div>
-      <div style={{background:'white',borderBottom:'1px solid var(--bdcolor)',padding:'8px 14px',display:'flex',gap:6,overflowX:'auto',flexShrink:0}}>
-        {cats.map(c=><button key={c} onClick={()=>setFilter(c)} style={{padding:'5px 12px',borderRadius:20,border:`1.5px solid ${filter===c?'var(--blue)':'var(--bdcolor)'}`,background:filter===c?'var(--blue)':'var(--bg)',color:filter===c?'white':'var(--text2)',fontFamily:'var(--font)',fontSize:12,fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>{c}</button>)}
+      <div style={{
+        background:'rgba(13, 22, 49, 0.9)',
+        borderBottom:'1px solid rgba(255, 255, 255, 0.05)',
+        padding:'10px 14px',
+        display:'flex',
+        gap:8,
+        overflowX:'auto',
+        flexShrink:0,
+        scrollbarWidth:'none'
+      }}>
+        {cats.map(c=>(
+          <button key={c} onClick={()=>setFilter(c)} style={{
+            padding:'6px 14px',
+            borderRadius:20,
+            border:`1px solid ${filter===c?'var(--text-highlight)':'var(--card-border)'}`,
+            background:filter===c?'var(--text-highlight)':'var(--surface)',
+            color:filter===c?'white':'var(--text-secondary)',
+            fontFamily:'var(--font-display)',
+            fontSize:12,
+            fontWeight:700,
+            cursor:'pointer',
+            whiteSpace:'nowrap',
+            transition:'background-color 0.2s'
+          }}>{c}</button>
+        ))}
       </div>
-      <div className="content" style={{overflowY:'auto'}}>
-        {recIds.length>0&&filter==='All'&&<div style={{background:'var(--pale)',borderRadius:12,padding:'8px 12px',marginBottom:12,display:'flex',alignItems:'center',gap:8,border:'1px solid var(--border)'}}><Ic n="star" s={15} c="var(--accent)"/><span style={{fontSize:12,fontWeight:700,color:'var(--blue)'}}>⭐ Starred: recommended for {d?.short}</span></div>}
+      <div className="content" style={{overflowY:'auto', padding:'20px'}}>
+        {recIds.length>0&&filter==='All'&& (
+          <div className="card" style={{
+            background:'rgba(77, 138, 255, 0.06)',
+            padding:'10px 14px',
+            marginBottom:14,
+            display:'flex',
+            alignItems:'center',
+            gap:10,
+            borderColor:'rgba(77, 138, 255, 0.2)'
+          }}>
+            <Ic n="star" s={16} c="var(--accent)"/>
+            <span style={{fontSize:12,fontWeight:700,color:'var(--text-highlight)',fontFamily:'var(--font-display)'}}>⭐ Recommended for {d?.short}</span>
+          </div>
+        )}
         {filtered.map(p=>{
           const isRec=recIds.includes(p.id)
           return (
-            <div key={p.id} className="card" style={{marginBottom:10,border:isRec?`2px solid var(--border)`:'1.5px solid transparent'}}>
-              {isRec&&<span style={{background:'var(--pale)',color:'var(--blue)',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20,display:'inline-block',marginBottom:8}}>⭐ Recommended</span>}
-              <div style={{display:'flex',gap:12,marginBottom:8}}>
-                <div style={{width:54,height:54,borderRadius:14,background:p.color+'18',display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,flexShrink:0}}>{p.icon}</div>
+            <div key={p.id} className="card" style={{
+              marginBottom:12,
+              borderColor:isRec?'rgba(77, 138, 255, 0.25)':'var(--card-border)',
+              background:isRec?'rgba(13, 22, 49, 0.85)':'var(--card)'
+            }}>
+              {isRec&&<span style={{
+                background:'rgba(77, 138, 255, 0.15)',
+                color:'var(--text-highlight)',
+                fontSize:11,
+                fontWeight:800,
+                padding:'3px 10px',
+                borderRadius:20,
+                display:'inline-block',
+                marginBottom:10
+              }}>⭐ Recommended</span>}
+              <div style={{display:'flex',gap:14,marginBottom:12}}>
+                <div style={{width:58,height:58,borderRadius:16,background:p.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:30,flexShrink:0}}>{p.icon}</div>
                 <div style={{flex:1}}>
-                  <div style={{fontWeight:800,fontSize:14}}>{p.name}</div>
-                  <span style={{fontSize:11,fontWeight:700,color:p.color,background:p.color+'15',padding:'2px 8px',borderRadius:20,display:'inline-block',marginTop:2}}>{p.cat}</span>
-                  <div style={{fontSize:15,fontWeight:800,color:'var(--blue)',marginTop:3}}>{p.price}</div>
+                  <div style={{fontWeight:800,fontSize:15,color:'var(--text-primary)'}}>{p.name}</div>
+                  <span style={{fontSize:11,fontWeight:800,color:p.color,background:p.color+'15',padding:'2px 8px',borderRadius:20,display:'inline-block',marginTop:4}}>{p.cat}</span>
+                  <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginTop:6}}>{p.price}</div>
                 </div>
               </div>
-              <div style={{fontSize:12,color:'var(--text2)',lineHeight:1.6,marginBottom:6}}>{p.desc}</div>
-              <div style={{fontSize:11,color:'var(--text3)',marginBottom:10}}>💊 {p.dosage}</div>
-              <div style={{display:'flex',gap:8}}>
-                <button onClick={()=>go('dealers')} className="btn btn-primary" style={{flex:1,fontSize:12,padding:'9px 10px'}}><Ic n="location" s={14} c="white"/>Find Store</button>
-                <button className="btn btn-outline" style={{flex:1,fontSize:12,padding:'9px 10px'}}><Ic n="phone" s={14} c="var(--blue)"/>Order</button>
+              <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.6,marginBottom:10,fontWeight:500}}>{p.desc}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:14,fontWeight:600}}>💊 {p.dosage}</div>
+              <div style={{display:'flex',gap:10}}>
+                <button onClick={()=>go('dealers')} className="btn btn-primary" style={{flex:1,fontSize:13,padding:'11px',borderRadius:12}}><Ic n="location" s={15} c="white"/>Find Store</button>
+                <button className="btn btn-outline" style={{flex:1,fontSize:13,padding:'11px',borderRadius:12}}><Ic n="phone" s={15} c="var(--text-primary)"/>Order</button>
               </div>
             </div>
           )
@@ -606,47 +861,74 @@ function RemindersScreen({ go, reminders, onSaveReminder, onDeleteReminder }) {
   const active = reminders.filter(r=>r.enabled).length
   return (
     <div className="screen fade-in" style={{position:'relative'}}>
-      <div className="hdr">
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <div><div style={{color:'white',fontSize:20,fontWeight:800}}>Reminders</div><div style={{color:'#A8C4E8',fontSize:12,marginTop:2}}>{active} active tasks</div></div>
-          <button onClick={()=>setShowAdd(true)} style={{width:40,height:40,borderRadius:'50%',background:'rgba(255,255,255,0.15)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic n="plus" s={22} c="white"/></button>
+          <div>
+            <div style={{color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>Reminders</div>
+            <div style={{color:'var(--text-secondary)',fontSize:12,marginTop:4,fontWeight:500}}>{active} active tasks</div>
+          </div>
+          <button onClick={()=>setShowAdd(true)} style={{width:40,height:40,borderRadius:'50%',background:'var(--surface)',border:'1px solid var(--card-border)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic n="plus" s={22} c="var(--text-primary)"/></button>
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginTop:12}}>
-          {[['Active',active,'#1E6FD9'],['Paused',reminders.length-active,'#A8C4E8'],['Due Today',reminders.filter(r=>r.nextDue==='Today'&&r.enabled).length,'#FFD54F']].map(([l,v,c])=>(
-            <div key={l} style={{background:'rgba(255,255,255,0.1)',borderRadius:10,padding:'10px 8px',textAlign:'center'}}>
-              <div style={{fontSize:20,fontWeight:800,color:c}}>{v}</div>
-              <div style={{fontSize:10,color:'rgba(255,255,255,0.6)'}}>{l}</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginTop:16}}>
+          {[
+            ['Active',active,'var(--text-highlight)'],
+            ['Paused',reminders.length-active,'var(--text-secondary)'],
+            ['Due Today',reminders.filter(r=>r.nextDue==='Today'&&r.enabled).length,'#fbbf24']
+          ].map(([l,v,c])=>(
+            <div key={l} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,padding:'10px 8px',textAlign:'center'}}>
+              <div style={{fontSize:18,fontWeight:800,color:c,fontFamily:'var(--font-display)'}}>{v}</div>
+              <div style={{fontSize:10,color:'var(--text-muted)',fontWeight:600,marginTop:2}}>{l}</div>
             </div>
           ))}
         </div>
       </div>
-      <div className="content">
+      <div className="content" style={{padding:'20px'}}>
         {reminders.map(r=>(
-          <div key={r.id} className="card" style={{display:'flex',alignItems:'flex-start',gap:10,marginBottom:10,opacity:r.enabled?1:0.55}}>
-            <div style={{width:44,height:44,borderRadius:12,background:'var(--pale)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{r.icon}</div>
+          <div key={r.id} className="card" style={{display:'flex',alignItems:'flex-start',gap:12,marginBottom:12,opacity:r.enabled?1:0.5}}>
+            <div style={{width:46,height:46,borderRadius:14,background:'var(--surface)',border:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{r.icon}</div>
             <div style={{flex:1}}>
-              <div style={{fontWeight:700,fontSize:13}}>{r.title}</div>
-              <div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>{r.time}  •  {r.days}</div>
-              {r.nextDue&&<span style={{background:r.nextDue==='Today'?'var(--pale)':'var(--accentl)',color:r.nextDue==='Today'?'var(--blue)':'var(--accent)',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20,display:'inline-block',marginTop:5}}>Next: {r.nextDue}</span>}
+              <div style={{fontWeight:700,fontSize:14,color:'var(--text-primary)'}}>{r.title}</div>
+              <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4,fontWeight:500}}>{r.time}  •  {r.days}</div>
+              {r.nextDue&&<span style={{
+                background:r.nextDue==='Today'?'rgba(77,138,255,0.15)':'rgba(255,255,255,0.06)',
+                color:r.nextDue==='Today'?'var(--text-highlight)':'var(--text-secondary)',
+                fontSize:11,
+                fontWeight:850,
+                padding:'3px 10px',
+                borderRadius:20,
+                display:'inline-block',
+                marginTop:8
+              }}>Next: {r.nextDue}</span>}
             </div>
-            <div style={{display:'flex',flexDirection:'column',gap:6,alignItems:'center'}}>
-              <button onClick={()=>onSaveReminder({...r, enabled:!r.enabled, updatedAt:Date.now()})} style={{width:42,height:24,borderRadius:12,background:r.enabled?'var(--llight)':'#E0E0E0',border:'none',cursor:'pointer',position:'relative'}}>
-                <div style={{width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,left:r.enabled?21:3,transition:'left 0.2s',boxShadow:'0 1px 3px rgba(0,0,0,0.2)'}}/>
+            <div style={{display:'flex',flexDirection:'column',gap:10,alignItems:'center',justifyContent:'center'}}>
+              <button onClick={()=>onSaveReminder({...r, enabled:!r.enabled, updatedAt:Date.now()})} style={{width:44,height:24,borderRadius:12,background:r.enabled?'var(--text-highlight)':'rgba(255,255,255,0.1)',border:'none',cursor:'pointer',position:'relative', transition:'background-color 0.2s'}}>
+                <div style={{width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,left:r.enabled?23:3,transition:'left 0.2s',boxShadow:'0 1px 3px rgba(0,0,0,0.3)'}}/>
               </button>
-              <button onClick={()=>onDeleteReminder(r.id)} style={{background:'none',border:'none',cursor:'pointer'}}><Ic n="trash" s={15} c="var(--text4)"/></button>
+              <button onClick={()=>onDeleteReminder(r.id)} style={{background:'none',border:'none',cursor:'pointer',opacity:0.6}}><Ic n="trash" s={16} c="var(--accent)"/></button>
             </div>
           </div>
         ))}
       </div>
       {showAdd&&(
-        <div onClick={()=>setShowAdd(false)} style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.45)',display:'flex',alignItems:'flex-end',zIndex:100}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:'white',borderRadius:'20px 20px 0 0',padding:24,width:'100%'}}>
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-              <span style={{fontSize:18,fontWeight:800}}>Add Reminder</span>
-              <button onClick={()=>setShowAdd(false)} style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:'var(--text3)'}}>✕</button>
+        <div onClick={()=>setShowAdd(false)} style={{position:'absolute',inset:0,background:'rgba(3,8,22,0.7)',backdropFilter:'blur(6px)',display:'flex',alignItems:'flex-end',zIndex:100}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:'var(--bg-screen)',borderTop:'1px solid var(--card-border)',borderRadius:'24px 24px 0 0',padding:24,width:'100%'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
+              <span style={{fontSize:18,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>Add Reminder</span>
+              <button onClick={()=>setShowAdd(false)} style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:'var(--text-muted)'}}>✕</button>
             </div>
-            <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="e.g. Apply FMN BioGuard Spray" style={{width:'100%',padding:'10px 12px',borderRadius:10,border:'1.5px solid var(--bdcolor)',fontFamily:'var(--font)',fontSize:14,outline:'none',marginBottom:16}}/>
-            <button onClick={()=>{if(newTitle.trim()){onSaveReminder({id:Date.now().toString(),title:newTitle,time:'07:00 AM',days:'Mon',icon:'💧',enabled:true,nextDue:'Mon',createdAt:Date.now(),updatedAt:Date.now()});setNewTitle('');setShowAdd(false)}}} className="btn btn-primary" style={{width:'100%'}}>Save Reminder</button>
+            <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="e.g. Apply FMN BioGuard Spray" style={{
+              width:'100%',
+              padding:'12px 14px',
+              borderRadius:12,
+              border:'1px solid var(--card-border)',
+              background:'var(--surface)',
+              color:'white',
+              fontFamily:'var(--font-sans)',
+              fontSize:14,
+              outline:'none',
+              marginBottom:18
+            }}/>
+            <button onClick={()=>{if(newTitle.trim()){onSaveReminder({id:Date.now().toString(),title:newTitle,time:'07:00 AM',days:'Mon',icon:'💧',enabled:true,nextDue:'Mon',createdAt:Date.now(),updatedAt:Date.now()});setNewTitle('');setShowAdd(false)}}} className="btn btn-primary" style={{width:'100%',borderRadius:12}}>Save Reminder</button>
           </div>
         </div>
       )}
@@ -666,42 +948,88 @@ function HistoryScreen({ go, scans }) {
   })
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
-      <div className="hdr">
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-          <div><div style={{color:'white',fontSize:20,fontWeight:800}}>Scan History</div><div style={{color:'#A8C4E8',fontSize:12,marginTop:2}}>{scans.length} total diagnoses</div></div>
-          <button style={{background:'rgba(255,255,255,0.12)',border:'none',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="download" s={18} c="white"/></button>
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <div>
+            <div style={{color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>Scan History</div>
+            <div style={{color:'var(--text-secondary)',fontSize:12,marginTop:4,fontWeight:500}}>{scans.length} total diagnoses</div>
+          </div>
+          <button style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="download" s={18} c="var(--text-primary)"/></button>
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:6}}>
-          {[['Total',scans.length,'#1E6FD9'],['Diseases',scans.filter(h=>['cmd','cbsd','cbb','cgm'].includes(h.diseaseId)).length,'#FFD54F'],['Healthy',scans.filter(h=>h.diseaseId==='healthy').length,'#A8C4E8'],['Treated',scans.filter(h=>h.treated).length,'#CE93D8']].map(([l,v,c])=>(
-            <div key={l} style={{background:'rgba(255,255,255,0.1)',borderRadius:10,padding:'8px 4px',textAlign:'center'}}>
-              <div style={{fontSize:18,fontWeight:800,color:c}}>{v}</div>
-              <div style={{fontSize:9,color:'rgba(255,255,255,0.6)'}}>{l}</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
+          {[
+            ['Total',scans.length,'var(--text-highlight)'],
+            ['Diseases',scans.filter(h=>['cmd','cbsd','cbb','cgm'].includes(h.diseaseId)).length,'#fbbf24'],
+            ['Healthy',scans.filter(h=>h.diseaseId==='healthy').length,'#10b981'],
+            ['Treated',scans.filter(h=>h.treated).length,'#a855f7']
+          ].map(([l,v,c])=>(
+            <div key={l} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,padding:'8px 4px',textAlign:'center'}}>
+              <div style={{fontSize:16,fontWeight:800,color:c,fontFamily:'var(--font-display)'}}>{v}</div>
+              <div style={{fontSize:9,color:'var(--text-muted)',fontWeight:600,marginTop:2}}>{l}</div>
             </div>
           ))}
         </div>
       </div>
-      <div style={{background:'white',borderBottom:'1px solid var(--bdcolor)',padding:'8px 14px',display:'flex',gap:6,overflowX:'auto',flexShrink:0}}>
-        {['All','Disease','Healthy','Treated'].map(f=><button key={f} onClick={()=>setFilter(f)} style={{padding:'5px 12px',borderRadius:20,border:`1.5px solid ${filter===f?'var(--blue)':'var(--bdcolor)'}`,background:filter===f?'var(--blue)':'var(--bg)',color:filter===f?'white':'var(--text2)',fontFamily:'var(--font)',fontSize:12,fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>{f}</button>)}
+      <div style={{
+        background:'rgba(13, 22, 49, 0.9)',
+        borderBottom:'1px solid rgba(255, 255, 255, 0.05)',
+        padding:'10px 14px',
+        display:'flex',
+        gap:8,
+        overflowX:'auto',
+        flexShrink:0,
+        scrollbarWidth:'none'
+      }}>
+        {['All','Disease','Healthy','Treated'].map(f=>(
+          <button key={f} onClick={()=>setFilter(f)} style={{
+            padding:'6px 14px',
+            borderRadius:20,
+            border:`1px solid ${filter===f?'var(--text-highlight)':'var(--card-border)'}`,
+            background:filter===f?'var(--text-highlight)':'var(--surface)',
+            color:filter===f?'white':'var(--text-secondary)',
+            fontFamily:'var(--font-display)',
+            fontSize:12,
+            fontWeight:700,
+            cursor:'pointer',
+            whiteSpace:'nowrap',
+            transition:'background-color 0.2s'
+          }}>{f}</button>
+        ))}
       </div>
-      <div className="content" style={{overflowY:'auto'}}>
+      <div className="content" style={{overflowY:'auto', padding:'20px'}}>
         {filtered.map(item=>{
           const d=DISEASES.find(x=>x.id===item.diseaseId)||DISEASES[4]
           return (
-            <button key={item.id} onClick={()=>go('diagnosis',{diseaseId:item.diseaseId})} style={{width:'100%',background:'white',border:'none',borderRadius:12,padding:'12px 14px',display:'flex',alignItems:'center',gap:12,marginBottom:8,cursor:'pointer',textAlign:'left',boxShadow:'0 2px 8px rgba(0,0,0,0.06)'}}>
-              <div style={{width:50,height:50,borderRadius:14,background:d.color+'18',display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,flexShrink:0}}>{d.icon}</div>
+            <button key={item.id} onClick={()=>go('diagnosis',{diseaseId:item.diseaseId})} className="card card-interactive" style={{
+              width:'100%',
+              display:'flex',
+              alignItems:'center',
+              gap:14,
+              marginBottom:10,
+              cursor:'pointer',
+              textAlign:'left'
+            }}>
+              <div style={{width:50,height:50,borderRadius:14,background:d.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,flexShrink:0}}>{d.icon}</div>
               <div style={{flex:1}}>
-                <div style={{fontWeight:700,fontSize:13}}>{d.name}</div>
-                <div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>📍 {item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
-                <div style={{display:'flex',gap:5,marginTop:4}}>
-                  <span style={{background:d.sevBg,color:d.sevColor,fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20}}>{d.severity==='None'?'Healthy':d.severity}</span>
-                  {item.treated&&<span style={{background:'var(--pale)',color:'var(--blue)',fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20}}>✓ Treated</span>}
+                <div style={{fontWeight:700,fontSize:14,color:'var(--text-primary)'}}>{d.name}</div>
+                <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4}}>📍 {item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
+                <div style={{display:'flex',gap:6,marginTop:8}}>
+                  <span style={{
+                    background:d.severity==='None'?'rgba(16,185,129,0.15)':d.sevBg,
+                    color:d.severity==='None'?'#10b981':d.sevColor,
+                    fontSize:10,
+                    fontWeight:800,
+                    padding:'2px 8px',
+                    borderRadius:20
+                  }}>{d.severity==='None'?'Healthy':d.severity}</span>
+                  {item.treated&&<span style={{background:'rgba(77,138,255,0.15)',color:'var(--text-highlight)',fontSize:10,fontWeight:800,padding:'2px 8px',borderRadius:20}}>✓ Treated</span>}
                 </div>
               </div>
-              <Ic n="chevron" s={16} c="var(--text4)"/>
+              <Ic n="chevron" s={16} c="var(--text-muted)"/>
             </button>
           )
         })}
-        <button onClick={()=>go('scan')} className="btn btn-outline" style={{width:'100%',marginTop:6}}><Ic n="scan" s={15} c="var(--blue)"/>Perform New Scan</button>
+        <button onClick={()=>go('scan')} className="btn btn-outline" style={{width:'100%',marginTop:6,borderRadius:12}}><Ic n="scan" s={15} c="var(--text-primary)"/>Perform New Scan</button>
       </div>
     </div>
   )
@@ -712,43 +1040,82 @@ function DealersScreen({ go }) {
   const [sel,setSel]=useState(null)
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
-      <div className="hdr">
-        <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <button onClick={()=>go('home')} style={{background:'rgba(255,255,255,0.12)',border:'none',borderRadius:'50%',width:36,height:36,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="white"/></button>
-          <div><div style={{color:'white',fontSize:18,fontWeight:800}}>Find FMN Dealer</div><div style={{color:'#A8C4E8',fontSize:12}}>{DEALERS.length} dealers near you</div></div>
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <button onClick={()=>go('home')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <div>
+            <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>Find FMN Dealer</div>
+            <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>{DEALERS.length} dealers near you</div>
+          </div>
         </div>
       </div>
-      <div style={{background:'#D4E4F7',height:160,display:'flex',alignItems:'center',justifyContent:'center',position:'relative',overflow:'hidden',flexShrink:0}}>
-        <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(0,48,135,0.06) 30px,rgba(0,48,135,0.06) 31px),repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(0,48,135,0.06) 30px,rgba(0,48,135,0.06) 31px)'}}/>
+      <div style={{
+        background:'#0c1535',
+        borderBottom:'1px solid rgba(255,255,255,0.05)',
+        height:160,
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center',
+        position:'relative',
+        overflow:'hidden',
+        flexShrink:0
+      }}>
+        <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(255,255,255,0.02) 30px,rgba(255,255,255,0.02) 31px),repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(255,255,255,0.02) 30px,rgba(255,255,255,0.02) 31px)'}}/>
         {DEALERS.map((d,i)=>(
-          <button key={d.id} onClick={()=>setSel(sel===d.id?null:d.id)} style={{position:'absolute',top:`${15+i*15}%`,left:`${10+i*18}%`,width:34,height:34,borderRadius:'50%',background:sel===d.id?'var(--accent)':(d.inStock?'var(--blue)':'#888'),border:'2.5px solid white',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 3px 10px rgba(0,0,0,0.2)'}}>
+          <button key={d.id} onClick={()=>setSel(sel===d.id?null:d.id)} style={{
+            position:'absolute',
+            top:`${15+i*15}%`,
+            left:`${10+i*18}%`,
+            width:34,
+            height:34,
+            borderRadius:'50%',
+            background:sel===d.id?'var(--accent)':(d.inStock?'var(--text-highlight)':'var(--text-muted)'),
+            border:'2.5px solid #0a1128',
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'center',
+            cursor:'pointer',
+            boxShadow:'0 4px 12px rgba(0,0,0,0.3)',
+            transition:'all 0.2s'
+          }}>
             <Ic n="location" s={15} c="white"/>
           </button>
         ))}
-        <div style={{background:'rgba(255,255,255,0.92)',borderRadius:10,padding:'8px 14px',textAlign:'center',boxShadow:'0 2px 8px rgba(0,0,0,0.1)'}}>
-          <div style={{fontSize:13,fontWeight:700,color:'var(--blue)'}}>📍 Your Location</div>
-          <div style={{fontSize:11,color:'var(--text3)'}}>Ogun State, FUNAAB</div>
+        <div className="card" style={{background:'rgba(10,17,40,0.85)',backdropFilter:'blur(10px)',borderRadius:12,padding:'8px 14px',textAlign:'center',boxShadow: 'var(--shadow-sm)'}}>
+          <div style={{fontSize:13,fontWeight:800,color:'var(--text-highlight)',fontFamily:'var(--font-display)'}}>📍 Your Location</div>
+          <div style={{fontSize:11,color:'var(--text-secondary)',fontWeight:500,marginTop:2}}>Ogun State, FUNAAB</div>
         </div>
       </div>
-      <div className="content" style={{overflowY:'auto'}}>
+      <div className="content" style={{overflowY:'auto', padding:'20px'}}>
         {DEALERS.map(d=>(
-          <div key={d.id} className="card" style={{marginBottom:10,border:sel===d.id?'2px solid var(--border)':'1.5px solid transparent'}}>
-            <button onClick={()=>setSel(sel===d.id?null:d.id)} style={{width:'100%',background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',gap:10,textAlign:'left',padding:0}}>
-              <div style={{width:50,height:50,borderRadius:14,background:d.inStock?'var(--pale)':'#F5F5F5',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>🏪</div>
+          <div key={d.id} className="card" style={{
+            marginBottom:12,
+            borderColor:sel===d.id?'var(--text-highlight)':'var(--card-border)',
+            background:sel===d.id?'rgba(13, 22, 49, 0.85)':'var(--card)'
+          }}>
+            <button onClick={()=>setSel(sel===d.id?null:d.id)} style={{width:'100%',background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',gap:12,textAlign:'left',padding:0}}>
+              <div style={{width:50,height:50,borderRadius:14,background:d.inStock?'rgba(77,138,255,0.08)':'rgba(255,255,255,0.03)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>🏪</div>
               <div style={{flex:1}}>
-                <div style={{fontWeight:800,fontSize:13}}>{d.name}</div>
-                <div style={{fontSize:11,color:'var(--text3)',marginTop:2}}>{d.address}</div>
-                <div style={{display:'flex',alignItems:'center',gap:6,marginTop:4}}>
-                  <span style={{fontSize:11,fontWeight:700,color:'var(--blue)'}}>📍 {d.distance}</span>
-                  <span style={{background:d.inStock?'var(--pale)':'#F5F5F5',color:d.inStock?'var(--blue)':'#888',fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:20}}>{d.inStock?'● In Stock':'○ Call First'}</span>
+                <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)'}}>{d.name}</div>
+                <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4,fontWeight:500}}>{d.address}</div>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginTop:6}}>
+                  <span style={{fontSize:12,fontWeight:700,color:'var(--text-highlight)'}}>📍 {d.distance}</span>
+                  <span style={{
+                    background:d.inStock?'rgba(16,185,129,0.15)':'rgba(255,255,255,0.06)',
+                    color:d.inStock?'#10b981':'var(--text-muted)',
+                    fontSize:10,
+                    fontWeight:800,
+                    padding:'2px 8px',
+                    borderRadius:20
+                  }}>{d.inStock?'● In Stock':'○ Call First'}</span>
                 </div>
               </div>
-              <Ic n="chevron" s={16} c="var(--text4)"/>
+              <Ic n="chevron" s={16} c="var(--text-muted)"/>
             </button>
             {sel===d.id&&(
-              <div style={{marginTop:12,display:'flex',gap:8}}>
-                <button className="btn btn-outline" style={{flex:1,fontSize:12,padding:'9px 8px'}}><Ic n="phone" s={14} c="var(--blue)"/>{d.phone}</button>
-                <button className="btn btn-primary" style={{flex:1,fontSize:12,padding:'9px 8px'}}><Ic n="navigate" s={14} c="white"/>Directions</button>
+              <div style={{marginTop:14,display:'flex',gap:10}}>
+                <button className="btn btn-outline" style={{flex:1,fontSize:12,padding:'10px',borderRadius:10}}><Ic n="phone" s={14} c="var(--text-primary)"/>{d.phone}</button>
+                <button className="btn btn-primary" style={{flex:1,fontSize:12,padding:'10px',borderRadius:10}}><Ic n="navigate" s={14} c="white"/>Directions</button>
               </div>
             )}
           </div>
@@ -774,77 +1141,155 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
   }, [profile]);
 
   const Toggle=({val,set})=>(
-    <button onClick={()=>set(!val)} style={{width:44,height:24,borderRadius:12,background:val?'var(--llight)':'#E0E0E0',border:'none',cursor:'pointer',position:'relative',flexShrink:0}}>
-      <div style={{width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,left:val?23:3,transition:'left 0.2s',boxShadow:'0 1px 3px rgba(0,0,0,0.2)'}}/>
+    <button onClick={()=>set(!val)} style={{
+      width:44,
+      height:24,
+      borderRadius:12,
+      background:val?'var(--text-highlight)':'rgba(255,255,255,0.1)',
+      border:'none',
+      cursor:'pointer',
+      position:'relative',
+      flexShrink:0,
+      transition:'background-color 0.2s'
+    }}>
+      <div style={{width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,left:val?23:3,transition:'left 0.2s',boxShadow:'0 1px 3px rgba(0,0,0,0.3)'}}/>
     </button>
   )
   const Modal=({children,title,onClose})=>(
-    <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'flex-end',zIndex:200}}>
-      <div onClick={e=>e.stopPropagation()} style={{background:'white',borderRadius:'20px 20px 0 0',width:'100%',maxHeight:'85%',overflowY:'auto',padding:20}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-          <span style={{fontSize:17,fontWeight:800}}>{title}</span>
-          <button onClick={onClose} style={{background:'#F0F0F0',border:'none',borderRadius:'50%',width:32,height:32,cursor:'pointer',fontSize:16}}>✕</button>
+    <div onClick={onClose} style={{
+      position:'absolute',
+      inset:0,
+      background:'rgba(3,8,22,0.7)',
+      backdropFilter:'blur(6px)',
+      display:'flex',
+      alignItems:'flex-end',
+      zIndex:200
+    }}>
+      <div onClick={e=>e.stopPropagation()} style={{
+        background:'var(--bg-screen)',
+        borderTop:'1px solid var(--card-border)',
+        borderRadius:'24px 24px 0 0',
+        width:'100%',
+        maxHeight:'85%',
+        overflowY:'auto',
+        padding:24
+      }}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
+          <span style={{fontSize:18,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>{title}</span>
+          <button onClick={onClose} style={{background:'var(--surface)',border:'1px solid var(--card-border)',color:'var(--text-secondary)',borderRadius:'50%',width:32,height:32,cursor:'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
         </div>
         {children}
       </div>
     </div>
   )
   const Field=({label,field,placeholder})=>(
-    <div style={{marginBottom:14}}>
-      <div style={{fontSize:12,fontWeight:700,color:'var(--text3)',marginBottom:5,textTransform:'uppercase'}}>{label}</div>
-      <input value={form[field] || ''} onChange={e=>setForm(p=>({...p,[field]:e.target.value}))} placeholder={placeholder} style={{width:'100%',padding:'11px 14px',borderRadius:10,border:'1.5px solid var(--bdcolor)',fontFamily:'var(--font)',fontSize:14,outline:'none'}}/>
+    <div style={{marginBottom:16}}>
+      <div style={{fontSize:11,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.8}}>{label}</div>
+      <input value={form[field] || ''} onChange={e=>setForm(p=>({...p,[field]:e.target.value}))} placeholder={placeholder} style={{
+        width:'100%',
+        padding:'12px 14px',
+        borderRadius:12,
+        border:'1px solid var(--card-border)',
+        background:'var(--surface)',
+        color:'white',
+        fontFamily:'var(--font-sans)',
+        fontSize:14,
+        outline:'none'
+      }}/>
     </div>
   )
 
   return (
     <div className="screen fade-in" style={{position:'relative'}}>
-      <div style={{background:'linear-gradient(160deg,#001F5B 0%,#003087 100%)',padding:'20px 16px 24px',textAlign:'center'}}>
-        <div style={{width:80,height:80,borderRadius:'50%',background:'rgba(255,255,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 10px',fontSize:44,border:'3px solid #1E6FD9'}}>👨🏾‍🌾</div>
-        <div style={{color:'white',fontSize:20,fontWeight:800}}>{profile.name}</div>
-        <div style={{color:'#A8C4E8',fontSize:13,marginTop:4}}>{profile.phone}</div>
-        <div style={{color:'#A8C4E8',fontSize:13,marginTop:3}}>📍 {profile.location}</div>
-        <div style={{background:'rgba(255,255,255,0.1)',borderRadius:20,padding:'5px 14px',display:'inline-flex',alignItems:'center',gap:6,marginTop:10}}>
-          <Ic n="star" s={14} c="#FFD54F"/><span style={{color:'white',fontSize:12,fontWeight:600}}>FMN Farmer  •  Since Jan 2025</span>
+      <div style={{
+        background: 'linear-gradient(180deg, rgba(13, 22, 49, 0.95) 0%, rgba(10, 17, 40, 0.5) 100%)',
+        padding: '28px 20px 24px',
+        textAlign: 'center',
+        borderBottom: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        <div style={{
+          width:86,
+          height:86,
+          borderRadius:'50%',
+          background:'var(--surface)',
+          display:'flex',
+          alignItems:'center',
+          justifyContent:'center',
+          margin:'0 auto 12px',
+          fontSize:44,
+          border:'2.5px solid var(--text-highlight)',
+          boxShadow:'0 0 20px rgba(77,138,255,0.2)'
+        }}>👨🏾‍🌾</div>
+        <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.name}</div>
+        <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:4,fontWeight:500}}>{profile.phone}</div>
+        <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>📍 {profile.location}</div>
+        <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:20,padding:'6px 14px',display:'inline-flex',alignItems:'center',gap:6,marginTop:12}}>
+          <Ic n="star" s={14} c="#fbbf24"/><span style={{color:'var(--text-secondary)',fontSize:11,fontWeight:750,letterSpacing:0.3}}>FMN Farmer  •  Since Jan 2025</span>
         </div>
       </div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,background:'#001F5B',padding:'0 14px 16px'}}>
-        {[[scans.length,'Scans','#1E6FD9'],[scans.filter(h=>h.treated).length,'Treated','#CE93D8'],[profile.farmSize.replace(' Hectares','ha'),'Farm','#FFD54F']].map(([v,l,c])=>(
-          <div key={l} className="card" style={{textAlign:'center',padding:10}}>
-            <div style={{fontSize:18,fontWeight:800,color:c}}>{v}</div>
-            <div style={{fontSize:10,color:'var(--text3)'}}>{l}</div>
+      <div style={{
+        display:'grid',
+        gridTemplateColumns:'repeat(3,1fr)',
+        gap:10,
+        background:'rgba(10, 17, 40, 0.4)',
+        padding:'0 20px 20px',
+        borderBottom: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        {[
+          [scans.length,'Scans','var(--text-highlight)'],
+          [scans.filter(h=>h.treated).length,'Treated','#a855f7'],
+          [profile.farmSize.replace(' Hectares','ha'),'Farm','#fbbf24']
+        ].map(([v,l,c])=>(
+          <div key={l} className="card" style={{textAlign:'center',padding:'12px 6px'}}>
+            <div style={{fontSize:18,fontWeight:800,color:c,fontFamily:'var(--font-display)'}}>{v}</div>
+            <div style={{fontSize:10,color:'var(--text-muted)',fontWeight:700,marginTop:4,textTransform:'uppercase',letterSpacing:0.5}}>{l}</div>
           </div>
         ))}
       </div>
-      <div className="content">
-        <div className="card" style={{marginBottom:12}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-            <div style={{display:'flex',alignItems:'center',gap:8}}><Ic n="leaf" s={18} c="var(--blue)"/><span style={{fontWeight:800,fontSize:14}}>Farm Details</span></div>
-            <button onClick={()=>{setForm({...profile});setModal('edit')}} style={{display:'flex',alignItems:'center',gap:4,background:'var(--pale)',border:'1.5px solid var(--border)',borderRadius:20,padding:'4px 12px',cursor:'pointer',color:'var(--blue)',fontWeight:700,fontSize:12,fontFamily:'var(--font)'}}>
-              <Ic n="edit" s={13} c="var(--blue)"/>Edit
+      <div className="content" style={{padding:'20px'}}>
+        <div className="card" style={{marginBottom:14}}>
+          <div style={{display:'flex',justifyContent: 'space-between',alignItems:'center',marginBottom:14}}>
+            <div style={{display:'flex',alignItems:'center',gap:8}}><Ic n="leaf" s={18} c="var(--text-highlight)"/><span style={{fontWeight:800,fontSize:15,fontFamily:'var(--font-display)',color:'var(--text-primary)'}}>Farm Details</span></div>
+            <button onClick={()=>{setForm({...profile});setModal('edit')}} className="btn btn-outline" style={{padding:'6px 14px',fontSize:12,borderRadius:20,fontWeight:700,fontFamily:'var(--font-display)'}}>
+              <Ic n="edit" s={13} c="var(--text-primary)"/>Edit
             </button>
           </div>
-          {[['Name',profile.name],['Phone',profile.phone],['State',profile.state],['LGA',profile.lga],['Farm Size',profile.farmSize],['Crops',profile.crops]].map(([l,v])=>(
-            <div key={l} style={{display:'flex',alignItems:'center',padding:'9px 0',borderBottom:'1px solid var(--bdcolor)'}}>
-              <span style={{flex:1,fontSize:13,color:'var(--text2)'}}>{l}</span>
-              <span style={{fontSize:13,fontWeight:700}}>{v}</span>
+          {[
+            ['Name',profile.name],
+            ['Phone',profile.phone],
+            ['State',profile.state],
+            ['LGA',profile.lga],
+            ['Farm Size',profile.farmSize],
+            ['Crops',profile.crops]
+          ].map(([l,v])=>(
+            <div key={l} style={{display:'flex',alignItems:'center',padding:'10px 0',borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
+              <span style={{flex:1,fontSize:13,color:'var(--text-secondary)',fontWeight:500}}>{l}</span>
+              <span style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>{v}</span>
             </div>
           ))}
         </div>
-        <div className="card" style={{marginBottom:12}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}><Ic n="settings" s={18} c="var(--blue)"/><span style={{fontWeight:800,fontSize:14}}>App Settings</span></div>
-          {[['Push Notifications','Reminders & alerts',notif,setNotif],['Offline Mode','Use AI without internet',offline,setOffline],['Location Services','For dealer search',loc,setLoc]].map(([l,s,v,set])=>(
-            <div key={l} style={{display:'flex',alignItems:'center',padding:'10px 0',borderBottom:'1px solid var(--bdcolor)',gap:10}}>
-              <div style={{flex:1}}><div style={{fontSize:13,fontWeight:700}}>{l}</div><div style={{fontSize:11,color:'var(--text3)'}}>{s}</div></div>
+        <div className="card" style={{marginBottom:14}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}><Ic n="settings" s={18} c="var(--text-highlight)"/><span style={{fontWeight:800,fontSize:15,fontFamily:'var(--font-display)',color:'var(--text-primary)'}}>App Settings</span></div>
+          {[
+            ['Push Notifications','Reminders & alerts',notif,setNotif],
+            ['Offline Mode','Use AI without internet',offline,setOffline],
+            ['Location Services','For dealer search',loc,setLoc]
+          ].map(([l,s,v,set])=>(
+            <div key={l} style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid rgba(255,255,255,0.05)',gap:12}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>{l}</div>
+                <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>{s}</div>
+              </div>
               <Toggle val={v} set={set}/>
             </div>
           ))}
           {/* Cloud Sync Manual Trigger */}
-          <div style={{display:'flex',alignItems:'center',padding:'10px 0',gap:10}}>
+          <div style={{display:'flex',alignItems:'center',padding:'12px 0',gap:12}}>
             <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:700}}>FMN Cloud Sync</div>
-              <div style={{fontSize:11,color:'var(--text3)'}}>Status: <span style={{fontWeight:700,textTransform:'capitalize'}}>{syncStatus}</span></div>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>FMN Cloud Sync</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>Status: <span style={{fontWeight:750,color:syncStatus==='synced'?'#10b981':'var(--text-highlight)',textTransform:'capitalize'}}>{syncStatus}</span></div>
             </div>
-            <button onClick={onTriggerSync} disabled={syncStatus === 'syncing'} className="btn" style={{padding:'6px 12px',fontSize:12,width:'auto',background:syncStatus === 'syncing' ? '#E0E0E0' : 'var(--blue)',color:'white'}}>
+            <button onClick={onTriggerSync} disabled={syncStatus === 'syncing'} className="btn btn-primary" style={{padding:'8px 14px',fontSize:12,borderRadius:10,width:'auto'}}>
               {syncStatus === 'syncing' ? 'Syncing...' : 'Sync Now 🔄'}
             </button>
           </div>
@@ -852,11 +1297,16 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         <div className="card">
           {[['About FMN AgriSense','ℹ️','about'],['Privacy Policy','🔒','privacy'],['Contact FMN Support','🎧','support'],['Rate the App','⭐','rate'],['Share with Farmers','📤','share']].map(([l,e,key],i,arr)=>(
             <button key={l} onClick={()=>setModal(key)} style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'13px 0',background:'none',border:'none',cursor:'pointer',textAlign:'left',fontFamily:'var(--font)',borderBottom:i<arr.length-1?'1px solid var(--bdcolor)':'none'}}>
-              <span style={{fontSize:22}}>{e}</span><span style={{flex:1,fontSize:14,color:'var(--text)'}}>{l}</span><Ic n="chevron" s={16} c="var(--text4)"/>
+              <span style={{fontSize:22}}>{e}</span>
+              <span style={{flex:1,fontSize:14,color:'var(--text-primary)',fontWeight:500}}>{l}</span>
+              <Ic n="chevron" s={16} c="var(--text-muted)"/>
             </button>
           ))}
         </div>
-        <div style={{textAlign:'center',fontSize:11,color:'var(--text4)',marginTop:16,lineHeight:1.8}}>FMN AgriSense  •  Version 1.0.0<br/>Built for FMN Innovation 5.0  •  March 2026</div>
+        <div style={{textAlign:'center',fontSize:11,color:'var(--text-muted)',marginTop:20,lineHeight:1.8,fontWeight:500}}>
+          FMN AgriSense  •  Version 1.0.0<br/>
+          Built for FMN Innovation 5.0  •  March 2026
+        </div>
       </div>
 
       {modal==='edit'&&<Modal title="✏️ Edit Profile" onClose={()=>setModal(null)}>
@@ -867,62 +1317,112 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         <Field label="LGA" field="lga" placeholder="e.g. Abeokuta South"/>
         <Field label="Farm Size" field="farmSize" placeholder="e.g. 3.5 Hectares"/>
         <Field label="Crops" field="crops" placeholder="e.g. Cassava, Maize"/>
-        <button onClick={()=>{onSaveProfile(form);setModal(null)}} className="btn btn-primary" style={{width:'100%',marginTop:4}}>Save Changes</button>
+        <button onClick={()=>{onSaveProfile(form);setModal(null)}} className="btn btn-primary" style={{width:'100%',marginTop:4,borderRadius:12}}>Save Changes</button>
       </Modal>}
 
       {modal==='about'&&<Modal title="ℹ️ About FMN AgriSense" onClose={()=>setModal(null)}>
-        <div style={{textAlign:'center',marginBottom:16}}><div style={{fontSize:56}}>🌿</div><div style={{fontSize:18,fontWeight:800,color:'var(--navy)',marginTop:8}}>FMN AgriSense</div><div style={{fontSize:13,color:'var(--text3)',marginTop:4}}>Version 1.0.0  •  FMN Innovation 5.0</div></div>
-        {[['🤖 Real AI','Powered by EfficientNet trained on 21,367 cassava images from the Kaggle Cassava Disease dataset.'],['🎯 Mission','Empowering Nigerian cassava farmers with instant AI disease detection, treatment plans, and FMN product recommendations.'],['🏆 Competition','Built for FMN Innovation 5.0 to showcase how technology can protect Nigerian farms and increase yields.']].map(([t,d])=>(
-          <div key={t} style={{background:'var(--pale)',borderRadius:12,padding:14,marginBottom:10}}><div style={{fontWeight:800,fontSize:13,marginBottom:5}}>{t}</div><div style={{fontSize:13,color:'var(--text2)',lineHeight:1.6}}>{d}</div></div>
+        <div style={{textAlign:'center',marginBottom:20}}>
+          <div style={{fontSize:56, filter:'drop-shadow(0 4px 10px rgba(0,0,0,0.3))'}}>🌿</div>
+          <div style={{fontSize:20,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginTop:10}}>FMN AgriSense</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',fontWeight:500,marginTop:4}}>Version 1.0.0  •  FMN Innovation 5.0</div>
+        </div>
+        {[
+          ['🤖 Real AI','Powered by EfficientNet trained on 21,367 cassava images from the Kaggle Cassava Disease dataset.'],
+          ['🎯 Mission','Empowering Nigerian cassava farmers with instant AI disease detection, treatment plans, and FMN product recommendations.'],
+          ['🏆 Competition','Built for FMN Innovation 5.0 to showcase how technology can protect Nigerian farms and increase yields.']
+        ].map(([t,d])=>(
+          <div key={t} className="card" style={{marginBottom:12, background:'var(--surface)'}}>
+            <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:6}}>{t}</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.6,fontWeight:500}}>{d}</div>
+          </div>
         ))}
       </Modal>}
 
       {modal==='privacy'&&<Modal title="🔒 Privacy Policy" onClose={()=>setModal(null)}>
-        {[['Data We Collect','Farm location, crop photos, and usage data to improve disease detection. No financial data collected.'],['How We Use It','Plant images are processed by AI for diagnosis. Images may be used anonymously to improve the model.'],['Your Rights','You can request data deletion at any time by contacting FMN support.']].map(([t,d])=>(
-          <div key={t} style={{marginBottom:14,paddingBottom:14,borderBottom:'1px solid var(--bdcolor)'}}><div style={{fontWeight:800,fontSize:13,marginBottom:5,color:'var(--navy)'}}>{t}</div><div style={{fontSize:13,color:'var(--text2)',lineHeight:1.6}}>{d}</div></div>
+        {[
+          ['Data We Collect','Farm location, crop photos, and usage data to improve disease detection. No financial data collected.'],
+          ['How We Use It','Plant images are processed by AI for diagnosis. Images may be used anonymously to improve the model.'],
+          ['Your Rights','You can request data deletion at any time by contacting FMN support.']
+        ].map(([t,d])=>(
+          <div key={t} style={{marginBottom:16,paddingBottom:16,borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
+            <div style={{fontWeight:800,fontSize:14,marginBottom:6,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>{t}</div>
+            <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.6,fontWeight:500}}>{d}</div>
+          </div>
         ))}
       </Modal>}
 
       {modal==='support'&&<Modal title="🎧 Contact FMN Support" onClose={()=>setModal(null)}>
-        <div style={{background:'var(--pale)',borderRadius:14,padding:16,textAlign:'center',marginBottom:16}}><div style={{fontSize:40}}>👨🏾‍💼</div><div style={{fontWeight:800,fontSize:15,marginTop:8}}>FMN AgriSense Support</div><div style={{fontSize:13,color:'var(--text3)',marginTop:4}}>Available Mon–Fri, 8am–5pm</div></div>
-        {[['📞','0800-FMN-FARM','Toll-free hotline'],['📧','agrisense@fmnplc.com','Response within 24 hours'],['💬','+234 803 FMN HELP','WhatsApp agronomist'],['🏢','1 Golden Penny Place, Lagos','FMN Head Office']].map(([ic,c,s])=>(
-          <div key={c} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 0',borderBottom:'1px solid var(--bdcolor)'}}>
-            <div style={{width:44,height:44,borderRadius:12,background:'var(--pale)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{ic}</div>
-            <div><div style={{fontWeight:700,fontSize:14}}>{c}</div><div style={{fontSize:12,color:'var(--text3)',marginTop:2}}>{s}</div></div>
+        <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:18,padding:20,textAlign:'center',marginBottom:20}}>
+          <div style={{fontSize:44,marginBottom:6}}>👨🏾‍💼</div>
+          <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>FMN AgriSense Support</div>
+          <div style={{fontSize:12,color:'var(--text-muted)',fontWeight:600,marginTop:4}}>Available Mon–Fri, 8am–5pm</div>
+        </div>
+        {[
+          ['📞','0800-FMN-FARM','Toll-free hotline'],
+          ['📧','agrisense@fmnplc.com','Response within 24 hours'],
+          ['💬','+234 803 FMN HELP','WhatsApp agronomist'],
+          ['🏢','1 Golden Penny Place, Lagos','FMN Head Office']
+        ].map(([ic,c,s])=>(
+          <div key={c} style={{display:'flex',alignItems:'center',gap:14,padding:'12px 0',borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
+            <div style={{width:44,height:44,borderRadius:12,background:'var(--surface)',border:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{ic}</div>
+            <div>
+              <div style={{fontWeight:700,fontSize:14,color:'var(--text-primary)'}}>{c}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)',marginTop:2,fontWeight:500}}>{s}</div>
+            </div>
           </div>
         ))}
       </Modal>}
 
       {modal==='rate'&&<Modal title="⭐ Rate FMN AgriSense" onClose={()=>setModal(null)}>
-        <div style={{textAlign:'center',padding:'10px 0 20px'}}>
+        <div style={{textAlign:'center',padding:'10px 0 10px'}}>
           <div style={{fontSize:56,marginBottom:12}}>🌿</div>
-          <div style={{fontSize:16,fontWeight:700,marginBottom:20}}>How would you rate this app?</div>
-          <div style={{display:'flex',justifyContent:'center',gap:10,marginBottom:16}}>
+          <div style={{fontSize:16,fontWeight:800,marginBottom:20,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>How would you rate this app?</div>
+          <div style={{display:'flex',justifyContent:'center',gap:12,marginBottom:20}}>
             {[1,2,3,4,5].map(s=>(
-              <button key={s} onClick={()=>setRating(s)} style={{fontSize:40,background:'none',border:'none',cursor:'pointer',opacity:s<=rating?1:0.3,transform:s<=rating?'scale(1.15)':'scale(1)',transition:'all 0.15s'}}>⭐</button>
+              <button key={s} onClick={()=>setRating(s)} style={{fontSize:40,background:'none',border:'none',cursor:'pointer',opacity:s<=rating?1:0.25,transform:s<=rating?'scale(1.15)':'scale(1)',transition:'all 0.15s'}}>⭐</button>
             ))}
           </div>
-          {rating>0&&<div style={{fontSize:14,color:'var(--blue)',fontWeight:700,marginBottom:16}}>{['','Needs improvement 😐','Could be better 🙂','Pretty good! 😊','Love it! 😃','Amazing! 🤩'][rating]}</div>}
+          {rating>0&&<div style={{fontSize:14,color:'var(--text-highlight)',fontWeight:800,marginBottom:20,fontFamily:'var(--font-display)'}}>{['','Needs improvement 😐','Could be better 🙂','Pretty good! 😊','Love it! 😃','Amazing! 🤩'][rating]}</div>}
           {!ratingDone
-            ?<button onClick={()=>{if(rating>0)setRatingDone(true)}} className="btn" style={{width:'100%',background:rating>0?'var(--blue)':'var(--bdcolor)',color:rating>0?'white':'var(--text3)',cursor:rating>0?'pointer':'default'}}>Submit Rating</button>
-            :<div style={{background:'var(--pale)',borderRadius:12,padding:16}}><div style={{fontSize:32,marginBottom:8}}>🎉</div><div style={{fontWeight:800,fontSize:15}}>Thank you!</div><div style={{fontSize:13,color:'var(--text3)',marginTop:4}}>Your rating helps us serve Nigerian farmers better.</div></div>
+            ?<button onClick={()=>{if(rating>0)setRatingDone(true)}} className="btn btn-primary" style={{width:'100%',borderRadius:12,opacity:rating>0?1:0.5,cursor:rating>0?'pointer':'default'}}>Submit Rating</button>
+            :<div className="card" style={{background:'rgba(16,185,129,0.06)',borderColor:'rgba(16,185,129,0.25)',padding:20,borderRadius:16}}>
+                <div style={{fontSize:32,marginBottom:8}}>🎉</div>
+                <div style={{fontWeight:800,fontSize:15,color:'var(--text-primary)'}}>Thank you!</div>
+                <div style={{fontSize:13,color:'var(--text-secondary)',marginTop:4,fontWeight:500}}>Your rating helps us serve Nigerian farmers better.</div>
+              </div>
           }
         </div>
       </Modal>}
 
       {modal==='share'&&<Modal title="📤 Share with Farmers" onClose={()=>setModal(null)}>
-        <div style={{background:'var(--pale)',borderRadius:14,padding:16,textAlign:'center',marginBottom:16}}>
-          <div style={{fontSize:40}}>🌿</div>
-          <div style={{fontWeight:800,fontSize:15,marginTop:8}}>FMN AgriSense</div>
-          <div style={{fontSize:13,color:'var(--text2)',marginTop:6,lineHeight:1.5}}>AI-powered cassava disease detection for Nigerian farmers. Free to use!</div>
+        <div className="card" style={{padding:20,textAlign:'center',marginBottom:16,background:'var(--surface)'}}>
+          <div style={{fontSize:40,marginBottom:6}}>🌿</div>
+          <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>FMN AgriSense</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',marginTop:6,lineHeight:1.6,fontWeight:500}}>AI-powered cassava disease detection for Nigerian farmers. Free to use!</div>
         </div>
-        <div style={{background:'#F5F5F5',borderRadius:10,padding:'10px 14px',display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
-          <span style={{flex:1,fontSize:12,color:'var(--text3)',fontFamily:'monospace'}}>fmn-agrisense.vercel.app</span>
-          <button onClick={()=>{navigator.clipboard?.writeText('fmn-agrisense.vercel.app');setCopied(true);setTimeout(()=>setCopied(false),2000)}} style={{background:copied?'var(--blue)':'var(--pale)',border:'1.5px solid var(--border)',color:copied?'white':'var(--blue)',borderRadius:8,padding:'5px 12px',cursor:'pointer',fontFamily:'var(--font)',fontWeight:700,fontSize:12}}>{copied?'✓ Copied!':'Copy'}</button>
+        <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,padding:'10px 14px',display:'flex',alignItems:'center',gap:12,marginBottom:20}}>
+          <span style={{flex:1,fontSize:13,color:'var(--text-secondary)',fontFamily:'monospace'}}>fmn-agrisense.vercel.app</span>
+          <button onClick={()=>{navigator.clipboard?.writeText('fmn-agrisense.vercel.app');setCopied(true);setTimeout(()=>setCopied(false),2000)}} style={{
+            background:copied?'#10b981':'var(--text-highlight)',
+            color:'white',
+            border:'none',
+            borderRadius:8,
+            padding:'6px 14px',
+            cursor:'pointer',
+            fontFamily:'var(--font-display)',
+            fontWeight:700,
+            fontSize:12,
+            transition:'background-color 0.2s'
+          }}>{copied?'✓ Copied!':'Copy'}</button>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:10}}>
-          {[['💬 WhatsApp','#25D366'],['📱 SMS','var(--blue)'],['📘 Facebook','#1877F2'],['✉️ Email','var(--accent)']].map(([l,bg])=>(
-            <button key={l} style={{padding:'12px 10px',background:bg,color:'white',border:'none',borderRadius:12,fontFamily:'var(--font)',fontWeight:700,fontSize:13,cursor:'pointer'}}>{l}</button>
+          {[
+            ['💬 WhatsApp','#25D366'],
+            ['📱 SMS','var(--text-highlight)'],
+            ['📘 Facebook','#1877F2'],
+            ['✉️ Email','var(--accent)']
+          ].map(([l,bg])=>(
+            <button key={l} style={{padding:'12px',background:bg,color:'white',border:'none',borderRadius:12,fontFamily:'var(--font-display)',fontWeight:700,fontSize:13,cursor:'pointer',boxShadow:'0 4px 10px rgba(0,0,0,0.15)'}}>{l}</button>
           ))}
         </div>
       </Modal>}
