@@ -1128,7 +1128,7 @@ function DealersScreen({ go }) {
 }
 
 // ── PROFILE ──────────────────────────────────────────────────────────────────
-function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTriggerSync }) {
+function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTriggerSync, onLogout }) {
   const [notif,setNotif] = useState(true)
   const [offline,setOffline] = useState(false)
   const [loc,setLoc] = useState(true)
@@ -1305,6 +1305,9 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
             </button>
           ))}
         </div>
+        <button onClick={onLogout} style={{width:'100%',padding:'14px',background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',borderRadius:12,color:'#ef4444',fontWeight:700,fontSize:14,cursor:'pointer',fontFamily:'var(--font-display)',marginTop:14}}>
+          Sign Out
+        </button>
         <div style={{textAlign:'center',fontSize:11,color:'var(--text-muted)',marginTop:20,lineHeight:1.8,fontWeight:500}}>
           FMN AgriSense  •  Version 1.0.0<br/>
           Built for FMN Innovation 5.0  •  March 2026
@@ -1592,6 +1595,7 @@ function AuthScreen() {
 // ── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [authLoading, setAuthLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [adminUsers, setAdminUsers] = useState([])
   const [adminScans, setAdminScans] = useState([])
@@ -1614,6 +1618,7 @@ export default function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session)
+      setAuthLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -1732,10 +1737,24 @@ export default function App() {
       case 'reminders': return <RemindersScreen {...p} reminders={reminders} onSaveReminder={handleSaveReminder} onDeleteReminder={handleDeleteReminder}/>
       case 'history':   return <HistoryScreen   {...p} scans={scans}/>
       case 'dealers':   return <DealersScreen   {...p}/>
-      case 'profile':   return <ProfileScreen   {...p} profile={profile} scans={scans} onSaveProfile={handleSaveProfile} syncStatus={syncStatus} onTriggerSync={handleTriggerSync}/>
+      case 'profile':   return <ProfileScreen   {...p} profile={profile} scans={scans} onSaveProfile={handleSaveProfile} syncStatus={syncStatus} onTriggerSync={handleTriggerSync} onLogout={handleLogout}/>
       default:          return <HomeScreen {...p} profile={profile} scans={scans} reminders={reminders}/>
     }
   }
+
+  if (authLoading) {
+    return (
+      <div className="app-shell" data-theme={theme}>
+        <div className="phone" style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <div style={{textAlign:'center'}}>
+            <div style={{fontSize:48,marginBottom:12}}>🌿</div>
+            <div style={{color:'var(--text-secondary)',fontSize:14}}>Loading...</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="app-shell" data-theme={theme}>
