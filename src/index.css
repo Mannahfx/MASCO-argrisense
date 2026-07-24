@@ -48,6 +48,22 @@
   --transition-smooth: 0.3s var(--spring);
 }
 
+[data-theme="light"] {
+  --bg-app: #f4f7f5;
+  --bg-screen: #ffffff;
+  --surface: rgba(0, 0, 0, 0.04);
+  --surface-hover: rgba(0, 0, 0, 0.08);
+  --card: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.08);
+  
+  --text-primary: #122119;
+  --text-secondary: #4a6755;
+  --text-muted: #85a290;
+  
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.08);
+}
+
 html, body, #root { 
   height: 100%; 
   font-family: var(--font-sans); 

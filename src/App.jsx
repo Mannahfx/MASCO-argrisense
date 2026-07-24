@@ -1435,6 +1435,7 @@ export default function App() {
   const [screen,  setScreen]  = useState('home')
   const [params,  setParams]  = useState({})
   const [analyzing, setAnalyzing] = useState(false)
+  const [theme, setTheme] = useState('dark')
 
   // Local-first synchronized states
   const [profile, setProfile] = useState(() => getLocalProfile())
@@ -1531,23 +1532,30 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-theme={theme}>
       <div className="phone">
         {/* Top app bar */}
         <div style={{
-          background: 'rgba(6, 17, 10, 0.95)',
+          background: 'var(--bg-app)',
           backdropFilter: 'blur(10px)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '14px 20px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          borderBottom: '1px solid var(--card-border)',
           flexShrink: 0
         }}>
           <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}>🌿 Cassava Doctor</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {syncStatus === 'syncing' && <span style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>🔄 Syncing</span>}
             {syncStatus === 'synced' && <span style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>☁️ Synced</span>}
+            
+            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} style={{
+              background: 'var(--surface)', border: '1px solid var(--card-border)', borderRadius: '50%',
+              width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'background 0.2s'
+            }}>
+              <span style={{fontSize: 14}}>{theme === 'dark' ? '☀️' : '🌙'}</span>
+            </button>
           </span>
         </div>
 
