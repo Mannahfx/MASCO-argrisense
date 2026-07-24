@@ -2107,10 +2107,16 @@ export default function App() {
     setTimeout(() => {
       setAnalyzing(false)
       // Save scan to local history and trigger sync
+      const defaultField = profile?.location || 'Unknown Field';
+      let inputField = window.prompt("What is the name of this field/farm?", defaultField);
+      if (!inputField || inputField.trim() === '') {
+        inputField = 'Unknown Field';
+      }
+
       const newScan = {
         id: 'scan_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
         diseaseId,
-        fieldName: 'North Field A',
+        fieldName: inputField.trim(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         confidence: confidence !== null ? confidence : Math.round(80 + Math.random() * 19),
         treated: false,
