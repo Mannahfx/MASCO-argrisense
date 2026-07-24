@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 export function getLocalProfile() {
   const data = localStorage.getItem('fmn_profile');
   return data ? JSON.parse(data) : {
-    full_name: 'Farmer',
+    full_name: '',
     phone: '',
     location: '',
     state: '',

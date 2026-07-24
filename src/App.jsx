@@ -201,7 +201,7 @@ function HomeScreen({ go, profile, scans, reminders }) {
       }}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <div>
-            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'Farmer'} 👋</div>
+            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'New Client'} 👋</div>
             <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>{profile.location || ''}  •  {profile.farm_size || profile.farmSize || ''}</div>
           </div>
           <button onClick={()=>go('profile')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:42,height:42,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'background-color 0.2s'}}>
@@ -1262,15 +1262,33 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
           {profile.avatar ? (
             <img src={profile.avatar} style={{width:'100%',height:'100%',objectFit:'cover'}} alt="Profile" />
           ) : (
-            <span>👨🏾‍🌾</span>
+            <span>👤</span>
           )}
+          
+          <div style={{
+            position:'absolute',
+            bottom: 0,
+            right: 0,
+            background: 'var(--primary)',
+            borderRadius: '50%',
+            width: 28,
+            height: 28,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+            border: '2px solid var(--surface)',
+            transform: 'translate(-2px, -2px)'
+          }}>
+            <Ic n="camera" s={14} c="white"/>
+          </div>
           <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display:'none'}} />
         </label>
-        <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.full_name || profile.name || 'Farmer'}</div>
+        <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.full_name || profile.name || 'New Client'}</div>
         <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:4,fontWeight:500}}>{profile.phone || ''}</div>
         <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>📍 {profile.location || ''}</div>
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:20,padding:'6px 14px',display:'inline-flex',alignItems:'center',gap:6,marginTop:12}}>
-          <Ic n="star" s={14} c="#fbbf24"/><span style={{color:'var(--text-secondary)',fontSize:11,fontWeight:750,letterSpacing:0.3}}>FMN Farmer  •  Since Jan 2025</span>
+          <Ic n="star" s={14} c="#fbbf24"/><span style={{color:'var(--text-secondary)',fontSize:11,fontWeight:750,letterSpacing:0.3}}>FMN User  •  Since Jan 2025</span>
         </div>
       </div>
       <div style={{
@@ -1677,8 +1695,27 @@ function AdminProfileTab({ profile, onSaveProfile, onLogout }) {
           {profile.avatar ? (
             <img src={profile.avatar} style={{width:'100%',height:'100%',objectFit:'cover'}} alt="Admin Profile" />
           ) : (
-            <span>👨🏾‍💻</span>
+            <span>👤</span>
           )}
+          
+          <div style={{
+            position:'absolute',
+            bottom: 0,
+            right: 0,
+            background: 'var(--primary)',
+            borderRadius: '50%',
+            width: 28,
+            height: 28,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+            border: '2px solid var(--surface)',
+            transform: 'translate(-2px, -2px)'
+          }}>
+            <Ic n="camera" s={14} c="white"/>
+          </div>
+
           <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display:'none'}} />
         </label>
         <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:900,fontFamily:'var(--font-display)'}}>{profile.full_name || 'IT Admin'}</div>
