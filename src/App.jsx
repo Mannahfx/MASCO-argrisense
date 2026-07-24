@@ -201,7 +201,7 @@ function HomeScreen({ go, profile, scans, reminders }) {
       }}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <div>
-            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'New Client'} 👋</div>
+            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'New Client'}</div>
             <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>{profile.location || ''}  •  {profile.farm_size || profile.farmSize || ''}</div>
           </div>
           <button onClick={()=>go('profile')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:42,height:42,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'background-color 0.2s'}}>
@@ -221,8 +221,8 @@ function HomeScreen({ go, profile, scans, reminders }) {
         )}
 
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:14,padding:12,marginTop:16,display:'flex',alignItems:'center',gap:10}}>
-          <Ic n="sun" s={18} c="#FDD835"/>
-          <span style={{color:'var(--text-secondary)',fontSize:12,fontWeight:600}}>32°C  •  {profile.state || 'Ogun State'}  •  Low disease risk today</span>
+          <Ic n="location" s={18} c="#FDD835"/>
+          <span style={{color:'var(--text-secondary)',fontSize:12,fontWeight:600}}>{profile.farm_name || profile.farmName || 'Farm Name'}  •  {profile.location || 'Location'}</span>
         </div>
       </div>
 
@@ -1026,7 +1026,7 @@ function HistoryScreen({ go, scans }) {
               <div style={{width:50,height:50,borderRadius:14,background:d.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,flexShrink:0}}>{d.icon}</div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:700,fontSize:14,color:'var(--text-primary)'}}>{d.name}</div>
-                <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4}}>📍 {item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
+                <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4}}>{item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
                 <div style={{display:'flex',gap:6,marginTop:8}}>
                   <span style={{
                     background:d.severity==='None'?'rgba(16,185,129,0.15)':d.sevBg,
@@ -1096,7 +1096,7 @@ function DealersScreen({ go }) {
           </button>
         ))}
         <div className="card" style={{background:'rgba(10,17,40,0.85)',backdropFilter:'blur(10px)',borderRadius:12,padding:'8px 14px',textAlign:'center',boxShadow: 'var(--shadow-sm)'}}>
-          <div style={{fontSize:13,fontWeight:800,color:'var(--text-highlight)',fontFamily:'var(--font-display)'}}>📍 Your Location</div>
+          <div style={{fontSize:13,fontWeight:800,color:'var(--text-highlight)',fontFamily:'var(--font-display)'}}>Your Location</div>
           <div style={{fontSize:11,color:'var(--text-secondary)',fontWeight:500,marginTop:2}}>Ogun State, FUNAAB</div>
         </div>
       </div>
@@ -1113,7 +1113,7 @@ function DealersScreen({ go }) {
                 <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)'}}>{d.name}</div>
                 <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4,fontWeight:500}}>{d.address}</div>
                 <div style={{display:'flex',alignItems:'center',gap:8,marginTop:6}}>
-                  <span style={{fontSize:12,fontWeight:700,color:'var(--text-highlight)'}}>📍 {d.distance}</span>
+                  <span style={{fontSize:12,fontWeight:700,color:'var(--text-highlight)'}}>{d.distance}</span>
                   <span style={{
                     background:d.inStock?'rgba(16,185,129,0.15)':'rgba(255,255,255,0.06)',
                     color:d.inStock?'#10b981':'var(--text-muted)',
@@ -1286,7 +1286,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         </label>
         <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.full_name || profile.name || 'New Client'}</div>
         <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:4,fontWeight:500}}>{profile.phone || ''}</div>
-        <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>📍 {profile.location || ''}</div>
+        <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>{profile.location || ''}</div>
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:20,padding:'6px 14px',display:'inline-flex',alignItems:'center',gap:6,marginTop:12}}>
           <Ic n="star" s={14} c="#fbbf24"/><span style={{color:'var(--text-secondary)',fontSize:11,fontWeight:750,letterSpacing:0.3}}>FMN User  •  Since Jan 2025</span>
         </div>
@@ -1320,6 +1320,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
           </div>
           {[
             ['Name',profile.full_name || profile.name || ''],
+            ['Farm Name',profile.farm_name || profile.farmName || ''],
             ['Phone',profile.phone || ''],
             ['State',profile.state || ''],
             ['LGA',profile.lga || ''],
@@ -1378,6 +1379,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
 
       {modal==='edit'&&<Modal title="✏️ Edit Profile" onClose={()=>setModal(null)}>
         <Field label="Full Name" field="full_name" placeholder="Your full name"/>
+        <Field label="Farm Name" field="farm_name" placeholder="e.g. Dominion Farms"/>
         <Field label="Phone" field="phone" placeholder="+234 ..."/>
         <Field label="Location" field="location" placeholder="e.g. Ogun State, FUNAAB"/>
         <Field label="State" field="state" placeholder="e.g. Ogun State"/>
