@@ -251,9 +251,15 @@ export function initSyncEngine(onStateUpdated, onSyncStatusChanged) {
 
 // --- Admin Actions ---
 export async function fetchAllUsersAndStats() {
+  const debug = [];
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return { users: [], scans: [] };
+    if (!user) {
+      debug.push('No authenticated user found');
+      return { users: [], scans: [], debug };
+    }
+    debug.push('Logged in as: ' + (user.email || user.id));
+    debug.push('Role in metadata: ' + (user.user_metadata?.role || 'none'));
 
     // Ensure the current admin has a profile row (in case trigger never fired)
     const { data: existingProfile } = await supabase
@@ -269,21 +275,27 @@ export async function fetchAllUsersAndStats() {
         full_name: user.user_metadata?.full_name || user.email,
         role: metaRole
       });
+      debug.push('Created missing admin profile row');
     }
 
     const { data: users, error: err1 } = await supabase.from('profiles').select('*');
     const { data: scans, error: err2 } = await supabase.from('scans').select('*');
 
     if (err1) {
-      console.error('Profiles fetch error (likely RLS):', err1.message, err1.code);
-    }
-    if (err2) {
-      console.error('Scans fetch error (likely RLS):', err2.message, err2.code);
+      debug.push('❌ PROFILES ERROR: ' + err1.message + ' (code: ' + err1.code + ')');
+    } else {
+      debug.push('✅ Profiles loaded: ' + (users?.length || 0) + ' rows');
     }
 
-    return { users: users || [], scans: scans || [] };
+    if (err2) {
+      debug.push('❌ SCANS ERROR: ' + err2.message + ' (code: ' + err2.code + ')');
+    } else {
+      debug.push('✅ Scans loaded: ' + (scans?.length || 0) + ' rows');
+    }
+
+    return { users: users || [], scans: scans || [], debug };
   } catch (err) {
-    console.error('Failed to fetch admin data:', err);
-    return { users: [], scans: [] };
+    debug.push('❌ FATAL: ' + err.message);
+    return { users: [], scans: [], debug };
   }
 }

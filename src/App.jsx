@@ -1497,7 +1497,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
   )
 }
 
-function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh }) {
+function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh, adminDebug }) {
   const [screen, setScreen] = useState('dashboard');
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
@@ -1520,7 +1520,7 @@ function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh })
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%', background:'var(--bg-app)'}}>
       <div style={{flex:1, overflowY:'auto', paddingBottom:80}}>
-        {screen === 'dashboard' && <AdminDashboardTab users={users} scans={scans} onRefresh={onRefresh} lastRefresh={lastRefresh} />}
+        {screen === 'dashboard' && <AdminDashboardTab users={users} scans={scans} onRefresh={onRefresh} lastRefresh={lastRefresh} adminDebug={adminDebug} />}
         {screen === 'logs' && <AdminLogsTab users={users} scans={scans} />}
         {screen === 'profile' && <AdminProfileTab profile={profile} onSaveProfile={onSaveProfile} onLogout={onLogout} />}
       </div>
@@ -1545,7 +1545,7 @@ function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh })
   )
 }
 
-function AdminDashboardTab({ users, scans, onRefresh, lastRefresh }) {
+function AdminDashboardTab({ users, scans, onRefresh, lastRefresh, adminDebug }) {
   const [refreshing, setRefreshing] = useState(false);
 
   async function handleRefresh() {
@@ -1618,6 +1618,20 @@ function AdminDashboardTab({ users, scans, onRefresh, lastRefresh }) {
           </LineChart>
         </ResponsiveContainer>
       </div>
+
+      {/* Debug Panel — shows what Supabase returned */}
+      {adminDebug?.length > 0 && (
+        <div style={{marginTop:24}}>
+          <div style={{fontSize:14, fontWeight:800, fontFamily:'var(--font-display)', marginBottom:8, color:'var(--text-muted)'}}>🔧 System Diagnostics</div>
+          <div className="card" style={{padding:16, fontSize:12, fontFamily:'monospace', color:'var(--text-secondary)'}}>
+            {adminDebug.map((line, i) => (
+              <div key={i} style={{padding:'4px 0', borderBottom: i < adminDebug.length - 1 ? '1px solid var(--card-border)' : 'none'}}>
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -1875,6 +1889,7 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [adminUsers, setAdminUsers] = useState([])
   const [adminScans, setAdminScans] = useState([])
+  const [adminDebug, setAdminDebug] = useState([])
 
   const [screen,  setScreen]  = useState('home')
   const [params,  setParams]  = useState({})
@@ -1906,16 +1921,18 @@ export default function App() {
           setProfile(prof)
           if (prof.role === 'admin' || isMetadataAdmin) {
             setIsAdmin(true)
-            fetchAllUsersAndStats().then(({users, scans}) => {
+            fetchAllUsersAndStats().then(({users, scans, debug}) => {
               setAdminUsers(users)
               setAdminScans(scans)
+              setAdminDebug(debug || [])
             })
           }
         } else if (isMetadataAdmin) {
            setIsAdmin(true)
-           fetchAllUsersAndStats().then(({users, scans}) => {
+           fetchAllUsersAndStats().then(({users, scans, debug}) => {
              setAdminUsers(users)
              setAdminScans(scans)
+             setAdminDebug(debug || [])
            })
         }
       }
@@ -1935,9 +1952,10 @@ export default function App() {
               setProfile(newState.profile)
               if (newState.profile.role === 'admin' || isMetadataAdmin) {
                 setIsAdmin(true)
-                fetchAllUsersAndStats().then(({users, scans}) => {
+                fetchAllUsersAndStats().then(({users, scans, debug}) => {
                   setAdminUsers(users)
                   setAdminScans(scans)
+                  setAdminDebug(debug || [])
                 })
               } else {
                 setIsAdmin(false)
@@ -2086,7 +2104,21 @@ export default function App() {
     return (
       <div className="app-shell" data-theme={theme}>
         <div className="phone" style={{width: '100%', maxWidth: 'none', height: '100vh', borderRadius: 0}}>
-          <AdminApp users={adminUsers} scans={adminScans} profile={profile} onSaveProfile={handleSaveProfile} onLogout={handleLogout} />
+          <AdminApp 
+            users={adminUsers} 
+            scans={adminScans} 
+            profile={profile} 
+            onSaveProfile={handleSaveProfile} 
+            onLogout={handleLogout}
+            adminDebug={adminDebug}
+            onRefresh={() => {
+              fetchAllUsersAndStats().then(({users, scans, debug}) => {
+                setAdminUsers(users)
+                setAdminScans(scans)
+                setAdminDebug(debug || [])
+              })
+            }}
+          />
         </div>
       </div>
     )
