@@ -177,8 +177,19 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
     // 3. Process Pending Upserts
     const scansUpsert = getPendingQueue('fmn_scans_pending_upsert');
     if (scansUpsert.length > 0) {
-      await supabase.from('scans').upsert(scansUpsert.map(s => ({ ...s, user_id: userId })));
-      localStorage.removeItem('fmn_scans_pending_upsert');
+      const { error } = await supabase.from('scans').upsert(scansUpsert.map(s => ({
+        id: s.id,
+        user_id: userId,
+        disease_id: s.diseaseId,
+        field_name: s.fieldName,
+        date: s.date,
+        confidence: s.confidence,
+        treated: s.treated,
+        created_at: new Date(s.createdAt).toISOString(),
+        updated_at: new Date(s.updatedAt).toISOString()
+      })));
+      if (error) console.error('Failed to upsert scans:', error);
+      else localStorage.removeItem('fmn_scans_pending_upsert');
     }
 
     const remindersUpsert = getPendingQueue('fmn_reminders_pending_upsert');
@@ -202,7 +213,16 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
         role: user.user_metadata?.role || 'client'
       };
     }
-    const scansData = scanRes.data || [];
+    const scansData = (scanRes.data || []).map(s => ({
+      id: s.id,
+      diseaseId: s.disease_id,
+      fieldName: s.field_name,
+      date: s.date,
+      confidence: s.confidence,
+      treated: s.treated,
+      createdAt: new Date(s.created_at).getTime(),
+      updatedAt: new Date(s.updated_at).getTime()
+    }));
     const remindersData = remRes.data || [];
 
     // 5. Save to local storage
@@ -279,7 +299,18 @@ export async function fetchAllUsersAndStats() {
     }
 
     const { data: users, error: err1 } = await supabase.from('profiles').select('*');
-    const { data: scans, error: err2 } = await supabase.from('scans').select('*');
+    const { data: rawScans, error: err2 } = await supabase.from('scans').select('*');
+    const scans = (rawScans || []).map(s => ({
+      id: s.id,
+      diseaseId: s.disease_id,
+      fieldName: s.field_name,
+      date: s.date,
+      confidence: s.confidence,
+      treated: s.treated,
+      createdAt: new Date(s.created_at).getTime(),
+      updatedAt: new Date(s.updated_at).getTime(),
+      user_id: s.user_id
+    }));
 
     if (err1) {
       debug.push('❌ PROFILES ERROR: ' + err1.message + ' (code: ' + err1.code + ')');
