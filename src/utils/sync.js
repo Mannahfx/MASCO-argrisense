@@ -191,9 +191,8 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
         id: s.id,
         user_id: userId,
         disease_id: s.diseaseId,
-        field_name: s.fieldName,
+        field: s.fieldName || s.field,
         date: s.date,
-        confidence: s.confidence,
         treated: s.treated,
         created_at: new Date(s.createdAt).toISOString(),
         updated_at: new Date(s.updatedAt).toISOString()
@@ -226,9 +225,8 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
     let scansData = (scanRes.data || []).map(s => ({
       id: s.id,
       diseaseId: s.disease_id,
-      fieldName: s.field_name,
+      fieldName: s.field,
       date: s.date,
-      confidence: s.confidence,
       treated: s.treated,
       createdAt: new Date(s.created_at).getTime(),
       updatedAt: new Date(s.updated_at).getTime()
@@ -330,9 +328,8 @@ export async function fetchAllUsersAndStats() {
     const scans = (rawScans || []).map(s => ({
       id: s.id,
       diseaseId: s.disease_id,
-      fieldName: s.field_name,
+      fieldName: s.field,
       date: s.date,
-      confidence: s.confidence,
       treated: s.treated,
       createdAt: new Date(s.created_at).getTime(),
       updatedAt: new Date(s.updated_at).getTime(),
