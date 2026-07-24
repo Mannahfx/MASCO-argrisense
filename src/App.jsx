@@ -192,9 +192,9 @@ function HomeScreen({ go, profile, scans, reminders }) {
   return (
     <div className="screen fade-in">
       <div style={{
-        background: 'linear-gradient(180deg, rgba(13, 22, 49, 0.9) 0%, rgba(10, 17, 40, 0.4) 100%)',
+        background: 'var(--header-grad)',
         padding: '24px 20px 24px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+        borderBottom: '1px solid var(--card-border)'
       }}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <div>
