@@ -1508,12 +1508,18 @@ function AuthScreen() {
         if (error) throw error
       } else {
         if (!fullName.trim()) throw new Error("Full name is required")
-        const { error } = await supabase.auth.signUp({ 
+        const { data, error } = await supabase.auth.signUp({ 
           email, 
           password,
           options: { data: { full_name: fullName, admin_code: adminCode } }
         })
         if (error) throw error
+        
+        // If email confirmation is required by Supabase, session will be null
+        if (!data.session) {
+          setError("Registration successful! Please check your email inbox to confirm your account.")
+          return
+        }
       }
     } catch (err) {
       setError(err.message)
