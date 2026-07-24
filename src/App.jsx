@@ -1760,10 +1760,14 @@ function AuthScreen() {
         if (error) throw error
       } else {
         if (!fullName.trim()) throw new Error("Full name is required")
+        const adminCodes = ['IT-ADMIN-A923', 'IT-ADMIN-B441', 'IT-ADMIN-C719', 'IT-ADMIN-D882', 'IT-ADMIN-E395'];
+        const metadataAdminCode = adminCode?.trim()?.toUpperCase();
+        const isMetadataAdmin = adminCodes.includes(metadataAdminCode);
+        
         const { data, error } = await supabase.auth.signUp({ 
           email, 
           password,
-          options: { data: { full_name: fullName, admin_code: adminCode } }
+          options: { data: { full_name: fullName, admin_code: adminCode, role: isMetadataAdmin ? 'admin' : 'client' } }
         })
         if (error) throw error
         

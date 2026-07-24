@@ -11,7 +11,7 @@ export function getLocalProfile() {
     lga: '',
     farm_size: '',
     crops: '',
-    role: 'user',
+    role: 'client',
     updated_at: new Date().toISOString()
   };
 }
