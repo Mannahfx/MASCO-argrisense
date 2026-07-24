@@ -194,7 +194,14 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
       supabase.from('reminders').select('*').eq('user_id', userId).order('created_at', { ascending: false })
     ]);
 
-    const profileData = profRes.data || getLocalProfile();
+    let profileData = profRes.data;
+    if (!profileData) {
+      profileData = { 
+        ...getLocalProfile(), 
+        full_name: user.user_metadata?.full_name || '',
+        role: user.user_metadata?.role || 'client'
+      };
+    }
     const scansData = scanRes.data || [];
     const remindersData = remRes.data || [];
 
