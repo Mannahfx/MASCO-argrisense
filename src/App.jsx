@@ -200,14 +200,25 @@ function HomeScreen({ go, profile, scans, reminders }) {
       }}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <div>
-            <div style={{color:'var(--text-secondary)',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:1.2}}>Good morning 👋</div>
-            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',marginTop:4,letterSpacing:-0.5}}>{profile.name}</div>
-            <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>{profile.location}  •  {profile.farmSize}</div>
+            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'Farmer'} 👋</div>
+            <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>{profile.location || ''}  •  {profile.farm_size || profile.farmSize || ''}</div>
           </div>
           <button onClick={()=>go('profile')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:42,height:42,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'background-color 0.2s'}}>
             <Ic n="bell" s={20} c="var(--text-primary)"/>
           </button>
         </div>
+
+        {/* Profile completion reminder */}
+        {(!profile.phone || !profile.location || !profile.state || !(profile.farm_size || profile.farmSize)) && (
+          <button onClick={()=>go('profile')} style={{width:'100%',background:'rgba(251,191,36,0.1)',border:'1px solid rgba(251,191,36,0.3)',borderRadius:12,padding:'10px 14px',marginTop:14,display:'flex',alignItems:'center',gap:10,cursor:'pointer',textAlign:'left'}}>
+            <span style={{fontSize:20}}>⚠️</span>
+            <div>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>Complete your profile</div>
+              <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>Add your phone, location & farm size for better recommendations</div>
+            </div>
+          </button>
+        )}
+
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:14,padding:12,marginTop:16,display:'flex',alignItems:'center',gap:10}}>
           <Ic n="sun" s={18} c="#FDD835"/>
           <span style={{color:'var(--text-secondary)',fontSize:12,fontWeight:600}}>32°C  •  {profile.state || 'Ogun State'}  •  Low disease risk today</span>
@@ -1616,8 +1627,22 @@ export default function App() {
   }, [theme])
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setIsAuthenticated(!!session)
+      if (session) {
+        // Check role on initial load
+        const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).single()
+        if (prof) {
+          setProfile(prof)
+          if (prof.role === 'admin') {
+            setIsAdmin(true)
+            fetchAllUsersAndStats().then(({users, scans}) => {
+              setAdminUsers(users)
+              setAdminScans(scans)
+            })
+          }
+        }
+      }
       setAuthLoading(false)
     })
 
