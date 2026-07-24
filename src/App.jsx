@@ -1564,7 +1564,10 @@ function AdminDashboardTab({ users, scans, onRefresh, lastRefresh, adminDebug })
     const d = new Date();
     d.setDate(d.getDate() - i);
     const dateStr = d.toISOString().split('T')[0];
-    const scansOnDate = scans?.filter(s => s.created_at.startsWith(dateStr))?.length || 0;
+    const scansOnDate = scans?.filter(s => {
+      if (!s.createdAt) return false;
+      return new Date(s.createdAt).toISOString().split('T')[0] === dateStr;
+    })?.length || 0;
     
     // Add some random baseline activity so the graph isn't flat if there's no data
     const baseline = Math.floor(Math.random() * 5) + 2; 
@@ -1643,9 +1646,9 @@ function AdminLogsTab({ users, scans }) {
     return {
       id: scan.id,
       user: user?.full_name || 'Unknown',
-      action: `Scanned ${scan.field}`,
-      details: scan.disease_id === 'healthy' ? 'Status: Healthy' : 'Status: Infected',
-      time: scan.created_at,
+      action: `Scanned ${scan.fieldName || 'Field'}`,
+      details: scan.diseaseId === 'healthy' ? 'Status: Healthy' : 'Status: Infected',
+      time: new Date(scan.createdAt || Date.now()).toISOString(),
       type: 'scan'
     }
   }) || [];
