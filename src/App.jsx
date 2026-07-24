@@ -1643,11 +1643,14 @@ function AdminLogsTab({ users, scans }) {
   // Generate mock logs by combining real scans with mocked login events
   const logs = scans?.slice(0, 20).map(scan => {
     const user = users?.find(u => u.id === scan.user_id)
+    const d = DISEASES.find(x => x.id === scan.diseaseId) || DISEASES[4]
     return {
       id: scan.id,
       user: user?.full_name || 'Unknown',
       action: `Scanned ${scan.fieldName || 'Field'}`,
-      details: scan.diseaseId === 'healthy' ? 'Status: Healthy' : 'Status: Infected',
+      details: scan.diseaseId === 'healthy' 
+        ? 'Status: Healthy' 
+        : `Status: Infected (${d.name}) • ${scan.treated ? 'Treated' : 'Not treated'}`,
       time: new Date(scan.createdAt || Date.now()).toISOString(),
       type: 'scan'
     }
