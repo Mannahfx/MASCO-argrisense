@@ -1499,6 +1499,17 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
 
 function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh }) {
   const [screen, setScreen] = useState('dashboard');
+  const [lastRefresh, setLastRefresh] = useState(new Date());
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    onRefresh?.();
+    const interval = setInterval(() => {
+      onRefresh?.();
+      setLastRefresh(new Date());
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
   
   const NAV = [
     {id:'dashboard', label:'Dashboard', icon:'home'},
@@ -1509,7 +1520,7 @@ function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh })
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%', background:'var(--bg-app)'}}>
       <div style={{flex:1, overflowY:'auto', paddingBottom:80}}>
-        {screen === 'dashboard' && <AdminDashboardTab users={users} scans={scans} onRefresh={onRefresh} />}
+        {screen === 'dashboard' && <AdminDashboardTab users={users} scans={scans} onRefresh={onRefresh} lastRefresh={lastRefresh} />}
         {screen === 'logs' && <AdminLogsTab users={users} scans={scans} />}
         {screen === 'profile' && <AdminProfileTab profile={profile} onSaveProfile={onSaveProfile} onLogout={onLogout} />}
       </div>
@@ -1534,7 +1545,14 @@ function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh })
   )
 }
 
-function AdminDashboardTab({ users, scans, onRefresh }) {
+function AdminDashboardTab({ users, scans, onRefresh, lastRefresh }) {
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    await onRefresh?.();
+    setTimeout(() => setRefreshing(false), 1000);
+  }
   const totalUsers = users?.filter(u => u.role === 'user' || u.role === 'client')?.length || 0;
   const totalScans = scans?.length || 0;
   const treatedScans = scans?.filter(s => s.treated)?.length || 0;
@@ -1562,10 +1580,10 @@ function AdminDashboardTab({ users, scans, onRefresh }) {
       <div style={{marginBottom:24, display:'flex', justifyContent:'space-between', alignItems:'center'}}>
         <div>
           <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>IT Admin Panel</div>
-          <div style={{color:'var(--text-muted)', fontSize:13}}>System Monitoring & Metrics</div>
+          <div style={{color:'var(--text-muted)', fontSize:12}}>Last updated: {lastRefresh?.toLocaleTimeString() || 'now'}</div>
         </div>
-        <button onClick={onRefresh} className="btn btn-outline" style={{padding:'6px 12px', fontSize:12, borderRadius:8, display:'flex', gap:6, alignItems:'center'}}>
-          <Ic n="scan" s={14} c="var(--text-primary)"/> Refresh
+        <button onClick={handleRefresh} className="btn btn-outline" style={{padding:'8px 14px', fontSize:12, borderRadius:8, display:'flex', gap:6, alignItems:'center', opacity: refreshing ? 0.6 : 1}}>
+          <Ic n="scan" s={14} c="var(--text-primary)"/> {refreshing ? 'Refreshing...' : 'Refresh'}
         </button>
       </div>
 
