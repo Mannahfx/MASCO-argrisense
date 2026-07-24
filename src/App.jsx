@@ -1535,7 +1535,7 @@ function AdminApp({ users, scans, profile, onLogout, onSaveProfile }) {
 }
 
 function AdminDashboardTab({ users, scans }) {
-  const totalUsers = users?.length || 0;
+  const totalUsers = users?.filter(u => u.role === 'user' || u.role === 'client')?.length || 0;
   const totalScans = scans?.length || 0;
   const treatedScans = scans?.filter(s => s.treated)?.length || 0;
   const aiAccuracy = "94.2%"; 
