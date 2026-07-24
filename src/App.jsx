@@ -1222,9 +1222,9 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
           border:'2.5px solid var(--text-highlight)',
           boxShadow:'0 0 20px rgba(77,138,255,0.2)'
         }}>👨🏾‍🌾</div>
-        <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.name}</div>
-        <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:4,fontWeight:500}}>{profile.phone}</div>
-        <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>📍 {profile.location}</div>
+        <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.full_name || profile.name || 'Farmer'}</div>
+        <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:4,fontWeight:500}}>{profile.phone || ''}</div>
+        <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>📍 {profile.location || ''}</div>
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:20,padding:'6px 14px',display:'inline-flex',alignItems:'center',gap:6,marginTop:12}}>
           <Ic n="star" s={14} c="#fbbf24"/><span style={{color:'var(--text-secondary)',fontSize:11,fontWeight:750,letterSpacing:0.3}}>FMN Farmer  •  Since Jan 2025</span>
         </div>
@@ -1240,7 +1240,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         {[
           [scans.length,'Scans','var(--text-highlight)'],
           [scans.filter(h=>h.treated).length,'Treated','#a855f7'],
-          [profile.farmSize.replace(' Hectares','ha'),'Farm','#fbbf24']
+          [(profile.farm_size || profile.farmSize || '0ha').replace(' Hectares','ha'),'Farm','#fbbf24']
         ].map(([v,l,c])=>(
           <div key={l} className="card" style={{textAlign:'center',padding:'12px 6px'}}>
             <div style={{fontSize:18,fontWeight:800,color:c,fontFamily:'var(--font-display)'}}>{v}</div>
@@ -1257,12 +1257,12 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
             </button>
           </div>
           {[
-            ['Name',profile.name],
-            ['Phone',profile.phone],
-            ['State',profile.state],
-            ['LGA',profile.lga],
-            ['Farm Size',profile.farmSize],
-            ['Crops',profile.crops]
+            ['Name',profile.full_name || profile.name || ''],
+            ['Phone',profile.phone || ''],
+            ['State',profile.state || ''],
+            ['LGA',profile.lga || ''],
+            ['Farm Size',profile.farm_size || profile.farmSize || ''],
+            ['Crops',profile.crops || '']
           ].map(([l,v])=>(
             <div key={l} style={{display:'flex',alignItems:'center',padding:'10px 0',borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
               <span style={{flex:1,fontSize:13,color:'var(--text-secondary)',fontWeight:500}}>{l}</span>
@@ -1312,12 +1312,12 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
       </div>
 
       {modal==='edit'&&<Modal title="✏️ Edit Profile" onClose={()=>setModal(null)}>
-        <Field label="Full Name" field="name" placeholder="Your full name"/>
+        <Field label="Full Name" field="full_name" placeholder="Your full name"/>
         <Field label="Phone" field="phone" placeholder="+234 ..."/>
         <Field label="Location" field="location" placeholder="e.g. Ogun State, FUNAAB"/>
         <Field label="State" field="state" placeholder="e.g. Ogun State"/>
         <Field label="LGA" field="lga" placeholder="e.g. Abeokuta South"/>
-        <Field label="Farm Size" field="farmSize" placeholder="e.g. 3.5 Hectares"/>
+        <Field label="Farm Size" field="farm_size" placeholder="e.g. 3.5 Hectares"/>
         <Field label="Crops" field="crops" placeholder="e.g. Cassava, Maize"/>
         <button onClick={()=>{onSaveProfile(form);setModal(null)}} className="btn btn-primary" style={{width:'100%',marginTop:4,borderRadius:12}}>Save Changes</button>
       </Modal>}
@@ -1748,7 +1748,7 @@ export default function App() {
               <span style={{fontSize: 14}}>{theme === 'dark' ? '☀️' : '🌙'}</span>
             </button>
           </div>
-          <AuthScreen onLogin={handleLogin} />
+          <AuthScreen />
         </div>
       </div>
     )
