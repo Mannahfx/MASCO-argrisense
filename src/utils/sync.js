@@ -151,6 +151,16 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
 
     const userId = user.id;
 
+    // 0. Ensure user profile exists to prevent Foreign Key errors when saving scans
+    const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', userId).single();
+    if (!existingProfile) {
+      await supabase.from('profiles').upsert({
+        id: userId,
+        full_name: user.user_metadata?.full_name || user.email,
+        role: user.user_metadata?.role || 'client'
+      });
+    }
+
     // 1. Process Profile Pending Update
     const profilePending = localStorage.getItem('fmn_profile_pending') === 'true';
     if (profilePending) {
@@ -213,7 +223,7 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
         role: user.user_metadata?.role || 'client'
       };
     }
-    const scansData = (scanRes.data || []).map(s => ({
+    let scansData = (scanRes.data || []).map(s => ({
       id: s.id,
       diseaseId: s.disease_id,
       fieldName: s.field_name,
@@ -223,7 +233,24 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
       createdAt: new Date(s.created_at).getTime(),
       updatedAt: new Date(s.updated_at).getTime()
     }));
-    const remindersData = remRes.data || [];
+    
+    // Prevent UI data loss: if there are pending local scans that failed to upload, merge them in
+    const pendingScans = getPendingQueue('fmn_scans_pending_upsert');
+    if (pendingScans.length > 0) {
+      const pendingMap = new Map(pendingScans.map(s => [s.id, s]));
+      const serverOnlyScans = scansData.filter(s => !pendingMap.has(s.id));
+      scansData = [...pendingScans, ...serverOnlyScans];
+      // sort by createdAt desc
+      scansData.sort((a, b) => b.createdAt - a.createdAt);
+    }
+    let remindersData = remRes.data || [];
+    const pendingReminders = getPendingQueue('fmn_reminders_pending_upsert');
+    if (pendingReminders.length > 0) {
+      const pendingMap = new Map(pendingReminders.map(r => [r.id, r]));
+      const serverOnlyReminders = remindersData.filter(r => !pendingMap.has(r.id));
+      remindersData = [...pendingReminders, ...serverOnlyReminders];
+      remindersData.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
 
     // 5. Save to local storage
     localStorage.setItem('fmn_profile', JSON.stringify(profileData));
