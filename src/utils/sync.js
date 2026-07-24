@@ -252,12 +252,38 @@ export function initSyncEngine(onStateUpdated, onSyncStatusChanged) {
 // --- Admin Actions ---
 export async function fetchAllUsersAndStats() {
   try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { users: [], scans: [] };
+
+    // Ensure the current admin has a profile row (in case trigger never fired)
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', user.id)
+      .single();
+
+    if (!existingProfile) {
+      const metaRole = user.user_metadata?.role || 'admin';
+      await supabase.from('profiles').upsert({
+        id: user.id,
+        full_name: user.user_metadata?.full_name || user.email,
+        role: metaRole
+      });
+    }
+
     const { data: users, error: err1 } = await supabase.from('profiles').select('*');
     const { data: scans, error: err2 } = await supabase.from('scans').select('*');
-    if (err1 || err2) throw err1 || err2;
-    return { users, scans };
+
+    if (err1) {
+      console.error('Profiles fetch error (likely RLS):', err1.message, err1.code);
+    }
+    if (err2) {
+      console.error('Scans fetch error (likely RLS):', err2.message, err2.code);
+    }
+
+    return { users: users || [], scans: scans || [] };
   } catch (err) {
-    console.error('Failed to fetch admin data', err);
+    console.error('Failed to fetch admin data:', err);
     return { users: [], scans: [] };
   }
 }
