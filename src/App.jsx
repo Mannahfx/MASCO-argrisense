@@ -1640,6 +1640,8 @@ function AdminDashboardTab({ users, scans, onRefresh, lastRefresh, adminDebug })
 }
 
 function AdminLogsTab({ users, scans }) {
+  const [selectedUser, setSelectedUser] = useState('All');
+
   // Generate mock logs by combining real scans with mocked login events
   const logs = scans?.slice(0, 20).map(scan => {
     const user = users?.find(u => u.id === scan.user_id)
@@ -1677,13 +1679,45 @@ function AdminLogsTab({ users, scans }) {
     logs.sort((a,b) => new Date(b.time) - new Date(a.time));
   }
 
+  const filteredLogs = selectedUser === 'All' 
+    ? logs 
+    : logs.filter(log => log.user_id === selectedUser || log.user === selectedUser);
+
+  // Extract unique clients who have logs
+  const clientsWithLogs = Array.from(new Set(logs.map(l => l.user)));
+
   return (
     <div className="screen fade-in" style={{padding:20}}>
-      <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)', marginBottom:8}}>System Logs</div>
-      <div style={{color:'var(--text-muted)', fontSize:13, marginBottom:24}}>Real-time client monitoring and events</div>
+      <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8}}>
+        <div>
+          <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>System Logs</div>
+          <div style={{color:'var(--text-muted)', fontSize:13, marginTop: 4}}>Real-time client monitoring and events</div>
+        </div>
+        <select 
+          value={selectedUser} 
+          onChange={(e) => setSelectedUser(e.target.value)}
+          style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--card-border)',
+            color: 'var(--text-primary)',
+            padding: '8px 12px',
+            borderRadius: 8,
+            fontSize: 12,
+            outline: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          <option value="All">All Clients (Overall)</option>
+          {clientsWithLogs.map(clientName => (
+            <option key={clientName} value={clientName}>{clientName}</option>
+          ))}
+        </select>
+      </div>
 
-      <div className="card" style={{overflow:'hidden'}}>
-        {logs.map((log, i) => (
+      <div className="card" style={{overflow:'hidden', marginTop: 24}}>
+        {filteredLogs.length === 0 ? (
+          <div style={{padding: 20, textAlign:'center', color:'var(--text-muted)', fontSize: 13}}>No activity found for this client.</div>
+        ) : filteredLogs.map((log, i) => (
           <div key={log.id} style={{padding:16, borderBottom: i < logs.length - 1 ? '1px solid var(--card-border)' : 'none', display:'flex', gap:12, alignItems:'center'}}>
             <div style={{width:36, height:36, borderRadius:'50%', background: log.type === 'scan' ? 'rgba(16,185,129,0.1)' : log.type === 'login' ? 'rgba(59,130,246,0.1)' : 'rgba(245,158,11,0.1)', display:'flex', alignItems:'center', justifyContent:'center'}}>
               <span style={{fontSize:16}}>{log.type === 'scan' ? '🌿' : log.type === 'login' ? '📱' : '⚙️'}</span>
