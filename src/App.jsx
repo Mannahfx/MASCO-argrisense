@@ -10,8 +10,10 @@ import {
   saveLocalReminder, 
   deleteLocalReminder, 
   triggerSync, 
-  initSyncEngine 
+  initSyncEngine,
+  fetchAllUsersAndStats 
 } from './utils/sync'
+import { supabase } from './lib/supabase'
 
 // ── AI MODEL ─────────────────────────────────────────────────────────────────
 const CLASS_MAP = { 0:'cbb', 1:'cbsd', 2:'cgm', 3:'cmd', 4:'healthy' }
@@ -1430,10 +1432,95 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
   )
 }
 
-function AuthScreen({ onLogin }) {
+function AdminDashboard({ users, scans, onLogout }) {
+  const totalUsers = users?.length || 0;
+  const totalScans = scans?.length || 0;
+  const treatedScans = scans?.filter(s => s.treated)?.length || 0;
+  const aiAccuracy = "94.2%"; // Mock AI metric
+
+  return (
+    <div className="screen fade-in" style={{background:'var(--bg-app)', padding:20, overflowY:'auto'}}>
+      <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24}}>
+        <div>
+          <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>IT Admin Panel</div>
+          <div style={{color:'var(--text-muted)', fontSize:13}}>System Monitoring & Client Activities</div>
+        </div>
+        <button onClick={onLogout} style={{background:'var(--surface)', border:'1px solid var(--card-border)', borderRadius:8, padding:'8px 12px', cursor:'pointer', color:'var(--text-primary)', fontWeight:600}}>
+          Sign Out
+        </button>
+      </div>
+
+      <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:24}}>
+        <div className="card" style={{padding:20, textAlign:'center'}}>
+          <div style={{fontSize:32, fontWeight:900, color:'var(--primary)'}}>{totalUsers}</div>
+          <div style={{fontSize:12, fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase'}}>Registered Farmers</div>
+        </div>
+        <div className="card" style={{padding:20, textAlign:'center'}}>
+          <div style={{fontSize:32, fontWeight:900, color:'var(--primary)'}}>{totalScans}</div>
+          <div style={{fontSize:12, fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase'}}>Total Scans Processed</div>
+        </div>
+        <div className="card" style={{padding:20, textAlign:'center'}}>
+          <div style={{fontSize:32, fontWeight:900, color:'var(--primary)'}}>{treatedScans}</div>
+          <div style={{fontSize:12, fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase'}}>Diseases Treated</div>
+        </div>
+        <div className="card" style={{padding:20, textAlign:'center'}}>
+          <div style={{fontSize:32, fontWeight:900, color:'var(--primary)'}}>{aiAccuracy}</div>
+          <div style={{fontSize:12, fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase'}}>AI Accuracy (7d)</div>
+        </div>
+      </div>
+
+      <div style={{fontSize:16, fontWeight:800, fontFamily:'var(--font-display)', marginBottom:12, color:'var(--text-primary)'}}>Recent Client Activities</div>
+      <div className="card" style={{overflow:'hidden'}}>
+        {scans?.slice(0, 5).map((scan, i) => {
+          const user = users?.find(u => u.id === scan.user_id)
+          return (
+            <div key={scan.id} style={{padding:16, borderBottom: i < 4 ? '1px solid var(--card-border)' : 'none', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+              <div>
+                <div style={{fontWeight:700, fontSize:14, color:'var(--text-primary)'}}>{user?.full_name || 'Unknown Farmer'}</div>
+                <div style={{fontSize:12, color:'var(--text-muted)'}}>Scanned {scan.field} • {scan.disease_id === 'healthy' ? 'Healthy' : 'Infected'}</div>
+              </div>
+              <div style={{fontSize:12, color:'var(--text-secondary)'}}>{new Date(scan.created_at).toLocaleDateString()}</div>
+            </div>
+          )
+        })}
+        {scans?.length === 0 && <div style={{padding:24, textAlign:'center', color:'var(--text-muted)'}}>No client activities yet.</div>}
+      </div>
+    </div>
+  )
+}
+
+function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   
+  async function handleSubmit() {
+    setError(null)
+    setLoading(true)
+    try {
+      if (isLogin) {
+        const { error } = await supabase.auth.signInWithPassword({ email, password })
+        if (error) throw error
+      } else {
+        if (!fullName.trim()) throw new Error("Full name is required")
+        const { error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: { data: { full_name: fullName } }
+        })
+        if (error) throw error
+      }
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',justifyContent:'center',padding:20,background:'var(--bg-app)'}}>
       <div style={{textAlign:'center',marginBottom:40}}>
@@ -1446,36 +1533,38 @@ function AuthScreen({ onLogin }) {
         <div style={{fontSize:20,fontWeight:800,fontFamily:'var(--font-display)',color:'var(--text-primary)',marginBottom:20}}>
           {isLogin ? 'Welcome back' : 'Create account'}
         </div>
+
+        {error && <div style={{background:'rgba(239,68,68,0.1)', color:'#ef4444', padding:12, borderRadius:8, fontSize:13, marginBottom:16}}>{error}</div>}
         
         {!isLogin && (
           <div style={{marginBottom:16}}>
             <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Full Name</div>
-            <input type="text" placeholder="e.g. John Doe" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+            <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} placeholder="e.g. John Doe" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
           </div>
         )}
         
         <div style={{marginBottom:16}}>
           <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Email Address</div>
-          <input type="email" placeholder="john@example.com" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+          <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="john@example.com" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
         </div>
         
         <div style={{marginBottom:24}}>
           <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Password</div>
           <div style={{position: 'relative'}}>
-            <input type={showPassword ? 'text' : 'password'} placeholder="••••••••" style={{width:'100%',padding:'14px',paddingRight:40,background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+            <input type={showPassword ? 'text' : 'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" style={{width:'100%',padding:'14px',paddingRight:40,background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
             <button onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',fontSize:18,color:'var(--text-muted)'}}>
               {showPassword ? '🙈' : '👁️'}
             </button>
           </div>
         </div>
         
-        <button onClick={onLogin} className="btn btn-primary" style={{width:'100%',padding:'16px',fontSize:16,borderRadius:12}}>
-          {isLogin ? 'Sign In' : 'Sign Up'}
+        <button onClick={handleSubmit} disabled={loading} className="btn btn-primary" style={{width:'100%',padding:'16px',fontSize:16,borderRadius:12,opacity:loading?0.7:1}}>
+          {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
         </button>
         
         <div style={{textAlign:'center',marginTop:20,fontSize:14,color:'var(--text-secondary)'}}>
           {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <span onClick={()=>setIsLogin(!isLogin)} style={{color:'var(--primary-light)',fontWeight:700,cursor:'pointer'}}>{isLogin ? 'Sign up' : 'Log in'}</span>
+          <span onClick={()=>{setIsLogin(!isLogin);setError(null)}} style={{color:'var(--primary-light)',fontWeight:700,cursor:'pointer'}}>{isLogin ? 'Sign up' : 'Log in'}</span>
         </div>
       </div>
     </div>
@@ -1610,6 +1699,16 @@ export default function App() {
             </button>
           </div>
           <AuthScreen onLogin={handleLogin} />
+        </div>
+      </div>
+    )
+  }
+
+  if (isAdmin) {
+    return (
+      <div className="app-shell" data-theme={theme}>
+        <div className="phone" style={{width: '100%', maxWidth: 'none', height: '100vh', borderRadius: 0}}>
+          <AdminDashboard users={adminUsers} scans={adminScans} onLogout={handleLogout} />
         </div>
       </div>
     )

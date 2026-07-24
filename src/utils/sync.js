@@ -1,54 +1,29 @@
-// Client-side synchronization utility for local-first state and backend sync
-
-// Auto-detect: use Render backend in production, localhost in development
-const API_BASE = import.meta.env.VITE_API_URL || (
-  window.location.hostname === 'localhost' 
-    ? 'http://localhost:5000/api' 
-    : 'https://fmn-agrisense-backend.onrender.com/api'
-);
+import { supabase } from '../lib/supabase'
 
 // --- Local Storage Helpers ---
 export function getLocalProfile() {
   const data = localStorage.getItem('fmn_profile');
   return data ? JSON.parse(data) : {
-    name: 'Oluwayinka Olayinka Paul',
-    phone: '+234 8101773538',
-    location: 'Ogun State, FUNAAB',
-    state: 'Ogun State',
-    lga: 'Abeokuta South',
-    farmSize: '3.5 Hectares',
-    crops: 'Cassava, Maize, Soybean',
-    updatedAt: Date.now()
+    full_name: 'Farmer',
+    phone: '',
+    location: '',
+    state: '',
+    lga: '',
+    farm_size: '',
+    crops: '',
+    role: 'user',
+    updated_at: new Date().toISOString()
   };
 }
 
 export function getLocalScans() {
   const data = localStorage.getItem('fmn_scans');
-  // Return default mock history if nothing in local storage yet
-  if (!data) {
-    const defaultHistory = [
-      { id: 'h1', date: 'Mar 10, 2026', diseaseId: 'cmd', field: 'North Field A', treated: true, createdAt: Date.now() - 5000000, updatedAt: Date.now() - 5000000 },
-      { id: 'h2', date: 'Mar 5, 2026', diseaseId: 'healthy', field: 'South Field B', treated: false, createdAt: Date.now() - 10000000, updatedAt: Date.now() - 10000000 },
-      { id: 'h3', date: 'Feb 28, 2026', diseaseId: 'cbb', field: 'East Plots', treated: true, createdAt: Date.now() - 15000000, updatedAt: Date.now() - 15000000 }
-    ];
-    localStorage.setItem('fmn_scans', JSON.stringify(defaultHistory));
-    return defaultHistory;
-  }
-  return JSON.parse(data);
+  return data ? JSON.parse(data) : [];
 }
 
 export function getLocalReminders() {
   const data = localStorage.getItem('fmn_reminders');
-  if (!data) {
-    const defaultReminders = [
-      { id: '1', title: 'Apply FMN BioGuard Spray', time: '07:00 AM', days: 'Mon, Thu', icon: '💧', enabled: true, nextDue: 'Today', createdAt: Date.now(), updatedAt: Date.now() },
-      { id: '2', title: 'Inspect for Whitefly', time: '06:30 AM', days: 'Wed, Sat', icon: '👁️', enabled: true, nextDue: 'Tomorrow', createdAt: Date.now(), updatedAt: Date.now() },
-      { id: '3', title: 'Apply FMN NPK Fertilizer', time: '08:00 AM', days: 'Mon', icon: '🌿', enabled: true, nextDue: 'Mon, Mar 18', createdAt: Date.now(), updatedAt: Date.now() }
-    ];
-    localStorage.setItem('fmn_reminders', JSON.stringify(defaultReminders));
-    return defaultReminders;
-  }
-  return JSON.parse(data);
+  return data ? JSON.parse(data) : [];
 }
 
 // --- Pending Queues Helpers ---
@@ -59,23 +34,22 @@ function getPendingQueue(key) {
 
 function addToPendingQueue(key, item) {
   const queue = getPendingQueue(key);
-  // Avoid duplicates
-  if (!queue.includes(item)) {
+  if (!queue.find(q => q.id === item.id)) {
     queue.push(item);
     localStorage.setItem(key, JSON.stringify(queue));
   }
 }
 
-function removeFromPendingQueue(key, item) {
+function removeFromPendingQueue(key, id) {
   const queue = getPendingQueue(key);
-  const filtered = queue.filter(q => q !== item);
+  const filtered = queue.filter(q => q.id !== id);
   localStorage.setItem(key, JSON.stringify(filtered));
 }
 
 // --- Client Actions updating Local State & Queuing Sync ---
 
 export function saveLocalProfile(profile) {
-  const updated = { ...profile, updatedAt: Date.now() };
+  const updated = { ...profile, updated_at: new Date().toISOString() };
   localStorage.setItem('fmn_profile', JSON.stringify(updated));
   localStorage.setItem('fmn_profile_pending', 'true');
   return updated;
@@ -84,17 +58,16 @@ export function saveLocalProfile(profile) {
 export function saveLocalScan(scan) {
   const scans = getLocalScans();
   const scanIndex = scans.findIndex(s => s.id === scan.id);
-  const updatedScan = { ...scan, updatedAt: Date.now() };
+  const updatedScan = { ...scan, updated_at: new Date().toISOString() };
   
   if (scanIndex > -1) {
     scans[scanIndex] = updatedScan;
   } else {
-    scans.unshift(updatedScan); // New scans go to the top
+    scans.unshift(updatedScan);
   }
   
   localStorage.setItem('fmn_scans', JSON.stringify(scans));
   
-  // Add to pending upsert queue
   const upsertQueue = getPendingQueue('fmn_scans_pending_upsert');
   const existingIdx = upsertQueue.findIndex(u => u.id === scan.id);
   if (existingIdx > -1) {
@@ -103,8 +76,6 @@ export function saveLocalScan(scan) {
     upsertQueue.push(updatedScan);
   }
   localStorage.setItem('fmn_scans_pending_upsert', JSON.stringify(upsertQueue));
-  
-  // Make sure it's not in the pending delete queue anymore
   removeFromPendingQueue('fmn_scans_pending_delete', scan.id);
   return scans;
 }
@@ -114,10 +85,9 @@ export function deleteLocalScan(scanId) {
   const filtered = scans.filter(s => s.id !== scanId);
   localStorage.setItem('fmn_scans', JSON.stringify(filtered));
 
-  // Remove from pending upsert, add to pending delete
   const upsertQueue = getPendingQueue('fmn_scans_pending_upsert').filter(u => u.id !== scanId);
   localStorage.setItem('fmn_scans_pending_upsert', JSON.stringify(upsertQueue));
-  addToPendingQueue('fmn_scans_pending_delete', scanId);
+  addToPendingQueue('fmn_scans_pending_delete', { id: scanId });
   
   return filtered;
 }
@@ -125,7 +95,7 @@ export function deleteLocalScan(scanId) {
 export function saveLocalReminder(reminder) {
   const reminders = getLocalReminders();
   const index = reminders.findIndex(r => r.id === reminder.id);
-  const updatedReminder = { ...reminder, updatedAt: Date.now() };
+  const updatedReminder = { ...reminder, updated_at: new Date().toISOString() };
 
   if (index > -1) {
     reminders[index] = updatedReminder;
@@ -135,7 +105,6 @@ export function saveLocalReminder(reminder) {
 
   localStorage.setItem('fmn_reminders', JSON.stringify(reminders));
 
-  // Add to pending upsert queue
   const upsertQueue = getPendingQueue('fmn_reminders_pending_upsert');
   const existingIdx = upsertQueue.findIndex(u => u.id === reminder.id);
   if (existingIdx > -1) {
@@ -144,7 +113,6 @@ export function saveLocalReminder(reminder) {
     upsertQueue.push(updatedReminder);
   }
   localStorage.setItem('fmn_reminders_pending_upsert', JSON.stringify(upsertQueue));
-
   removeFromPendingQueue('fmn_reminders_pending_delete', reminder.id);
   return reminders;
 }
@@ -154,15 +122,14 @@ export function deleteLocalReminder(reminderId) {
   const filtered = reminders.filter(r => r.id !== reminderId);
   localStorage.setItem('fmn_reminders', JSON.stringify(filtered));
 
-  // Remove from pending upsert, add to pending delete
   const upsertQueue = getPendingQueue('fmn_reminders_pending_upsert').filter(u => u.id !== reminderId);
   localStorage.setItem('fmn_reminders_pending_upsert', JSON.stringify(upsertQueue));
-  addToPendingQueue('fmn_reminders_pending_delete', reminderId);
+  addToPendingQueue('fmn_reminders_pending_delete', { id: reminderId });
 
   return filtered;
 }
 
-// --- Sync Coordination Logic ---
+// --- Sync Coordination Logic (Supabase) ---
 let isSyncing = false;
 
 export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
@@ -176,53 +143,74 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
   onSyncStatusChanged?.('syncing');
 
   try {
-    // Read current pending queues
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      isSyncing = false;
+      return;
+    }
+
+    const userId = user.id;
+
+    // 1. Process Profile Pending Update
     const profilePending = localStorage.getItem('fmn_profile_pending') === 'true';
-    const profile = profilePending ? getLocalProfile() : null;
+    if (profilePending) {
+      const profile = getLocalProfile();
+      await supabase.from('profiles').upsert({ id: userId, ...profile });
+      localStorage.removeItem('fmn_profile_pending');
+    }
 
-    const scansUpsert = getPendingQueue('fmn_scans_pending_upsert');
+    // 2. Process Pending Deletions
     const scansDelete = getPendingQueue('fmn_scans_pending_delete');
-    
-    const remindersUpsert = getPendingQueue('fmn_reminders_pending_upsert');
-    const remindersDelete = getPendingQueue('fmn_reminders_pending_delete');
+    if (scansDelete.length > 0) {
+      const ids = scansDelete.map(s => s.id);
+      await supabase.from('scans').delete().in('id', ids);
+      localStorage.removeItem('fmn_scans_pending_delete');
+    }
 
-    // Make the sync API request
-    const response = await fetch(`${API_BASE}/sync`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        profile,
-        scans: { upsert: scansUpsert, delete: scansDelete },
-        reminders: { upsert: remindersUpsert, delete: remindersDelete }
-      })
+    const remindersDelete = getPendingQueue('fmn_reminders_pending_delete');
+    if (remindersDelete.length > 0) {
+      const ids = remindersDelete.map(r => r.id);
+      await supabase.from('reminders').delete().in('id', ids);
+      localStorage.removeItem('fmn_reminders_pending_delete');
+    }
+
+    // 3. Process Pending Upserts
+    const scansUpsert = getPendingQueue('fmn_scans_pending_upsert');
+    if (scansUpsert.length > 0) {
+      await supabase.from('scans').upsert(scansUpsert.map(s => ({ ...s, user_id: userId })));
+      localStorage.removeItem('fmn_scans_pending_upsert');
+    }
+
+    const remindersUpsert = getPendingQueue('fmn_reminders_pending_upsert');
+    if (remindersUpsert.length > 0) {
+      await supabase.from('reminders').upsert(remindersUpsert.map(r => ({ ...r, user_id: userId })));
+      localStorage.removeItem('fmn_reminders_pending_upsert');
+    }
+
+    // 4. Fetch Fresh Data from Supabase
+    const [profRes, scanRes, remRes] = await Promise.all([
+      supabase.from('profiles').select('*').eq('id', userId).single(),
+      supabase.from('scans').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
+      supabase.from('reminders').select('*').eq('user_id', userId).order('created_at', { ascending: false })
+    ]);
+
+    const profileData = profRes.data || getLocalProfile();
+    const scansData = scanRes.data || [];
+    const remindersData = remRes.data || [];
+
+    // 5. Save to local storage
+    localStorage.setItem('fmn_profile', JSON.stringify(profileData));
+    localStorage.setItem('fmn_scans', JSON.stringify(scansData));
+    localStorage.setItem('fmn_reminders', JSON.stringify(remindersData));
+
+    // Trigger UI refresh
+    onStateUpdated?.({
+      profile: profileData,
+      scans: scansData,
+      reminders: remindersData
     });
 
-    if (!response.ok) throw new Error('Sync endpoint returned error');
-
-    const result = await response.json();
-
-    if (result.success) {
-      // Clear pending queues on success
-      if (profilePending) localStorage.removeItem('fmn_profile_pending');
-      localStorage.removeItem('fmn_scans_pending_upsert');
-      localStorage.removeItem('fmn_scans_pending_delete');
-      localStorage.removeItem('fmn_reminders_pending_upsert');
-      localStorage.removeItem('fmn_reminders_pending_delete');
-
-      // Update local storage with the server's reconciled state
-      if (result.profile) localStorage.setItem('fmn_profile', JSON.stringify(result.profile));
-      localStorage.setItem('fmn_scans', JSON.stringify(result.scans));
-      localStorage.setItem('fmn_reminders', JSON.stringify(result.reminders));
-
-      // Trigger UI callback to refresh states
-      onStateUpdated?.({
-        profile: result.profile || getLocalProfile(),
-        scans: result.scans,
-        reminders: result.reminders
-      });
-
-      onSyncStatusChanged?.('synced');
-    }
+    onSyncStatusChanged?.('synced');
   } catch (error) {
     console.warn('Sync failed:', error);
     onSyncStatusChanged?.('error');
@@ -231,34 +219,12 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
   }
 }
 
-// Initial state fetch from backend (to pull existing records when first going online)
 export async function fetchFullState(onStateUpdated, onSyncStatusChanged) {
-  if (!navigator.onLine) return;
-  onSyncStatusChanged?.('syncing');
-  try {
-    const response = await fetch(`${API_BASE}/state`);
-    if (!response.ok) throw new Error('Could not fetch server state');
-    const result = await response.json();
-
-    if (result.profile) localStorage.setItem('fmn_profile', JSON.stringify(result.profile));
-    localStorage.setItem('fmn_scans', JSON.stringify(result.scans));
-    localStorage.setItem('fmn_reminders', JSON.stringify(result.reminders));
-
-    onStateUpdated?.({
-      profile: result.profile || getLocalProfile(),
-      scans: result.scans,
-      reminders: result.reminders
-    });
-    onSyncStatusChanged?.('synced');
-  } catch (err) {
-    console.warn('Initial state fetch failed, using local storage:', err);
-    onSyncStatusChanged?.('error');
-  }
+  // Can just reuse triggerSync since it does exactly what we want without any pending data
+  return triggerSync(onStateUpdated, onSyncStatusChanged);
 }
 
-// Initialize sync engine triggers
 export function initSyncEngine(onStateUpdated, onSyncStatusChanged) {
-  // Listen for online events
   window.addEventListener('online', () => {
     console.log('Device back online, triggering sync...');
     triggerSync(onStateUpdated, onSyncStatusChanged);
@@ -269,22 +235,22 @@ export function initSyncEngine(onStateUpdated, onSyncStatusChanged) {
     onSyncStatusChanged?.('offline');
   });
 
-  // Perform initial fetch/sync on app load
   if (navigator.onLine) {
-    // If we have pending local changes, sync them, else do a clean state fetch
-    const hasLocalPending = 
-      localStorage.getItem('fmn_profile_pending') === 'true' ||
-      getPendingQueue('fmn_scans_pending_upsert').length > 0 ||
-      getPendingQueue('fmn_scans_pending_delete').length > 0 ||
-      getPendingQueue('fmn_reminders_pending_upsert').length > 0 ||
-      getPendingQueue('fmn_reminders_pending_delete').length > 0;
-
-    if (hasLocalPending) {
-      triggerSync(onStateUpdated, onSyncStatusChanged);
-    } else {
-      fetchFullState(onStateUpdated, onSyncStatusChanged);
-    }
+    triggerSync(onStateUpdated, onSyncStatusChanged);
   } else {
     onSyncStatusChanged?.('offline');
+  }
+}
+
+// --- Admin Actions ---
+export async function fetchAllUsersAndStats() {
+  try {
+    const { data: users, error: err1 } = await supabase.from('profiles').select('*');
+    const { data: scans, error: err2 } = await supabase.from('scans').select('*');
+    if (err1 || err2) throw err1 || err2;
+    return { users, scans };
+  } catch (err) {
+    console.error('Failed to fetch admin data', err);
+    return { users: [], scans: [] };
   }
 }
