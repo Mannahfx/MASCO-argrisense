@@ -130,7 +130,7 @@ html, body, #root {
 }
 
 .hdr { 
-  background: linear-gradient(to bottom, #0a1128, rgba(10,17,40,0.8));
+  background: var(--header-grad);
   backdrop-filter: blur(12px);
   padding: 16px 20px; 
   flex-shrink: 0; 

@@ -538,9 +538,9 @@ function DiagnosisScreen({ go, diseaseId, aiConfidence, allScores }) {
   return (
     <div className="screen fade-in">
       <div style={{
-        background: 'linear-gradient(180deg, rgba(13, 22, 49, 0.9) 0%, rgba(10, 17, 40, 0.4) 100%)',
+        background: 'var(--header-grad)',
         padding: '16px 20px 24px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+        borderBottom: '1px solid var(--card-border)'
       }}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
           <button onClick={()=>go('home')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
@@ -1202,10 +1202,10 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
   return (
     <div className="screen fade-in" style={{position:'relative'}}>
       <div style={{
-        background: 'linear-gradient(180deg, rgba(13, 22, 49, 0.95) 0%, rgba(10, 17, 40, 0.5) 100%)',
+        background: 'var(--header-grad)',
         padding: '28px 20px 24px',
         textAlign: 'center',
-        borderBottom: '1px solid rgba(255,255,255,0.05)'
+        borderBottom: '1px solid var(--card-border)'
       }}>
         <div style={{
           width:86,
@@ -1430,12 +1430,73 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
   )
 }
 
+function AuthScreen({ onLogin }) {
+  const [isLogin, setIsLogin] = useState(true)
+  
+  return (
+    <div className="screen fade-in" style={{display:'flex',flexDirection:'column',justifyContent:'center',padding:20,background:'var(--bg-app)'}}>
+      <div style={{textAlign:'center',marginBottom:40}}>
+        <div style={{fontSize:48,marginBottom:10}}>🌿</div>
+        <div style={{fontSize:28,fontWeight:900,fontFamily:'var(--font-display)',color:'var(--text-primary)',letterSpacing:-0.5}}>Cassava Doctor</div>
+        <div style={{color:'var(--text-secondary)',fontSize:14,marginTop:8}}>Your AI crop protection assistant</div>
+      </div>
+      
+      <div className="card" style={{padding:24}}>
+        <div style={{fontSize:20,fontWeight:800,fontFamily:'var(--font-display)',color:'var(--text-primary)',marginBottom:20}}>
+          {isLogin ? 'Welcome back' : 'Create account'}
+        </div>
+        
+        {!isLogin && (
+          <div style={{marginBottom:16}}>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Full Name</div>
+            <input type="text" placeholder="e.g. John Doe" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+          </div>
+        )}
+        
+        <div style={{marginBottom:16}}>
+          <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Email Address</div>
+          <input type="email" placeholder="john@example.com" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+        </div>
+        
+        <div style={{marginBottom:24}}>
+          <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Password</div>
+          <input type="password" placeholder="••••••••" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+        </div>
+        
+        <button onClick={onLogin} className="btn btn-primary" style={{width:'100%',padding:'16px',fontSize:16,borderRadius:12}}>
+          {isLogin ? 'Sign In' : 'Sign Up'}
+        </button>
+        
+        <div style={{textAlign:'center',marginTop:20,fontSize:14,color:'var(--text-secondary)'}}>
+          {isLogin ? "Don't have an account? " : "Already have an account? "}
+          <span onClick={()=>setIsLogin(!isLogin)} style={{color:'var(--primary-light)',fontWeight:700,cursor:'pointer'}}>{isLogin ? 'Sign up' : 'Log in'}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('cassava_auth') === 'true')
   const [screen,  setScreen]  = useState('home')
   const [params,  setParams]  = useState({})
   const [analyzing, setAnalyzing] = useState(false)
-  const [theme, setTheme] = useState('dark')
+  const [theme, setTheme] = useState(() => localStorage.getItem('cassava_theme') || 'dark')
+
+  useEffect(() => {
+    localStorage.setItem('cassava_theme', theme)
+  }, [theme])
+
+  function handleLogin() {
+    localStorage.setItem('cassava_auth', 'true')
+    setIsAuthenticated(true)
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('cassava_auth')
+    setIsAuthenticated(false)
+  }
 
   // Local-first synchronized states
   const [profile, setProfile] = useState(() => getLocalProfile())
@@ -1530,6 +1591,23 @@ export default function App() {
       default:          return <HomeScreen {...p} profile={profile} scans={scans} reminders={reminders}/>
     }
   }
+  if (!isAuthenticated) {
+    return (
+      <div className="app-shell" data-theme={theme}>
+        <div className="phone">
+          <div style={{position:'absolute',top:20,right:20,zIndex:10}}>
+            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} style={{
+              background: 'var(--surface)', border: '1px solid var(--card-border)', borderRadius: '50%',
+              width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'background 0.2s'
+            }}>
+              <span style={{fontSize: 14}}>{theme === 'dark' ? '☀️' : '🌙'}</span>
+            </button>
+          </div>
+          <AuthScreen onLogin={handleLogin} />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="app-shell" data-theme={theme}>
@@ -1566,7 +1644,9 @@ export default function App() {
           <nav className="bottom-nav">
             {NAV.map(n=>(
               <button key={n.id} onClick={()=>go(n.id)} className={`nav-item${activeNav===n.id?' active':''}`}>
-                <Ic n={n.icon} s={22} c={activeNav===n.id?'var(--text-highlight)':'var(--text-muted)'}/>
+                <div style={{ background: activeNav===n.id ? 'var(--primary-light)' : 'transparent', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s', marginBottom: 2 }}>
+                  <Ic n={n.icon} s={20} c={activeNav===n.id?'white':'var(--text-muted)'}/>
+                </div>
                 {n.label}
               </button>
             ))}
