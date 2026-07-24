@@ -1544,7 +1544,7 @@ export default function App() {
           borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
           flexShrink: 0
         }}>
-          <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}>🌿 FMN AgriSense</span>
+          <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}>🌿 Cassava Doctor</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             {syncStatus === 'syncing' && <span style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>🔄 Syncing</span>}
             {syncStatus === 'synced' && <span style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>☁️ Synced</span>}
