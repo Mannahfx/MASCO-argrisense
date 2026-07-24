@@ -1153,6 +1153,28 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
     setForm({...profile});
   }, [profile]);
 
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 300;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        onSaveProfile({...profile, avatar: dataUrl});
+      }
+      img.src = event.target.result;
+    }
+    reader.readAsDataURL(file);
+  }
+
   const Toggle=({val,set})=>(
     <button onClick={()=>set(!val)} style={{
       width:44,
@@ -1220,7 +1242,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         textAlign: 'center',
         borderBottom: '1px solid var(--card-border)'
       }}>
-        <div style={{
+        <label style={{
           width:86,
           height:86,
           borderRadius:'50%',
@@ -1231,8 +1253,18 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
           margin:'0 auto 12px',
           fontSize:44,
           border:'2.5px solid var(--text-highlight)',
-          boxShadow:'0 0 20px rgba(77,138,255,0.2)'
-        }}>👨🏾‍🌾</div>
+          boxShadow:'0 0 20px rgba(77,138,255,0.2)',
+          cursor:'pointer',
+          overflow:'hidden',
+          position:'relative'
+        }}>
+          {profile.avatar ? (
+            <img src={profile.avatar} style={{width:'100%',height:'100%',objectFit:'cover'}} alt="Profile" />
+          ) : (
+            <span>👨🏾‍🌾</span>
+          )}
+          <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display:'none'}} />
+        </label>
         <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.full_name || profile.name || 'Farmer'}</div>
         <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:4,fontWeight:500}}>{profile.phone || ''}</div>
         <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>📍 {profile.location || ''}</div>
@@ -1446,22 +1478,54 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
   )
 }
 
-function AdminDashboard({ users, scans, onLogout }) {
+function AdminApp({ users, scans, profile, onLogout, onSaveProfile }) {
+  const [screen, setScreen] = useState('dashboard');
+  
+  const NAV = [
+    {id:'dashboard', label:'Dashboard', icon:'home'},
+    {id:'logs', label:'System Logs', icon:'scan'},
+    {id:'profile', label:'Profile', icon:'user'}
+  ];
+  
+  return (
+    <div style={{display:'flex', flexDirection:'column', height:'100%', background:'var(--bg-app)'}}>
+      <div style={{flex:1, overflowY:'auto', paddingBottom:80}}>
+        {screen === 'dashboard' && <AdminDashboardTab users={users} scans={scans} />}
+        {screen === 'logs' && <AdminLogsTab users={users} scans={scans} />}
+        {screen === 'profile' && <AdminProfileTab profile={profile} onSaveProfile={onSaveProfile} onLogout={onLogout} />}
+      </div>
+      
+      {/* Bottom Nav */}
+      <div className="bottom-nav">
+        {NAV.map(n => (
+          <button key={n.id} className="nav-item" onClick={() => setScreen(n.id)}>
+            <div className={`nav-icon-wrap ${screen === n.id ? 'active' : ''}`}>
+              <Ic n={n.icon} s={22} c={screen === n.id ? "white" : "var(--text-muted)"}/>
+            </div>
+            <span style={{
+              fontSize: 10,
+              fontWeight: screen === n.id ? 800 : 600,
+              color: screen === n.id ? 'var(--text-primary)' : 'var(--text-muted)',
+              marginTop: 4
+            }}>{n.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function AdminDashboardTab({ users, scans }) {
   const totalUsers = users?.length || 0;
   const totalScans = scans?.length || 0;
   const treatedScans = scans?.filter(s => s.treated)?.length || 0;
-  const aiAccuracy = "94.2%"; // Mock AI metric
+  const aiAccuracy = "94.2%"; 
 
   return (
-    <div className="screen fade-in" style={{background:'var(--bg-app)', padding:20, overflowY:'auto'}}>
-      <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24}}>
-        <div>
-          <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>IT Admin Panel</div>
-          <div style={{color:'var(--text-muted)', fontSize:13}}>System Monitoring & Client Activities</div>
-        </div>
-        <button onClick={onLogout} style={{background:'var(--surface)', border:'1px solid var(--card-border)', borderRadius:8, padding:'8px 12px', cursor:'pointer', color:'var(--text-primary)', fontWeight:600}}>
-          Sign Out
-        </button>
+    <div className="screen fade-in" style={{padding:20}}>
+      <div style={{marginBottom:24}}>
+        <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>IT Admin Panel</div>
+        <div style={{color:'var(--text-muted)', fontSize:13}}>System Monitoring & Metrics</div>
       </div>
 
       <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:24}}>
@@ -1482,13 +1546,21 @@ function AdminDashboard({ users, scans, onLogout }) {
           <div style={{fontSize:12, fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase'}}>AI Accuracy (7d)</div>
         </div>
       </div>
+    </div>
+  )
+}
 
-      <div style={{fontSize:16, fontWeight:800, fontFamily:'var(--font-display)', marginBottom:12, color:'var(--text-primary)'}}>Recent Client Activities</div>
+function AdminLogsTab({ users, scans }) {
+  return (
+    <div className="screen fade-in" style={{padding:20}}>
+      <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)', marginBottom:8}}>System Logs</div>
+      <div style={{color:'var(--text-muted)', fontSize:13, marginBottom:24}}>Recent client activities & system events</div>
+
       <div className="card" style={{overflow:'hidden'}}>
-        {scans?.slice(0, 5).map((scan, i) => {
+        {scans?.slice(0, 15).map((scan, i) => {
           const user = users?.find(u => u.id === scan.user_id)
           return (
-            <div key={scan.id} style={{padding:16, borderBottom: i < 4 ? '1px solid var(--card-border)' : 'none', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+            <div key={scan.id} style={{padding:16, borderBottom: i < 14 ? '1px solid var(--card-border)' : 'none', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
               <div>
                 <div style={{fontWeight:700, fontSize:14, color:'var(--text-primary)'}}>{user?.full_name || 'Unknown Farmer'}</div>
                 <div style={{fontSize:12, color:'var(--text-muted)'}}>Scanned {scan.field} • {scan.disease_id === 'healthy' ? 'Healthy' : 'Infected'}</div>
@@ -1499,6 +1571,67 @@ function AdminDashboard({ users, scans, onLogout }) {
         })}
         {scans?.length === 0 && <div style={{padding:24, textAlign:'center', color:'var(--text-muted)'}}>No client activities yet.</div>}
       </div>
+    </div>
+  )
+}
+
+function AdminProfileTab({ profile, onSaveProfile, onLogout }) {
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 300;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        onSaveProfile({...profile, avatar: dataUrl});
+      }
+      img.src = event.target.result;
+    }
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <div className="screen fade-in" style={{padding:20}}>
+      <div style={{textAlign:'center', marginBottom:32, marginTop:20}}>
+        <label style={{
+          width:100, height:100, borderRadius:'50%', background:'var(--surface)', display:'flex', alignItems:'center',
+          justifyContent:'center', margin:'0 auto 16px', fontSize:44, border:'3px solid var(--primary)',
+          boxShadow:'0 0 20px rgba(16,185,129,0.2)', cursor:'pointer', overflow:'hidden', position:'relative'
+        }}>
+          {profile.avatar ? (
+            <img src={profile.avatar} style={{width:'100%',height:'100%',objectFit:'cover'}} alt="Admin Profile" />
+          ) : (
+            <span>👨🏾‍💻</span>
+          )}
+          <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display:'none'}} />
+        </label>
+        <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:900,fontFamily:'var(--font-display)'}}>{profile.full_name || 'IT Admin'}</div>
+        <div style={{color:'var(--primary)',fontSize:13,fontWeight:700,marginTop:4,textTransform:'uppercase',letterSpacing:1}}>Systems Administrator</div>
+      </div>
+
+      <div className="card" style={{marginBottom:24}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}><Ic n="settings" s={18} c="var(--primary)"/><span style={{fontWeight:800,fontSize:15,fontFamily:'var(--font-display)',color:'var(--text-primary)'}}>IT Controls</span></div>
+        <div style={{padding:'12px 0',borderBottom:'1px solid var(--card-border)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>Database Backup</div>
+          <button className="btn btn-outline" style={{padding:'6px 12px', fontSize:12, borderRadius:8}}>Run Backup</button>
+        </div>
+        <div style={{padding:'12px 0',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>Clear System Cache</div>
+          <button className="btn btn-outline" style={{padding:'6px 12px', fontSize:12, borderRadius:8}}>Clear</button>
+        </div>
+      </div>
+
+      <button onClick={onLogout} style={{width:'100%',padding:'14px',background:'rgba(239,68,68,0.1)',border:'1px solid rgba(239,68,68,0.3)',borderRadius:12,color:'#ef4444',fontWeight:700,fontSize:14,cursor:'pointer',fontFamily:'var(--font-display)'}}>
+        Sign Out Admin
+      </button>
     </div>
   )
 }
@@ -1681,6 +1814,10 @@ export default function App() {
   }
 
   function handleLogout() {
+    localStorage.removeItem('fmn_profile')
+    localStorage.removeItem('fmn_scans')
+    localStorage.removeItem('fmn_reminders')
+    localStorage.removeItem('fmn_profile_pending')
     supabase.auth.signOut()
   }
 
@@ -1802,7 +1939,7 @@ export default function App() {
     return (
       <div className="app-shell" data-theme={theme}>
         <div className="phone" style={{width: '100%', maxWidth: 'none', height: '100vh', borderRadius: 0}}>
-          <AdminDashboard users={adminUsers} scans={adminScans} onLogout={handleLogout} />
+          <AdminApp users={adminUsers} scans={adminScans} profile={profile} onSaveProfile={handleSaveProfile} onLogout={handleLogout} />
         </div>
       </div>
     )
