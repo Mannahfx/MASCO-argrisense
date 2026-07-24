@@ -1432,6 +1432,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
 
 function AuthScreen({ onLogin }) {
   const [isLogin, setIsLogin] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
   
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',justifyContent:'center',padding:20,background:'var(--bg-app)'}}>
@@ -1460,7 +1461,12 @@ function AuthScreen({ onLogin }) {
         
         <div style={{marginBottom:24}}>
           <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Password</div>
-          <input type="password" placeholder="••••••••" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+          <div style={{position: 'relative'}}>
+            <input type={showPassword ? 'text' : 'password'} placeholder="••••••••" style={{width:'100%',padding:'14px',paddingRight:40,background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+            <button onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',fontSize:18,color:'var(--text-muted)'}}>
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
         </div>
         
         <button onClick={onLogin} className="btn btn-primary" style={{width:'100%',padding:'16px',fontSize:16,borderRadius:12}}>
