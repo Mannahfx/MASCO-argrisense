@@ -1497,7 +1497,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
   )
 }
 
-function AdminApp({ users, scans, profile, onLogout, onSaveProfile }) {
+function AdminApp({ users, scans, profile, onLogout, onSaveProfile, onRefresh }) {
   const [screen, setScreen] = useState('dashboard');
   
   const NAV = [
@@ -1509,7 +1509,7 @@ function AdminApp({ users, scans, profile, onLogout, onSaveProfile }) {
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%', background:'var(--bg-app)'}}>
       <div style={{flex:1, overflowY:'auto', paddingBottom:80}}>
-        {screen === 'dashboard' && <AdminDashboardTab users={users} scans={scans} />}
+        {screen === 'dashboard' && <AdminDashboardTab users={users} scans={scans} onRefresh={onRefresh} />}
         {screen === 'logs' && <AdminLogsTab users={users} scans={scans} />}
         {screen === 'profile' && <AdminProfileTab profile={profile} onSaveProfile={onSaveProfile} onLogout={onLogout} />}
       </div>
@@ -1534,7 +1534,7 @@ function AdminApp({ users, scans, profile, onLogout, onSaveProfile }) {
   )
 }
 
-function AdminDashboardTab({ users, scans }) {
+function AdminDashboardTab({ users, scans, onRefresh }) {
   const totalUsers = users?.filter(u => u.role === 'user' || u.role === 'client')?.length || 0;
   const totalScans = scans?.length || 0;
   const treatedScans = scans?.filter(s => s.treated)?.length || 0;
@@ -1559,9 +1559,14 @@ function AdminDashboardTab({ users, scans }) {
 
   return (
     <div className="screen fade-in" style={{padding:20}}>
-      <div style={{marginBottom:24}}>
-        <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>IT Admin Panel</div>
-        <div style={{color:'var(--text-muted)', fontSize:13}}>System Monitoring & Metrics</div>
+      <div style={{marginBottom:24, display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+        <div>
+          <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>IT Admin Panel</div>
+          <div style={{color:'var(--text-muted)', fontSize:13}}>System Monitoring & Metrics</div>
+        </div>
+        <button onClick={onRefresh} className="btn btn-outline" style={{padding:'6px 12px', fontSize:12, borderRadius:8, display:'flex', gap:6, alignItems:'center'}}>
+          <Ic n="scan" s={14} c="var(--text-primary)"/> Refresh
+        </button>
       </div>
 
       <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:24}}>
