@@ -1569,12 +1569,10 @@ function AdminDashboardTab({ users, scans, onRefresh, lastRefresh, adminDebug })
       return new Date(s.createdAt).toISOString().split('T')[0] === dateStr;
     })?.length || 0;
     
-    // Add some random baseline activity so the graph isn't flat if there's no data
-    const baseline = Math.floor(Math.random() * 5) + 2; 
-    
+    // Removed random baseline so the graph accurately reflects real scans
     chartData.push({
       date: d.toLocaleDateString('en-US', {weekday:'short'}),
-      scans: scansOnDate + baseline
+      scans: scansOnDate
     });
   }
 
@@ -1641,6 +1639,7 @@ function AdminDashboardTab({ users, scans, onRefresh, lastRefresh, adminDebug })
 
 function AdminLogsTab({ users, scans }) {
   const [selectedUser, setSelectedUser] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Generate mock logs by combining real scans with mocked login events
   const logs = scans?.slice(0, 20).map(scan => {
@@ -1679,9 +1678,22 @@ function AdminLogsTab({ users, scans }) {
     logs.sort((a,b) => new Date(b.time) - new Date(a.time));
   }
 
-  const filteredLogs = selectedUser === 'All' 
-    ? logs 
-    : logs.filter(log => log.user_id === selectedUser || log.user === selectedUser);
+  const filteredLogs = logs.filter(log => {
+    // 1. Filter by dropdown
+    if (selectedUser !== 'All' && log.user_id !== selectedUser && log.user !== selectedUser) {
+      return false;
+    }
+    // 2. Filter by search query (check user name, action, or details)
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      if (!log.user.toLowerCase().includes(q) && 
+          !log.action.toLowerCase().includes(q) && 
+          !log.details.toLowerCase().includes(q)) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   // Extract unique clients who have logs
   const clientsWithLogs = Array.from(new Set(logs.map(l => l.user)));
@@ -1693,25 +1705,47 @@ function AdminLogsTab({ users, scans }) {
           <div style={{fontSize:24, fontWeight:900, fontFamily:'var(--font-display)', color:'var(--text-primary)'}}>System Logs</div>
           <div style={{color:'var(--text-muted)', fontSize:13, marginTop: 4}}>Real-time client monitoring and events</div>
         </div>
-        <select 
-          value={selectedUser} 
-          onChange={(e) => setSelectedUser(e.target.value)}
-          style={{
-            background: 'var(--surface)',
-            border: '1px solid var(--card-border)',
-            color: 'var(--text-primary)',
-            padding: '8px 12px',
-            borderRadius: 8,
-            fontSize: 12,
-            outline: 'none',
-            cursor: 'pointer'
-          }}
-        >
-          <option value="All">All Clients (Overall)</option>
-          {clientsWithLogs.map(clientName => (
-            <option key={clientName} value={clientName}>{clientName}</option>
-          ))}
-        </select>
+        <div style={{display:'flex', gap: 12, alignItems: 'center'}}>
+          <div style={{position: 'relative'}}>
+            <input 
+              type="text"
+              placeholder="Search users or actions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--card-border)',
+                color: 'white',
+                padding: '8px 12px 8px 32px',
+                borderRadius: 8,
+                fontSize: 12,
+                outline: 'none',
+                width: 200,
+                fontFamily: 'var(--font-sans)'
+              }}
+            />
+            <span style={{position: 'absolute', left: 10, top: 9, opacity: 0.5}}><Ic n="search" s={14} c="white"/></span>
+          </div>
+          <select 
+            value={selectedUser} 
+            onChange={(e) => setSelectedUser(e.target.value)}
+            style={{
+              background: 'var(--surface)',
+              border: '1px solid var(--card-border)',
+              color: 'var(--text-primary)',
+              padding: '8px 12px',
+              borderRadius: 8,
+              fontSize: 12,
+              outline: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="All">All Clients (Overall)</option>
+            {clientsWithLogs.map(clientName => (
+              <option key={clientName} value={clientName}>{clientName}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="card" style={{overflow:'hidden', marginTop: 24}}>
