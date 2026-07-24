@@ -1495,6 +1495,7 @@ function AuthScreen() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
+  const [adminCode, setAdminCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   
@@ -1510,7 +1511,7 @@ function AuthScreen() {
         const { error } = await supabase.auth.signUp({ 
           email, 
           password,
-          options: { data: { full_name: fullName } }
+          options: { data: { full_name: fullName, admin_code: adminCode } }
         })
         if (error) throw error
       }
@@ -1548,15 +1549,26 @@ function AuthScreen() {
           <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="john@example.com" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
         </div>
         
-        <div style={{marginBottom:24}}>
+        <div style={{marginBottom:!isLogin ? 16 : 24}}>
           <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Password</div>
           <div style={{position: 'relative'}}>
             <input type={showPassword ? 'text' : 'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" style={{width:'100%',padding:'14px',paddingRight:40,background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
-            <button onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',fontSize:18,color:'var(--text-muted)'}}>
-              {showPassword ? '🙈' : '👁️'}
+            <button onClick={() => setShowPassword(!showPassword)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:'var(--text-muted)',display:'flex',alignItems:'center'}}>
+              {showPassword ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              )}
             </button>
           </div>
         </div>
+
+        {!isLogin && (
+          <div style={{marginBottom:24}}>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--text-muted)',marginBottom:6,textTransform:'uppercase',letterSpacing:0.5}}>Admin Code (Optional)</div>
+            <input type="text" value={adminCode} onChange={e=>setAdminCode(e.target.value)} placeholder="Leave blank if farmer" style={{width:'100%',padding:'14px',background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,color:'var(--text-primary)',fontFamily:'var(--font-sans)',fontSize:15}}/>
+          </div>
+        )}
         
         <button onClick={handleSubmit} disabled={loading} className="btn btn-primary" style={{width:'100%',padding:'16px',fontSize:16,borderRadius:12,opacity:loading?0.7:1}}>
           {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
