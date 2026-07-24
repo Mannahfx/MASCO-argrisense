@@ -1764,16 +1764,27 @@ export default function App() {
       setIsAuthenticated(!!session)
       if (session) {
         // Check role on initial load
+        const adminCodes = ['IT-ADMIN-A923', 'IT-ADMIN-B441', 'IT-ADMIN-C719', 'IT-ADMIN-D882', 'IT-ADMIN-E395'];
+        const metadataAdminCode = session.user?.user_metadata?.admin_code?.trim()?.toUpperCase();
+        const isMetadataAdmin = adminCodes.includes(metadataAdminCode);
+        
         const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).single()
+        
         if (prof) {
           setProfile(prof)
-          if (prof.role === 'admin') {
+          if (prof.role === 'admin' || isMetadataAdmin) {
             setIsAdmin(true)
             fetchAllUsersAndStats().then(({users, scans}) => {
               setAdminUsers(users)
               setAdminScans(scans)
             })
           }
+        } else if (isMetadataAdmin) {
+           setIsAdmin(true)
+           fetchAllUsersAndStats().then(({users, scans}) => {
+             setAdminUsers(users)
+             setAdminScans(scans)
+           })
         }
       }
       setAuthLoading(false)
@@ -1782,11 +1793,15 @@ export default function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session)
       if (session) {
+        const adminCodes = ['IT-ADMIN-A923', 'IT-ADMIN-B441', 'IT-ADMIN-C719', 'IT-ADMIN-D882', 'IT-ADMIN-E395'];
+        const metadataAdminCode = session.user?.user_metadata?.admin_code?.trim()?.toUpperCase();
+        const isMetadataAdmin = adminCodes.includes(metadataAdminCode);
+
         initSyncEngine(
           (newState) => {
             if (newState.profile) {
               setProfile(newState.profile)
-              if (newState.profile.role === 'admin') {
+              if (newState.profile.role === 'admin' || isMetadataAdmin) {
                 setIsAdmin(true)
                 fetchAllUsersAndStats().then(({users, scans}) => {
                   setAdminUsers(users)
