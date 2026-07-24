@@ -1591,42 +1591,74 @@ function AuthScreen() {
 
 // ── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('cassava_auth') === 'true')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [adminUsers, setAdminUsers] = useState([])
+  const [adminScans, setAdminScans] = useState([])
+
   const [screen,  setScreen]  = useState('home')
   const [params,  setParams]  = useState({})
   const [analyzing, setAnalyzing] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('cassava_theme') || 'dark')
 
-  useEffect(() => {
-    localStorage.setItem('cassava_theme', theme)
-  }, [theme])
-
-  function handleLogin() {
-    localStorage.setItem('cassava_auth', 'true')
-    setIsAuthenticated(true)
-  }
-
-  function handleLogout() {
-    localStorage.removeItem('cassava_auth')
-    setIsAuthenticated(false)
-  }
-
   // Local-first synchronized states
   const [profile, setProfile] = useState(() => getLocalProfile())
   const [scans, setScans] = useState(() => getLocalScans())
   const [reminders, setReminders] = useState(() => getLocalReminders())
-  const [syncStatus, setSyncStatus] = useState('offline') // syncing | synced | offline | error
+  const [syncStatus, setSyncStatus] = useState('offline')
 
-  // Bind sync state updates to client React states
+  useEffect(() => {
+    localStorage.setItem('cassava_theme', theme)
+  }, [theme])
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session)
+      if (session) {
+        initSyncEngine(
+          (newState) => {
+            if (newState.profile) {
+              setProfile(newState.profile)
+              if (newState.profile.role === 'admin') {
+                setIsAdmin(true)
+                fetchAllUsersAndStats().then(({users, scans}) => {
+                  setAdminUsers(users)
+                  setAdminScans(scans)
+                })
+              } else {
+                setIsAdmin(false)
+              }
+            }
+            if (newState.scans) setScans(newState.scans)
+            if (newState.reminders) setReminders(newState.reminders)
+          },
+          setSyncStatus
+        )
+      } else {
+        setIsAdmin(false)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  function handleLogin() {
+    // Only used to trigger render if not relying entirely on onAuthStateChange, but onAuthStateChange handles it.
+  }
+
+  function handleLogout() {
+    supabase.auth.signOut()
+  }
+
   const onStateUpdated = (newState) => {
     if (newState.profile) setProfile(newState.profile);
     if (newState.scans) setScans(newState.scans);
     if (newState.reminders) setReminders(newState.reminders);
   };
-
-  useEffect(() => {
-    initSyncEngine(onStateUpdated, setSyncStatus);
-  }, []);
 
   function handleSaveProfile(newProfile) {
     const updated = saveLocalProfile(newProfile);
