@@ -202,7 +202,9 @@ function HomeScreen({ go, profile, scans, reminders }) {
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <div>
             <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'New Client'}</div>
-            <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>{profile.location || ''}  •  {profile.farm_size || profile.farmSize || ''}</div>
+            <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>
+              {[profile.location, profile.farm_size || profile.farmSize].filter(Boolean).join('  •  ')}
+            </div>
           </div>
           <button onClick={()=>go('profile')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:42,height:42,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'background-color 0.2s'}}>
             <Ic n="bell" s={20} c="var(--text-primary)"/>
