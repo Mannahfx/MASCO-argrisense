@@ -330,7 +330,7 @@ function HomeScreen({ go, profile, scans, reminders }) {
               cursor:'pointer',
               textAlign:'left'
             }}>
-              <div style={{width:48,height:48,borderRadius:14,background:d.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{d.icon}</div>
+              <div style={{width:48,height:48,borderRadius:14,background:d.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><DynamicIcon name={d.icon} size={24} color={d.color} /></div>
               <div style={{flex:1}}>
                 <div style={{fontSize:14,fontWeight:700,color:'var(--text-primary)'}}>{d.name}</div>
                 <div style={{fontSize:12,color:'var(--text-muted)',marginTop:4}}>{item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
@@ -563,11 +563,11 @@ function DiagnosisScreen({ go, diseaseId, aiConfidence, allScores }) {
           <span style={{color:'var(--text-primary)',fontWeight:800,fontFamily:'var(--font-display)',fontSize:16}}>Diagnosis Result</span>
           <div style={{width:38}}/>
         </div>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:120,fontSize:72,filter:'drop-shadow(0 8px 16px rgba(0,0,0,0.3))'}}>{d.icon}</div>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:120,filter:'drop-shadow(0 8px 16px rgba(0,0,0,0.3))'}}><DynamicIcon name={d.icon} size={72} color={d.color} /></div>
         <div style={{padding:'0 4px'}}>
           <div style={{display:'flex',gap:6,marginBottom:12}}>
-            <span style={{background:d.severity==='None'?'rgba(16,185,129,0.15)':d.sevBg,color:d.severity==='None'?'#10b981':d.sevColor,fontSize:11,fontWeight:800,padding:'4px 12px',borderRadius:20,display:'inline-block'}}>{d.severity==='None'?'✅ Healthy':`⚠️ ${d.severity}`}</span>
-            {isReal&&<span style={{background:'rgba(77,138,255,0.15)',color:'var(--text-highlight)',fontSize:11,fontWeight:800,padding:'4px 12px',borderRadius:20,display:'inline-block'}}>🤖 Real AI Result</span>}
+            <span style={{background:d.severity==='None'?'rgba(16,185,129,0.15)':d.sevBg,color:d.severity==='None'?'#10b981':d.sevColor,fontSize:11,fontWeight:800,padding:'4px 12px',borderRadius:20,display:'inline-flex',alignItems:'center',gap:4}}>{d.severity==='None'?<CheckCircle size={12}/>:null}{d.severity==='None'?'Healthy':d.severity}</span>
+            {isReal&&<span style={{background:'rgba(77,138,255,0.15)',color:'var(--text-highlight)',fontSize:11,fontWeight:800,padding:'4px 12px',borderRadius:20,display:'inline-flex',alignItems:'center',gap:4}}><Bot size={12}/> Real AI Result</span>}
           </div>
           <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:900,fontFamily:'var(--font-display)',lineHeight:1.2}}>{d.name}</div>
           <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:6,lineHeight:1.4}}>{d.short}</div>
@@ -603,7 +603,7 @@ function DiagnosisScreen({ go, diseaseId, aiConfidence, allScores }) {
               const d2=DISEASES.find(x=>x.id===id)||{name:id,color:'#888',icon:'🌿'}
               return (
                 <div key={id} style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-                  <span style={{fontSize:18,width:24,textAlign:'center'}}>{d2.icon}</span>
+                  <span style={{width:24,textAlign:'center'}}><DynamicIcon name={d2.icon} size={18} color={d2.color} /></span>
                   <span style={{fontSize:12,color:'var(--text-secondary)',width:130,flexShrink:0,fontWeight:600}}>{d2.name}</span>
                   <div style={{flex:1,height:8,background:'rgba(255,255,255,0.06)',borderRadius:4,overflow:'hidden'}}>
                     <div style={{height:'100%',width:`${pct}%`,background:d2.color,borderRadius:4}}/>
@@ -849,7 +849,7 @@ function ProductsScreen({ go, diseaseId }) {
                 marginBottom:10
               }}>⭐ Recommended</span>}
               <div style={{display:'flex',gap:14,marginBottom:12}}>
-                <div style={{width:58,height:58,borderRadius:16,background:p.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:30,flexShrink:0}}>{p.icon}</div>
+                <div style={{width:58,height:58,borderRadius:16,background:p.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><DynamicIcon name={p.icon} size={30} color={p.color} /></div>
                 <div style={{flex:1}}>
                   <div style={{fontWeight:800,fontSize:15,color:'var(--text-primary)'}}>{p.name}</div>
                   <span style={{fontSize:11,fontWeight:800,color:p.color,background:p.color+'15',padding:'2px 8px',borderRadius:20,display:'inline-block',marginTop:4}}>{p.cat}</span>
@@ -901,7 +901,7 @@ function RemindersScreen({ go, reminders, onSaveReminder, onDeleteReminder }) {
       <div className="content" style={{padding:'20px'}}>
         {reminders.map(r=>(
           <div key={r.id} className="card" style={{display:'flex',alignItems:'flex-start',gap:12,marginBottom:12,opacity:r.enabled?1:0.5}}>
-            <div style={{width:46,height:46,borderRadius:14,background:'var(--surface)',border:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{r.icon}</div>
+            <div style={{width:46,height:46,borderRadius:14,background:'var(--surface)',border:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><DynamicIcon name={r.icon} size={22} color='var(--text-highlight)' /></div>
             <div style={{flex:1}}>
               <div style={{fontWeight:700,fontSize:14,color:'var(--text-primary)'}}>{r.title}</div>
               <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4,fontWeight:500}}>{r.time}  •  {r.days}</div>
@@ -1025,7 +1025,7 @@ function HistoryScreen({ go, scans }) {
               cursor:'pointer',
               textAlign:'left'
             }}>
-              <div style={{width:50,height:50,borderRadius:14,background:d.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,flexShrink:0}}>{d.icon}</div>
+              <div style={{width:50,height:50,borderRadius:14,background:d.color+'1a',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><DynamicIcon name={d.icon} size={26} color={d.color} /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:700,fontSize:14,color:'var(--text-primary)'}}>{d.name}</div>
                 <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4}}>{item.fieldName || item.field || 'Field A'}  •  {item.date}</div>
@@ -1110,7 +1110,7 @@ function DealersScreen({ go }) {
             background:sel===d.id?'rgba(13, 22, 49, 0.85)':'var(--card)'
           }}>
             <button onClick={()=>setSel(sel===d.id?null:d.id)} style={{width:'100%',background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',gap:12,textAlign:'left',padding:0}}>
-              <div style={{width:50,height:50,borderRadius:14,background:d.inStock?'rgba(77,138,255,0.08)':'rgba(255,255,255,0.03)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>🏪</div>
+              <div style={{width:50,height:50,borderRadius:14,background:d.inStock?'rgba(77,138,255,0.08)':'rgba(255,255,255,0.03)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><Store size={22} color={d.inStock?'var(--text-highlight)':'var(--text-muted)'} /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)'}}>{d.name}</div>
                 <div style={{fontSize:12,color:'var(--text-secondary)',marginTop:4,fontWeight:500}}>{d.address}</div>
@@ -1264,7 +1264,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
           {profile.avatar ? (
             <img src={profile.avatar} style={{width:'100%',height:'100%',objectFit:'cover'}} alt="Profile" />
           ) : (
-            <span>👤</span>
+            <User size={40} color="var(--text-muted)" />
           )}
           
           <div style={{
@@ -1362,9 +1362,9 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
           </div>
         </div>
         <div className="card">
-          {[['About FMN AgriSense','ℹ️','about'],['Privacy Policy','🔒','privacy'],['Contact FMN Support','🎧','support'],['Rate the App','⭐','rate'],['Share with Farmers','📤','share']].map(([l,e,key],i,arr)=>(
+          {[['About FMN AgriSense',<Info size={22} color="var(--text-muted)" />,'about'],['Privacy Policy',<Lock size={22} color="var(--text-muted)" />,'privacy'],['Contact FMN Support',<Headset size={22} color="var(--text-muted)" />,'support'],['Rate the App',<Star size={22} color="var(--text-muted)" />,'rate'],['Share with Farmers',<Share size={22} color="var(--text-muted)" />,'share']].map(([l,e,key],i,arr)=>(
             <button key={l} onClick={()=>setModal(key)} style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'13px 0',background:'none',border:'none',cursor:'pointer',textAlign:'left',fontFamily:'var(--font)',borderBottom:i<arr.length-1?'1px solid var(--bdcolor)':'none'}}>
-              <span style={{fontSize:22}}>{e}</span>
+              <span style={{display:'flex',alignItems:'center',justifyContent:'center',width:24}}>{e}</span>
               <span style={{flex:1,fontSize:14,color:'var(--text-primary)',fontWeight:500}}>{l}</span>
               <Ic n="chevron" s={16} c="var(--text-muted)"/>
             </button>
@@ -1379,7 +1379,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         </div>
       </div>
 
-      {modal==='edit'&&<Modal title="✏️ Edit Profile" onClose={()=>setModal(null)}>
+      {modal==='edit'&&<Modal title={<><Wrench size={18} style={{verticalAlign:'middle',marginRight:6}}/>Edit Profile</>} onClose={()=>setModal(null)}>
         <Field label="Full Name" field="full_name" placeholder="Your full name"/>
         <Field label="Farm Name" field="farm_name" placeholder="e.g. Dominion Farms"/>
         <Field label="Phone" field="phone" placeholder="+234 ..."/>
@@ -1391,30 +1391,30 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         <button onClick={()=>{onSaveProfile(form);setModal(null)}} className="btn btn-primary" style={{width:'100%',marginTop:4,borderRadius:12}}>Save Changes</button>
       </Modal>}
 
-      {modal==='about'&&<Modal title="ℹ️ About FMN AgriSense" onClose={()=>setModal(null)}>
+      {modal==='about'&&<Modal title={<><Info size={18} style={{verticalAlign:'middle',marginRight:6}}/>About FMN AgriSense</>} onClose={()=>setModal(null)}>
         <div style={{textAlign:'center',marginBottom:20}}>
-          <div style={{fontSize:56, filter:'drop-shadow(0 4px 10px rgba(0,0,0,0.3))'}}>🌿</div>
+          <Leaf size={56} color="var(--text-highlight)" style={{filter:'drop-shadow(0 4px 10px rgba(0,0,0,0.3))'}} />
           <div style={{fontSize:20,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginTop:10}}>FMN AgriSense</div>
           <div style={{fontSize:13,color:'var(--text-secondary)',fontWeight:500,marginTop:4}}>Version 1.0.0  •  FMN Innovation 5.0</div>
         </div>
         {[
-          ['🤖 Real AI','Powered by EfficientNet trained on 21,367 cassava images from the Kaggle Cassava Disease dataset.'],
-          ['🎯 Mission','Empowering Nigerian cassava farmers with instant AI disease detection, treatment plans, and FMN product recommendations.'],
-          ['🏆 Competition','Built for FMN Innovation 5.0 to showcase how technology can protect Nigerian farms and increase yields.']
-        ].map(([t,d])=>(
+          [<Bot size={18} color="var(--text-primary)" />, 'Real AI','Powered by EfficientNet trained on 21,367 cassava images from the Kaggle Cassava Disease dataset.'],
+          [<Target size={18} color="var(--text-primary)" />, 'Mission','Empowering Nigerian cassava farmers with instant AI disease detection, treatment plans, and FMN product recommendations.'],
+          [<Trophy size={18} color="var(--text-primary)" />, 'Competition','Built for FMN Innovation 5.0 to showcase how technology can protect Nigerian farms and increase yields.']
+        ].map(([icon, t, d])=>(
           <div key={t} className="card" style={{marginBottom:12, background:'var(--surface)'}}>
-            <div style={{fontWeight:800,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:6}}>{t}</div>
+            <div style={{display:'flex',alignItems:'center',gap:8,fontWeight:800,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:6}}>{icon} {t}</div>
             <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.6,fontWeight:500}}>{d}</div>
           </div>
         ))}
       </Modal>}
 
-      {modal==='privacy'&&<Modal title="🔒 Privacy Policy" onClose={()=>setModal(null)}>
+      {modal==='privacy'&&<Modal title={<><Lock size={18} style={{verticalAlign:'middle',marginRight:6}}/>Privacy Policy</>} onClose={()=>setModal(null)}>
         {[
           ['Data We Collect','Farm location, crop photos, and usage data to improve disease detection. No financial data collected.'],
           ['How We Use It','Plant images are processed by AI for diagnosis. Images may be used anonymously to improve the model.'],
           ['Your Rights','You can request data deletion at any time by contacting FMN support.']
-        ].map(([t,d])=>(
+        ].map(([icon, t, d])=>(
           <div key={t} style={{marginBottom:16,paddingBottom:16,borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
             <div style={{fontWeight:800,fontSize:14,marginBottom:6,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>{t}</div>
             <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.6,fontWeight:500}}>{d}</div>
@@ -1422,17 +1422,17 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         ))}
       </Modal>}
 
-      {modal==='support'&&<Modal title="🎧 Contact FMN Support" onClose={()=>setModal(null)}>
+      {modal==='support'&&<Modal title={<><Headset size={18} style={{verticalAlign:'middle',marginRight:6}}/>Contact FMN Support</>} onClose={()=>setModal(null)}>
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:18,padding:20,textAlign:'center',marginBottom:20}}>
-          <div style={{fontSize:44,marginBottom:6}}>👨🏾‍💼</div>
+          <UserSquare size={44} color="var(--text-highlight)" style={{marginBottom:6}} />
           <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>FMN AgriSense Support</div>
           <div style={{fontSize:12,color:'var(--text-muted)',fontWeight:600,marginTop:4}}>Available Mon–Fri, 8am–5pm</div>
         </div>
         {[
-          ['📞','0800-FMN-FARM','Toll-free hotline'],
-          ['📧','agrisense@fmnplc.com','Response within 24 hours'],
-          ['💬','+234 803 FMN HELP','WhatsApp agronomist'],
-          ['🏢','1 Golden Penny Place, Lagos','FMN Head Office']
+          [<Phone size={18} />,'0800-FMN-FARM','Toll-free hotline'],
+          [<Mail size={18} />,'agrisense@fmnplc.com','Response within 24 hours'],
+          [<MessageSquare size={18} />,'+234 803 FMN HELP','WhatsApp agronomist'],
+          [<Building size={18} />,'1 Golden Penny Place, Lagos','FMN Head Office']
         ].map(([ic,c,s])=>(
           <div key={c} style={{display:'flex',alignItems:'center',gap:14,padding:'12px 0',borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
             <div style={{width:44,height:44,borderRadius:12,background:'var(--surface)',border:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{ic}</div>
@@ -1444,20 +1444,20 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         ))}
       </Modal>}
 
-      {modal==='rate'&&<Modal title="⭐ Rate FMN AgriSense" onClose={()=>setModal(null)}>
+      {modal==='rate'&&<Modal title={<><Star size={18} style={{verticalAlign:'middle',marginRight:6}}/>Rate FMN AgriSense</>} onClose={()=>setModal(null)}>
         <div style={{textAlign:'center',padding:'10px 0 10px'}}>
-          <div style={{fontSize:56,marginBottom:12}}>🌿</div>
+          <Leaf size={56} color="var(--text-highlight)" style={{marginBottom:12}} />
           <div style={{fontSize:16,fontWeight:800,marginBottom:20,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>How would you rate this app?</div>
           <div style={{display:'flex',justifyContent:'center',gap:12,marginBottom:20}}>
             {[1,2,3,4,5].map(s=>(
-              <button key={s} onClick={()=>setRating(s)} style={{fontSize:40,background:'none',border:'none',cursor:'pointer',opacity:s<=rating?1:0.25,transform:s<=rating?'scale(1.15)':'scale(1)',transition:'all 0.15s'}}>⭐</button>
+              <button key={s} onClick={()=>setRating(s)} style={{fontSize:40,background:'none',border:'none',cursor:'pointer',opacity:s<=rating?1:0.25,transform:s<=rating?'scale(1.15)':'scale(1)',transition:'all 0.15s'}}><Star size={40} fill={s<=rating?'currentColor':'none'} /></button>
             ))}
           </div>
           {rating>0&&<div style={{fontSize:14,color:'var(--text-highlight)',fontWeight:800,marginBottom:20,fontFamily:'var(--font-display)'}}>{['','Needs improvement 😐','Could be better 🙂','Pretty good! 😊','Love it! 😃','Amazing! 🤩'][rating]}</div>}
           {!ratingDone
             ?<button onClick={()=>{if(rating>0)setRatingDone(true)}} className="btn btn-primary" style={{width:'100%',borderRadius:12,opacity:rating>0?1:0.5,cursor:rating>0?'pointer':'default'}}>Submit Rating</button>
             :<div className="card" style={{background:'rgba(16,185,129,0.06)',borderColor:'rgba(16,185,129,0.25)',padding:20,borderRadius:16}}>
-                <div style={{fontSize:32,marginBottom:8}}>🎉</div>
+                <PartyPopper size={32} color="var(--text-highlight)" style={{marginBottom:8}} />
                 <div style={{fontWeight:800,fontSize:15,color:'var(--text-primary)'}}>Thank you!</div>
                 <div style={{fontSize:13,color:'var(--text-secondary)',marginTop:4,fontWeight:500}}>Your rating helps us serve Nigerian farmers better.</div>
               </div>
@@ -1465,9 +1465,9 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         </div>
       </Modal>}
 
-      {modal==='share'&&<Modal title="📤 Share with Farmers" onClose={()=>setModal(null)}>
+      {modal==='share'&&<Modal title={<><Share size={18} style={{verticalAlign:'middle',marginRight:6}}/>Share with Farmers</>} onClose={()=>setModal(null)}>
         <div className="card" style={{padding:20,textAlign:'center',marginBottom:16,background:'var(--surface)'}}>
-          <div style={{fontSize:40,marginBottom:6}}>🌿</div>
+          <Leaf size={40} color="var(--text-highlight)" style={{marginBottom:6}} />
           <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>FMN AgriSense</div>
           <div style={{fontSize:13,color:'var(--text-secondary)',marginTop:6,lineHeight:1.6,fontWeight:500}}>AI-powered cassava disease detection for Nigerian farmers. Free to use!</div>
         </div>
@@ -1488,10 +1488,10 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:10}}>
           {[
-            ['💬 WhatsApp','#25D366'],
-            ['📱 SMS','var(--text-highlight)'],
-            ['📘 Facebook','#1877F2'],
-            ['✉️ Email','var(--accent)']
+            [<><MessageCircle size={15} style={{marginRight:6,verticalAlign:'middle'}}/>WhatsApp</>,'#25D366'],
+            [<><Smartphone size={15} style={{marginRight:6,verticalAlign:'middle'}}/>SMS</>,'var(--text-highlight)'],
+            [<><Facebook size={15} style={{marginRight:6,verticalAlign:'middle'}}/>Facebook</>,'#1877F2'],
+            [<><Mail size={15} style={{marginRight:6,verticalAlign:'middle'}}/>Email</>,'var(--accent)']
           ].map(([l,bg])=>(
             <button key={l} style={{padding:'12px',background:bg,color:'white',border:'none',borderRadius:12,fontFamily:'var(--font-display)',fontWeight:700,fontSize:13,cursor:'pointer',boxShadow:'0 4px 10px rgba(0,0,0,0.15)'}}>{l}</button>
           ))}
@@ -1627,7 +1627,7 @@ function AdminDashboardTab({ users, scans, onRefresh, lastRefresh, adminDebug })
       {/* Debug Panel — shows what Supabase returned */}
       {adminDebug?.length > 0 && (
         <div style={{marginTop:24}}>
-          <div style={{fontSize:14, fontWeight:800, fontFamily:'var(--font-display)', marginBottom:8, color:'var(--text-muted)'}}>🔧 System Diagnostics</div>
+          <div style={{fontSize:14, fontWeight:800, fontFamily:'var(--font-display)', marginBottom:8, color:'var(--text-muted)'}}><><Wrench size={16} style={{marginRight:6,verticalAlign:'middle'}}/> System Diagnostics</></div>
           <div className="card" style={{padding:16, fontSize:12, fontFamily:'monospace', color:'var(--text-secondary)'}}>
             {adminDebug.map((line, i) => (
               <div key={i} style={{padding:'4px 0', borderBottom: i < adminDebug.length - 1 ? '1px solid var(--card-border)' : 'none'}}>
@@ -1758,7 +1758,7 @@ function AdminLogsTab({ users, scans }) {
         ) : filteredLogs.map((log, i) => (
           <div key={log.id} style={{padding:16, borderBottom: i < logs.length - 1 ? '1px solid var(--card-border)' : 'none', display:'flex', gap:12, alignItems:'center'}}>
             <div style={{width:36, height:36, borderRadius:'50%', background: log.type === 'scan' ? 'rgba(16,185,129,0.1)' : log.type === 'login' ? 'rgba(59,130,246,0.1)' : 'rgba(245,158,11,0.1)', display:'flex', alignItems:'center', justifyContent:'center'}}>
-              <span style={{fontSize:16}}>{log.type === 'scan' ? '🌿' : log.type === 'login' ? '📱' : '⚙️'}</span>
+              {log.type === 'scan' ? <Leaf size={16} /> : log.type === 'login' ? <Smartphone size={16} /> : <Settings size={16} />}
             </div>
             <div style={{flex:1}}>
               <div style={{fontWeight:700, fontSize:14, color:'var(--text-primary)'}}>{log.user}</div>
@@ -1810,7 +1810,7 @@ function AdminProfileTab({ profile, onSaveProfile, onLogout }) {
           {profile.avatar ? (
             <img src={profile.avatar} style={{width:'100%',height:'100%',objectFit:'cover'}} alt="Admin Profile" />
           ) : (
-            <span>👤</span>
+            <User size={40} color="var(--text-muted)" />
           )}
           
           <div style={{
@@ -1902,7 +1902,7 @@ function AuthScreen() {
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',justifyContent:'center',padding:20,background:'var(--bg-app)'}}>
       <div style={{textAlign:'center',marginBottom:40}}>
-        <div style={{fontSize:48,marginBottom:10}}>🌿</div>
+        <Leaf size={48} color="var(--text-highlight)" style={{marginBottom:10}} />
         <div style={{fontSize:28,fontWeight:900,fontFamily:'var(--font-display)',color:'var(--text-primary)',letterSpacing:-0.5}}>Cassava Doctor</div>
         <div style={{color:'var(--text-secondary)',fontSize:14,marginTop:8}}>Your AI crop protection assistant</div>
       </div>
@@ -2158,7 +2158,7 @@ export default function App() {
       <div className="app-shell" data-theme={theme}>
         <div className="phone" style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
           <div style={{textAlign:'center'}}>
-            <div style={{fontSize:48,marginBottom:12}}>🌿</div>
+            <Leaf size={48} color="var(--text-highlight)" style={{marginBottom:12}} />
             <div style={{color:'var(--text-secondary)',fontSize:14}}>Loading...</div>
           </div>
         </div>
@@ -2175,7 +2175,7 @@ export default function App() {
               background: 'var(--surface)', border: '1px solid var(--card-border)', borderRadius: '50%',
               width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'background 0.2s'
             }}>
-              <span style={{fontSize: 14}}>{theme === 'dark' ? '☀️' : '🌙'}</span>
+              {theme === 'dark' ? <Sun size={14}/> : <Moon size={14}/>}
             </button>
           </div>
           <AuthScreen />
@@ -2222,16 +2222,16 @@ export default function App() {
           borderBottom: '1px solid var(--card-border)',
           flexShrink: 0
         }}>
-          <span style={{ fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}>🌿 Cassava Doctor</span>
+          <span style={{ display:'flex',alignItems:'center',gap:6,fontSize: 14, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', letterSpacing: '0.2px' }}><Leaf size={14} color="var(--text-highlight)" /> Cassava Doctor</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {syncStatus === 'syncing' && <span style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>🔄 Syncing</span>}
-            {syncStatus === 'synced' && <span style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}>☁️ Synced</span>}
+            {syncStatus === 'syncing' && <span style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}><RefreshCw size={11} className="spin" /> Syncing</span>}
+            {syncStatus === 'synced' && <span style={{ background: 'rgba(16,185,129,0.12)', color: '#10b981', fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 4 }}><Cloud size={11} /> Synced</span>}
             
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} style={{
               background: 'var(--surface)', border: '1px solid var(--card-border)', borderRadius: '50%',
               width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'background 0.2s'
             }}>
-              <span style={{fontSize: 14}}>{theme === 'dark' ? '☀️' : '🌙'}</span>
+              {theme === 'dark' ? <Sun size={14}/> : <Moon size={14}/>}
             </button>
           </span>
         </div>
