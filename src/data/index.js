@@ -56,11 +56,11 @@ export const PRODUCTS = [
 ];
 
 export const DEALERS = [
-  { id:1, name:'AgriStore Ibadan',      address:'Ring Road, Ibadan, Oyo State',         phone:'+234 802 345 6789', distance:'1.2km', inStock:true  },
-  { id:2, name:'Agro Depot Lagos',      address:'Agege Motor Road, Lagos',              phone:'+234 803 456 7890', distance:'3.4km', inStock:true  },
-  { id:3, name:'Farm Inputs Abeokuta',  address:'Oke-Mosan, Abeokuta, Ogun State',      phone:'+234 704 567 8901', distance:'5.7km', inStock:false },
-  { id:4, name:'AgriHub Ilorin',        address:'Tanke Road, Ilorin, Kwara State',      phone:'+234 805 678 9012', distance:'8.1km', inStock:true  },
-  { id:5, name:'Rural Inputs Ondo',     address:'Akure Road, Ondo Town',                phone:'+234 706 789 0123', distance:'12.3km',inStock:true  },
+  { id:1, name:'Jubaili Agrotec Ibadan', address:'No. 9, Magazine Road, Jericho, Ibadan, Oyo State', phone:'+234 812 860 0062', distance:'4.2km', inStock:true },
+  { id:2, name:'Saro Agrosciences',      address:'Plot 6-8, Block F, Oluyole Industrial Estate, Ibadan', phone:'+234 807 749 4225', distance:'7.8km', inStock:true },
+  { id:3, name:'Dizengoff Nigeria',      address:'Plot 328, Block 12, Ogunnusi Road, Omole Phase 1, Lagos', phone:'+234 702 551 6364', distance:'115km', inStock:true },
+  { id:4, name:'Jubaili Agrotec Kano',   address:'Km 10, Hadejia Road, Gunduwawa District, Kano', phone:'+234 803 402 2512', distance:'820km', inStock:true },
+  { id:5, name:'Indorama Fertilizers',   address:'Indorama Complex, East-West Expressway, Eleme, Rivers State', phone:'+234 703 683 5998', distance:'640km', inStock:false },
 ];
 
 export const REMINDERS = [
