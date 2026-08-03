@@ -625,7 +625,7 @@ function DiagnosisScreen({ go, goBack, diseaseId, aiConfidence, allScores }) {
           <button onClick={()=>go('treatment',{diseaseId})} className="btn btn-primary" style={{borderRadius:14,padding:'12px'}}><Ic n="medkit" s={16} c="white"/>Treatment</button>
           <button onClick={()=>go('products',{diseaseId})} className="btn btn-outline" style={{borderRadius:14,padding:'12px'}}><Ic n="flask" s={16} c="var(--text-primary)"/>Products</button>
         </div>
-        <button onClick={()=>go('dealers')} className="btn" style={{width:'100%',background:'rgba(234,60,26,0.08)',color:'var(--accent)',border:'1px solid rgba(234,60,26,0.2)',borderRadius:14,padding:'14px',marginBottom:10}}><Ic n="location" s={16} c="var(--accent)"/>Find Nearest FMN Dealer</button>
+        <button onClick={()=>go('dealers')} className="btn" style={{width:'100%',background:'rgba(234,60,26,0.08)',color:'var(--accent)',border:'1px solid rgba(234,60,26,0.2)',borderRadius:14,padding:'14px',marginBottom:10}}><Ic n="location" s={16} c="var(--accent)"/>Find Nearest Dealer</button>
         <button onClick={()=>go('scan')} className="btn" style={{width:'100%',background:'transparent',color:'var(--text-muted)',fontSize:13}}><Ic n="scan" s={15} c="var(--text-muted)"/>Scan another plant</button>
       </div>
     </div>
@@ -721,7 +721,7 @@ function TreatmentScreen({ go, diseaseId }) {
               }}>{step}</span>
             </button>
           ))}
-          <button onClick={()=>go('products',{diseaseId})} className="btn btn-accent" style={{width:'100%',marginTop:8,borderRadius:14}}><Ic n="flask" s={15} c="white"/>View FMN Products →</button>
+          <button onClick={()=>go('products',{diseaseId})} className="btn btn-accent" style={{width:'100%',marginTop:8,borderRadius:14}}><Ic n="flask" s={15} c="white"/>View Products →</button>
         </>}
         {tab==='prevention'&&<>
           <div className="card" style={{marginBottom:14, background:'rgba(77, 138, 255, 0.03)'}}>
@@ -791,7 +791,7 @@ function ProductsScreen({ go, goBack, diseaseId }) {
         <div style={{display:'flex',alignItems:'center',gap:12}}>
           <button onClick={goBack} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
           <div>
-            <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>FMN Products</div>
+            <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>Recommended Products</div>
             <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>Agrochemicals & Fertilizers</div>
           </div>
         </div>
@@ -1067,7 +1067,7 @@ function DealersScreen({ go, goBack }) {
         <div style={{display:'flex',alignItems:'center',gap:12}}>
           <button onClick={goBack} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
           <div>
-            <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>Find FMN Dealer</div>
+            <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>Find Dealer</div>
             <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>{DEALERS.length} dealers near you</div>
           </div>
         </div>
@@ -1404,7 +1404,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         </div>
         {[
           [<Bot size={18} color="var(--text-primary)" />, 'Real AI','Powered by EfficientNet trained on 21,367 cassava images from the Kaggle Cassava Disease dataset.'],
-          [<Target size={18} color="var(--text-primary)" />, 'Mission','Empowering Nigerian cassava farmers with instant AI disease detection, treatment plans, and FMN product recommendations.'],
+          [<Target size={18} color="var(--text-primary)" />, 'Mission','Empowering Nigerian cassava farmers with instant AI disease detection, treatment plans, and product recommendations.'],
           [<Trophy size={18} color="var(--text-primary)" />, 'Competition','Built for FMN Innovation 5.0 to showcase how technology can protect Nigerian farms and increase yields.']
         ].map(([icon, t, d])=>(
           <div key={t} className="card" style={{marginBottom:12, background:'var(--surface)'}}>
