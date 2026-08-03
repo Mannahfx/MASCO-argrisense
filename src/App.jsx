@@ -566,7 +566,7 @@ function DiagnosisScreen({ go, diseaseId, aiConfidence, allScores }) {
         borderBottom: '1px solid var(--card-border)'
       }}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
-          <button onClick={()=>go('home')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <button onClick={goBack} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
           <span style={{color:'var(--text-primary)',fontWeight:800,fontFamily:'var(--font-display)',fontSize:16}}>Diagnosis Result</span>
           <div style={{width:38}}/>
         </div>
@@ -789,7 +789,7 @@ function ProductsScreen({ go, diseaseId }) {
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
       <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
         <div style={{display:'flex',alignItems:'center',gap:12}}>
-          <button onClick={()=>go('home')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <button onClick={goBack} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
           <div>
             <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>FMN Products</div>
             <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>Agrochemicals & Fertilizers</div>
@@ -1065,7 +1065,7 @@ function DealersScreen({ go }) {
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
       <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
         <div style={{display:'flex',alignItems:'center',gap:12}}>
-          <button onClick={()=>go('home')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <button onClick={goBack} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
           <div>
             <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>Find FMN Dealer</div>
             <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>{DEALERS.length} dealers near you</div>
@@ -1296,9 +1296,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
         <div style={{color:'var(--text-primary)',fontSize:22,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.3}}>{profile.full_name || profile.name || 'New Client'}</div>
         <div style={{color:'var(--text-secondary)',fontSize:13,marginTop:4,fontWeight:500}}>{profile.phone || ''}</div>
         <div style={{color:'var(--text-muted)',fontSize:13,marginTop:3,fontWeight:500}}>{profile.location || ''}</div>
-        <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:20,padding:'6px 14px',display:'inline-flex',alignItems:'center',gap:6,marginTop:12}}>
-          <Ic n="star" s={14} c="#fbbf24"/><span style={{color:'var(--text-secondary)',fontSize:11,fontWeight:750,letterSpacing:0.3}}>FMN User  •  Since Jan 2025</span>
-        </div>
+
       </div>
       <div style={{
         display:'grid',
@@ -1976,7 +1974,8 @@ export default function App() {
   const [adminScans, setAdminScans] = useState([])
   const [adminDebug, setAdminDebug] = useState([])
 
-  const [screen,  setScreen]  = useState('home')
+  const [screen,  setScreen]  = useState('home');
+  const [navHistory, setNavHistory] = useState([]);
   const [params,  setParams]  = useState({})
   const [analyzing, setAnalyzing] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('cassava_theme') || 'dark')
@@ -2111,7 +2110,23 @@ export default function App() {
     triggerSync(onStateUpdated, setSyncStatus);
   }
 
-  function go(s, p={}) { setScreen(s); setParams(p) }
+  function go(s, p={}) { 
+    setNavHistory(prev => [...prev, {screen, params}]);
+    setScreen(s); 
+    setParams(p); 
+  }
+
+  function goBack() {
+    if (navHistory.length > 0) {
+      const prev = navHistory[navHistory.length - 1];
+      setNavHistory(h => h.slice(0, -1));
+      setScreen(prev.screen);
+      setParams(prev.params);
+    } else {
+      setScreen('home');
+      setParams({});
+    }
+  }
 
   function startAnalyzing(diseaseId, confidence=null, allScores=null) {
     setAnalyzing(true)
