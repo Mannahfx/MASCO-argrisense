@@ -84,7 +84,8 @@ html, body, #root {
 
 .app-shell { 
   display: flex; 
-  min-height: 100vh; 
+  min-height: 100vh;
+  min-height: 100dvh;
   padding: 0; 
   background-color: var(--bg-app);
 }
@@ -92,7 +93,8 @@ html, body, #root {
 /* Full-screen responsive layout */
 .phone { 
   width: 100%; 
-  height: 100vh; 
+  height: 100vh;
+  height: 100dvh; 
   background: var(--bg-screen); 
   overflow: hidden; 
   display: flex; 
