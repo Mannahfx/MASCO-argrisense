@@ -554,7 +554,7 @@ function AnalyzingScreen() {
 }
 
 // ── DIAGNOSIS ────────────────────────────────────────────────────────────────
-function DiagnosisScreen({ go, diseaseId, aiConfidence, allScores }) {
+function DiagnosisScreen({ go, goBack, diseaseId, aiConfidence, allScores }) {
   const d = DISEASES.find(x=>x.id===diseaseId) || DISEASES[4]
   const conf = aiConfidence != null ? aiConfidence : d.confidence
   const isReal = aiConfidence != null
@@ -779,7 +779,7 @@ function TreatmentScreen({ go, diseaseId }) {
 }
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
-function ProductsScreen({ go, diseaseId }) {
+function ProductsScreen({ go, goBack, diseaseId }) {
   const [filter, setFilter] = useState('All')
   const d = DISEASES.find(x=>x.id===diseaseId)
   const recIds = d?.fmnProducts||[]
@@ -1059,7 +1059,7 @@ function HistoryScreen({ go, scans }) {
 }
 
 // ── DEALERS ──────────────────────────────────────────────────────────────────
-function DealersScreen({ go }) {
+function DealersScreen({ go, goBack }) {
   const [sel,setSel]=useState(null)
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
@@ -2158,7 +2158,7 @@ export default function App() {
   const time = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
   const activeNav = NAV.find(n=>n.id===screen)?.id || 'home'
 
-  const p = { go, ...params }
+  const p = { go, goBack, ...params }
   const renderScreen = () => {
     if (analyzing) return <AnalyzingScreen/>
     switch(screen) {
