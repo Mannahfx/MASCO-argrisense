@@ -1,4 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { Leaf, Sprout, Flower, Shrub, CheckCircle, FlaskConical, Bug, Shield, Beaker, Pill, TrendingUp, TreePine, Droplet, Eye, CloudRain, Scissors, Bot, Target, Trophy, Lock, Headset, UserSquare, Phone, Mail, MessageSquare, Building, Star, PartyPopper, Share, MessageCircle, Smartphone, Globe, Wrench, Settings, User, Sun, Moon, RefreshCw, Cloud, Store, Info } from 'lucide-react';
+
+const IconMap = { Leaf, Sprout, Flower, Shrub, CheckCircle, FlaskConical, Bug, Shield, Beaker, Pill, TrendingUp, TreePine, Droplet, Eye, CloudRain, Scissors };
+function DynamicIcon({ name, size=24, color='currentColor' }) {
+  const Icon = IconMap[name] || Leaf;
+  return <Icon size={size} color={color} />;
+}
 import { DISEASES, PRODUCTS, DEALERS, REMINDERS, HISTORY } from './data'
 import { 
   getLocalProfile, 
@@ -1490,7 +1497,7 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
           {[
             [<><MessageCircle size={15} style={{marginRight:6,verticalAlign:'middle'}}/>WhatsApp</>,'#25D366'],
             [<><Smartphone size={15} style={{marginRight:6,verticalAlign:'middle'}}/>SMS</>,'var(--text-highlight)'],
-            [<><Facebook size={15} style={{marginRight:6,verticalAlign:'middle'}}/>Facebook</>,'#1877F2'],
+            [<><Globe size={15} style={{marginRight:6,verticalAlign:'middle'}}/>Globe</>,'#1877F2'],
             [<><Mail size={15} style={{marginRight:6,verticalAlign:'middle'}}/>Email</>,'var(--accent)']
           ].map(([l,bg])=>(
             <button key={l} style={{padding:'12px',background:bg,color:'white',border:'none',borderRadius:12,fontFamily:'var(--font-display)',fontWeight:700,fontSize:13,cursor:'pointer',boxShadow:'0 4px 10px rgba(0,0,0,0.15)'}}>{l}</button>

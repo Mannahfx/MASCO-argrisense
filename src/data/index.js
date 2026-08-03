@@ -28,7 +28,7 @@ export const DISEASES = [
   },
   {
     id:'cgm', name:'Cassava Green Mottle', short:'CGM',
-    severity:'Moderate', sevColor:'#2E7D32', sevBg:'#E8F5E9', icon:'Seedling', confidence:82, color:'#2E7D32',
+    severity:'Moderate', sevColor:'#2E7D32', sevBg:'#E8F5E9', icon:'Shrub', confidence:82, color:'#2E7D32',
     desc:'A viral disease causing green mottling and distortion on young leaves.',
     symptoms:['Green mottling on young leaves','Mild leaf distortion','Reduced plant vigour','Some yield reduction'],
     treatment:['Remove severely infected plants','Control whitefly and mite vectors','Apply FMN GrowBoost foliar spray','Monitor weekly for spread','Apply FMN NPK to boost plant immunity'],
