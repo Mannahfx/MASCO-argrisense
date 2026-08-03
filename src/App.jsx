@@ -1136,9 +1136,23 @@ function DealersScreen({ go, goBack }) {
               <Ic n="chevron" s={16} c="var(--text-muted)"/>
             </button>
             {sel===d.id&&(
-              <div style={{marginTop:14,display:'flex',gap:10}}>
-                <button className="btn btn-outline" style={{flex:1,fontSize:12,padding:'10px',borderRadius:10}}><Ic n="phone" s={14} c="var(--text-primary)"/>{d.phone}</button>
-                <button className="btn btn-primary" style={{flex:1,fontSize:12,padding:'10px',borderRadius:10}}><Ic n="navigate" s={14} c="white"/>Directions</button>
+              <div style={{marginTop:14,display:'flex',flexDirection:'column',gap:10}}>
+                <div style={{width:'100%',height:200,borderRadius:12,overflow:'hidden',border:'1px solid var(--card-border)'}}>
+                  <iframe 
+                    width="100%" 
+                    height="100%" 
+                    style={{border:0}} 
+                    loading="lazy" 
+                    allowFullScreen 
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(d.name + ', ' + d.address)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}>
+                  </iframe>
+                </div>
+                <div style={{display:'flex',gap:10}}>
+                  <button className="btn btn-outline" style={{flex:1,fontSize:12,padding:'10px',borderRadius:10}}><Ic n="phone" s={14} c="var(--text-primary)"/>{d.phone}</button>
+                  <a href={`https://maps.google.com/maps?q=${encodeURIComponent(d.name + ', ' + d.address)}`} target="_blank" rel="noreferrer" style={{flex:1,textDecoration:'none'}}>
+                    <button className="btn btn-primary" style={{width:'100%',fontSize:12,padding:'10px',borderRadius:10}}><Ic n="navigate" s={14} c="white"/>Directions</button>
+                  </a>
+                </div>
               </div>
             )}
           </div>
