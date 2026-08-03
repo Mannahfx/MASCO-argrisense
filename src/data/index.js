@@ -4,36 +4,36 @@ export const DISEASES = [
     severity:'High', sevColor:'#E65100', sevBg:'#FFF3E0', icon:'Leaf', confidence:94, color:'#E65100',
     desc:'A viral disease spread by whiteflies causing mosaic yellowing on leaves and stunted growth.',
     symptoms:['Yellow-green mosaic patterns on leaves','Leaf distortion and puckering','Stunted plant growth','Reduced tuber size and yield'],
-    treatment:['Remove and destroy all infected plants immediately','Apply FMN BioGuard Fungicide at 2L/ha every 14 days','Use FMN WhiteFly Control spray','Plant CMD-resistant varieties next season','Sanitise all farm tools with 10% bleach solution'],
-    prevention:'Use certified disease-free planting material. Monitor weekly for whitefly.',
-    fmnProducts:['fmn-bioguard','fmn-whitefly','fmn-growboost'],
+    treatment:['Immediate roguing of infected plants','Deploy yellow sticky traps and FMN WhiteFly Control','Maintain weed-free field to remove alternative hosts','Source certified CMD-resistant cuttings for next season'],
+    prevention:'Use certified disease-free planting material. Control whitefly populations.',
+    fmnProducts:['fmn-whitefly','fmn-growboost'],
   },
   {
     id:'cbsd', name:'Cassava Brown Streak Disease', short:'CBSD',
     severity:'Critical', sevColor:'#B71C1C', sevBg:'#FFEBEE', icon:'Sprout', confidence:88, color:'#B71C1C',
     desc:'A devastating viral disease causing brown streaks on stems and roots, with potential total tuber loss.',
     symptoms:['Yellow-green chlorosis on leaves','Brown necrotic streaks on stems','Corky rot inside tubers','Premature leaf drop'],
-    treatment:['Uproot and burn all infected plants','Apply FMN StemGuard at 3L/ha','Disinfect all cutting tools','Monitor plants daily for 2 weeks','Report to local extension office'],
-    prevention:'Only plant CBSD-tolerant varieties. Never move material from infected fields.',
-    fmnProducts:['fmn-stemguard','fmn-rootboost','fmn-npk'],
+    treatment:['Uproot and burn symptomatic plants immediately','Do not use or sell harvested tubers showing corky necrosis','Disinfect all cutting tools with FMN SteriClean between plants','Do not move any stem cuttings from infected fields'],
+    prevention:'Plant CBSD-tolerant varieties. Enforce strict tool sanitation.',
+    fmnProducts:['fmn-stericlean','fmn-whitefly'],
   },
   {
     id:'cbb', name:'Cassava Bacterial Blight', short:'CBB',
     severity:'High', sevColor:'#6A1B9A', sevBg:'#F3E5F5', icon:'Flower', confidence:86, color:'#6A1B9A',
     desc:'A bacterial disease causing angular leaf spots, wilting and dieback of shoots.',
     symptoms:['Angular water-soaked leaf spots','Leaf wilting and yellowing','Stem cankers and gum exudate','Shoot tip dieback'],
-    treatment:['Remove and destroy all infected plant parts','Apply copper-based bactericide spray','Avoid working in field when wet','Use disease-free stem cuttings only','Apply FMN GrowBoost to strengthen healthy plants'],
-    prevention:'Use resistant varieties. Disinfect tools. Avoid overhead irrigation.',
-    fmnProducts:['fmn-growboost','fmn-npk'],
+    treatment:['Rogue heavily blighted plants and burn crop debris','Avoid working in the field when leaves are wet','Implement crop rotation with maize or legumes','Apply FMN NPK to strengthen plant cell walls'],
+    prevention:'Use resistant varieties. Disinfect tools with FMN SteriClean.',
+    fmnProducts:['fmn-stericlean','fmn-npk'],
   },
   {
     id:'cgm', name:'Cassava Green Mottle', short:'CGM',
     severity:'Moderate', sevColor:'#2E7D32', sevBg:'#E8F5E9', icon:'Shrub', confidence:82, color:'#2E7D32',
     desc:'A viral disease causing green mottling and distortion on young leaves.',
     symptoms:['Green mottling on young leaves','Mild leaf distortion','Reduced plant vigour','Some yield reduction'],
-    treatment:['Remove severely infected plants','Control whitefly and mite vectors','Apply FMN GrowBoost foliar spray','Monitor weekly for spread','Apply FMN NPK to boost plant immunity'],
-    prevention:'Use certified clean planting material. Control insect vectors early.',
-    fmnProducts:['fmn-growboost','fmn-whitefly','fmn-npk'],
+    treatment:['Remove and destroy stunted or mottled plants','Do not use stems from affected plants for propagation','Apply FMN GrowBoost foliar spray to asymptomatic neighbors'],
+    prevention:'Use certified clean planting material. Maintain overall field resilience.',
+    fmnProducts:['fmn-growboost','fmn-npk'],
   },
   {
     id:'healthy', name:'Healthy Plant', short:'Healthy',
@@ -47,9 +47,8 @@ export const DISEASES = [
 ];
 
 export const PRODUCTS = [
-  { id:'fmn-bioguard',  name:'FMN BioGuard Pro',        cat:'Fungicide',       price:'₦4,500',      desc:'Broad-spectrum biological fungicide for fungal and viral diseases.', dosage:'2L/ha every 14 days', icon:'FlaskConical', color:'#003087' },
   { id:'fmn-whitefly',  name:'FMN WhiteFly Control',    cat:'Insecticide',     price:'₦3,200',      desc:'Systemic insecticide for effective whitefly control.', dosage:'1.5L/ha', icon:'Bug', color:'#4527A0' },
-  { id:'fmn-stemguard', name:'FMN StemGuard',            cat:'Fungicide',       price:'₦5,800',      desc:'Systemic fungicide for stem and root protection.', dosage:'3L/ha at planting', icon:'Shield', color:'#BF360C' },
+  { id:'fmn-stericlean',name:'FMN SteriClean',          cat:'Disinfectant',    price:'₦2,500',      desc:'Broad-spectrum disinfectant for farm tools to prevent mechanical transmission of viruses and bacteria.', dosage:'10% solution', icon:'Shield', color:'#003087' },
   { id:'fmn-npk',       name:'FMN NPK 15-15-15',         cat:'Fertilizer',      price:'₦18,500/50kg',desc:'Balanced compound fertilizer for strong crop establishment.', dosage:'200kg/ha', icon:'Beaker', color:'#E65100' },
   { id:'fmn-urea',      name:'FMN Urea (46% N)',          cat:'Fertilizer',      price:'₦14,000/50kg',desc:'High-nitrogen fertilizer for rapid correction of deficiency.', dosage:'50kg/ha top-dress', icon:'Pill', color:'#1565C0' },
   { id:'fmn-growboost', name:'FMN GrowBoost',             cat:'Foliar',          price:'₦2,800',      desc:'Micronutrient foliar spray for rapid plant recovery and vigour.', dosage:'500ml/ha monthly', icon:'TrendingUp', color:'#2E7D32' },
@@ -65,7 +64,7 @@ export const DEALERS = [
 ];
 
 export const REMINDERS = [
-  { id:'1', title:'Apply FMN BioGuard Spray', time:'07:00 AM', days:'Mon, Thu', icon:'Droplet', enabled:true,  nextDue:'Today'       },
+  { id:'1', title:'Tool Disinfection check',  time:'07:00 AM', days:'Mon, Thu', icon:'Shield', enabled:true,  nextDue:'Today'       },
   { id:'2', title:'Inspect for Whitefly',     time:'06:30 AM', days:'Wed, Sat', icon:'Eye', enabled:true,  nextDue:'Tomorrow'    },
   { id:'3', title:'Apply FMN NPK Fertilizer', time:'08:00 AM', days:'Mon',      icon:'Sprout', enabled:true,  nextDue:'Mon, Mar 18' },
   { id:'4', title:'Soil Moisture Check',      time:'05:30 PM', days:'Tue, Fri', icon:'CloudRain', enabled:false, nextDue:'Fri, Mar 14' },
