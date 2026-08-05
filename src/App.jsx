@@ -2459,6 +2459,7 @@ export default function App() {
       case 'history':   return <HistoryScreen   {...p} scans={scans}/>
       case 'dealers':   return <DealersScreen   {...p}/>
       case 'market':    return <MarketScreen    {...p} openDrawer={() => setIsDrawerOpen(true)}/>
+      case 'agronomist': return <AgronomistChatScreen {...p} profile={profile} scan={scans.find(s=>s.id===params.scanId)} />
       case 'profile':   return <ProfileScreen   {...p} profile={profile} scans={scans} onSaveProfile={handleSaveProfile} syncStatus={syncStatus} onTriggerSync={handleTriggerSync} onLogout={handleLogout}/>
       default:          return <HomeScreen {...p} profile={profile} scans={scans} reminders={reminders}/>
     }
