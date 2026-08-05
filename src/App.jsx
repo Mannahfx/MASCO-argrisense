@@ -878,7 +878,8 @@ function RemindersScreen({ go, openDrawer, reminders, onSaveReminder, onDeleteRe
             </button>
             <div>
               <div style={{color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>Tasks</div>
-            <div style={{color:'var(--text-secondary)',fontSize:12,marginTop:4,fontWeight:500}}>{active} active tasks</div>
+              <div style={{color:'var(--text-secondary)',fontSize:12,marginTop:4,fontWeight:500}}>{active} active tasks</div>
+            </div>
           </div>
           <button onClick={()=>setShowAdd(true)} style={{width:40,height:40,borderRadius:'50%',background:'var(--surface)',border:'1px solid var(--card-border)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic n="plus" s={22} c="var(--text-primary)"/></button>
         </div>
