@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Leaf, Sprout, Flower, Shrub, CheckCircle, FlaskConical, Bug, Shield, Beaker, Pill, TrendingUp, TreePine, Droplet, Eye, CloudRain, Scissors, Bot, Target, Trophy, Lock, Headset, UserSquare, Phone, Mail, MessageSquare, Building, Star, PartyPopper, Share, MessageCircle, Smartphone, Globe, Wrench, Settings, User, Sun, Moon, RefreshCw, Cloud, Store, Info } from 'lucide-react';
+import { Leaf, Sprout, Flower, Shrub, CheckCircle, FlaskConical, Bug, Shield, Beaker, Pill, TrendingUp, TreePine, Droplet, Eye, CloudRain, Scissors, Bot, Target, Trophy, Lock, Headset, UserSquare, Phone, Mail, MessageSquare, Building, Star, PartyPopper, Share, MessageCircle, Smartphone, Globe, Wrench, Settings, User, Sun, Moon, RefreshCw, Cloud, Store, Info, Menu } from 'lucide-react';
 
 const IconMap = { Leaf, Sprout, Flower, Shrub, CheckCircle, FlaskConical, Bug, Shield, Beaker, Pill, TrendingUp, TreePine, Droplet, Eye, CloudRain, Scissors };
 function DynamicIcon({ name, size=24, color='currentColor' }) {
@@ -198,7 +198,7 @@ function Ic({ n, s=20, c='currentColor' }) {
 }
 
 // ── HOME ─────────────────────────────────────────────────────────────────────
-function HomeScreen({ go, profile, scans, reminders }) {
+function HomeScreen({ go, openDrawer, profile, scans, reminders }) {
   return (
     <div className="screen fade-in">
       <div style={{
@@ -207,10 +207,15 @@ function HomeScreen({ go, profile, scans, reminders }) {
         borderBottom: '1px solid var(--card-border)'
       }}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <div>
-            <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'New Client'}</div>
-            <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>
-              {[profile.location, profile.farm_size || profile.farmSize].filter(Boolean).join('  •  ')}
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <button onClick={openDrawer} style={{background:'transparent',border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',padding:0}}>
+              <Menu size={24} color="var(--text-primary)"/>
+            </button>
+            <div>
+              <div style={{color:'var(--text-primary)',fontSize:24,fontWeight:800,fontFamily:'var(--font-display)',letterSpacing:-0.5}}>{profile.full_name || profile.name || 'New Client'}</div>
+              <div style={{color:'var(--text-muted)',fontSize:12,marginTop:4,fontWeight:500}}>
+                {[profile.location, profile.farm_size || profile.farmSize].filter(Boolean).join('  •  ')}
+              </div>
             </div>
           </div>
           <button onClick={()=>go('profile')} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:42,height:42,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'background-color 0.2s'}}>
@@ -272,30 +277,6 @@ function HomeScreen({ go, profile, scans, reminders }) {
           </div>
           <Ic n="scan" s={54} c="rgba(255,255,255,0.9)"/>
         </button>
-
-        {/* Quick Actions */}
-        <div style={{fontSize:16,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:12}}>Quick Actions</div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10,marginBottom:20}}>
-          {[
-            ['flask','Products','var(--text-highlight)','products'],
-            ['location','Dealer','var(--accent)','dealers'],
-            ['bell','Reminders','#a855f7','reminders'],
-            ['clock','History','#10b981','history']
-          ].map(([ic,lb,col,sc])=>(
-            <button key={lb} onClick={()=>go(sc)} className="card card-interactive" style={{
-              borderRadius:16,
-              padding:'14px 4px',
-              display:'flex',
-              flexDirection:'column',
-              alignItems:'center',
-              gap:8,
-              cursor:'pointer'
-            }}>
-              <div style={{width:42,height:42,borderRadius:12,background:col+'1a',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic n={ic} s={20} c={col}/></div>
-              <span style={{fontSize:11,fontWeight:700,color:'var(--text-secondary)',textAlign:'center'}}>{lb}</span>
-            </button>
-          ))}
-        </div>
 
         {/* Upcoming */}
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
@@ -361,7 +342,7 @@ function HomeScreen({ go, profile, scans, reminders }) {
 // ── SCAN ─────────────────────────────────────────────────────────────────────
 const SAMPLES=[{label:'Mosaic',emoji:'🍃',id:'cmd'},{label:'Brown Streak',emoji:'🌿',id:'cbsd'},{label:'Blight',emoji:'🍂',id:'cbb'},{label:'Green Mottle',emoji:'🌱',id:'cgm'},{label:'Healthy',emoji:'✅',id:'healthy'}]
 
-function ScanScreen({ go, startAnalyzing }) {
+function ScanScreen({ go, openDrawer, startAnalyzing }) {
   const [preview,  setPreview]  = useState(null)
   const [status,   setStatus]   = useState('idle') // idle|loading|ready|error
   const [msg,      setMsg]      = useState('')
@@ -397,7 +378,12 @@ function ScanScreen({ go, startAnalyzing }) {
   return (
     <div className="screen fade-in">
       <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-        <div style={{color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>Scan Plant</div>
+        <div style={{display:'flex',alignItems:'center',gap:12,color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>
+          <button onClick={openDrawer} style={{background:'transparent',border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',padding:0}}>
+            <Menu size={20} color="var(--text-primary)"/>
+          </button>
+          Scan Plant
+        </div>
         <div style={{color:'var(--text-secondary)',fontSize:12,marginTop:4,fontWeight:500}}>{statusLabel}</div>
       </div>
       <div className="content" style={{padding:'20px'}}>
@@ -878,7 +864,7 @@ function ProductsScreen({ go, goBack, diseaseId }) {
 }
 
 // ── REMINDERS ────────────────────────────────────────────────────────────────
-function RemindersScreen({ go, reminders, onSaveReminder, onDeleteReminder }) {
+function RemindersScreen({ go, openDrawer, reminders, onSaveReminder, onDeleteReminder }) {
   const [showAdd,setShowAdd] = useState(false)
   const [newTitle,setNewTitle] = useState('')
   const active = reminders.filter(r=>r.enabled).length
@@ -886,8 +872,12 @@ function RemindersScreen({ go, reminders, onSaveReminder, onDeleteReminder }) {
     <div className="screen fade-in" style={{position:'relative'}}>
       <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <div>
-            <div style={{color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>Reminders</div>
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <button onClick={openDrawer} style={{background:'transparent',border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',padding:0}}>
+              <Menu size={20} color="var(--text-primary)"/>
+            </button>
+            <div>
+              <div style={{color:'var(--text-primary)',fontSize:20,fontWeight:800,fontFamily:'var(--font-display)'}}>Tasks</div>
             <div style={{color:'var(--text-secondary)',fontSize:12,marginTop:4,fontWeight:500}}>{active} active tasks</div>
           </div>
           <button onClick={()=>setShowAdd(true)} style={{width:40,height:40,borderRadius:'50%',background:'var(--surface)',border:'1px solid var(--card-border)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}><Ic n="plus" s={22} c="var(--text-primary)"/></button>
@@ -960,7 +950,7 @@ function RemindersScreen({ go, reminders, onSaveReminder, onDeleteReminder }) {
 }
 
 // ── HISTORY ──────────────────────────────────────────────────────────────────
-function HistoryScreen({ go, scans }) {
+function HistoryScreen({ go, openDrawer, scans }) {
   const [filter,setFilter] = useState('All')
   const filtered = scans.filter(h=>{
     if(filter==='All')return true
@@ -1059,13 +1049,13 @@ function HistoryScreen({ go, scans }) {
 }
 
 // ── DEALERS ──────────────────────────────────────────────────────────────────
-function DealersScreen({ go, goBack }) {
+function DealersScreen({ go, openDrawer, goBack }) {
   const [sel,setSel]=useState(null)
   return (
     <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
       <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
         <div style={{display:'flex',alignItems:'center',gap:12}}>
-          <button onClick={goBack} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+          <button onClick={openDrawer} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Menu size={18} color="var(--text-primary)"/></button>
           <div>
             <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>Find Dealer</div>
             <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>{DEALERS.length} dealers near you</div>
@@ -1163,7 +1153,7 @@ function DealersScreen({ go, goBack }) {
 }
 
 // ── PROFILE ──────────────────────────────────────────────────────────────────
-function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTriggerSync, onLogout }) {
+function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStatus, onTriggerSync, onLogout }) {
   const [notif,setNotif] = useState(true)
   const [offline,setOffline] = useState(false)
   const [loc,setLoc] = useState(true)
@@ -1262,10 +1252,13 @@ function ProfileScreen({ go, profile, scans, onSaveProfile, syncStatus, onTrigge
     <div className="screen fade-in" style={{position:'relative'}}>
       <div style={{
         background: 'var(--header-grad)',
-        padding: '28px 20px 24px',
+        padding: '16px 20px 24px',
         textAlign: 'center',
         borderBottom: '1px solid var(--card-border)'
       }}>
+        <div style={{display:'flex',justifyContent:'flex-start',marginBottom:10}}>
+          <button onClick={openDrawer} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Menu size={18} color="var(--text-primary)"/></button>
+        </div>
         <label style={{
           width:86,
           height:86,
@@ -1979,6 +1972,175 @@ function AuthScreen() {
   )
 }
 
+// ── SIDE DRAWER ──────────────────────────────────────────────────────────────
+function SideDrawer({ isOpen, onClose, go, currentScreen, profile }) {
+  if (!isOpen) return null;
+  const MENU = [
+    {id:'home', label:'Dashboard', icon:'home'},
+    {id:'scan', label:'Scan Plant', icon:'scan'},
+    {id:'market', label:'Market & Profits', icon:'TrendingUp'},
+    {id:'dealers', label:'Find Dealer', icon:'location'},
+    {id:'reminders', label:'Tasks & Schedule', icon:'bell'},
+    {id:'history', label:'Scan History', icon:'clock'},
+    {id:'profile', label:'Profile Settings', icon:'user'}
+  ];
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 1000, display: 'flex'
+    }}>
+      <div style={{
+        position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)'
+      }} onClick={onClose} />
+      <div className="fade-in" style={{
+        position: 'relative', width: '280px', height: '100%', background: 'var(--bg-app)', borderRight: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', boxShadow: '5px 0 25px rgba(0,0,0,0.5)', animation: 'slideInLeft 0.3s ease-out'
+      }}>
+        <div style={{padding: '30px 20px', background: 'var(--header-grad)', borderBottom: '1px solid var(--card-border)'}}>
+          <div style={{width: 50, height: 50, borderRadius: 25, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12}}>
+            <span style={{fontSize: 24, fontWeight: 800, color: 'white'}}>{(profile?.full_name || profile?.name || 'U')[0].toUpperCase()}</span>
+          </div>
+          <div style={{color: 'var(--text-primary)', fontSize: 18, fontWeight: 800, fontFamily: 'var(--font-display)'}}>{profile?.full_name || profile?.name || 'Farmer'}</div>
+          <div style={{color: 'var(--text-secondary)', fontSize: 12, marginTop: 4}}>{profile?.location || 'Nigeria'}</div>
+        </div>
+        <div style={{flex: 1, overflowY: 'auto', padding: '20px 10px'}}>
+          {MENU.map(item => {
+            const active = currentScreen === item.id;
+            return (
+              <button key={item.id} onClick={() => { go(item.id); onClose(); }} style={{
+                width: '100%', background: active ? 'var(--primary-light)' : 'transparent', border: 'none', borderRadius: 12, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', marginBottom: 6, transition: 'background 0.2s', textAlign: 'left'
+              }}>
+                {item.icon === 'TrendingUp' ? <TrendingUp size={20} color={active ? 'white' : 'var(--text-muted)'} /> : <Ic n={item.icon} s={20} c={active ? 'white' : 'var(--text-muted)'} />}
+                <span style={{fontSize: 15, fontWeight: 700, color: active ? 'white' : 'var(--text-primary)'}}>{item.label}</span>
+              </button>
+            )
+          })}
+        </div>
+        <div style={{padding: '20px', borderTop: '1px solid var(--card-border)'}}>
+          <div style={{fontSize: 10, color: 'var(--text-muted)', textAlign: 'center'}}>Manna AgriSense v1.1.0</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── MARKET SCREEN ────────────────────────────────────────────────────────────
+function MarketScreen({ goBack, openDrawer }) {
+  const [tab, setTab] = useState('prices'); // 'prices' | 'calculator'
+  const [farmSize, setFarmSize] = useState(2); // hectares
+  const [yieldPerHa, setYieldPerHa] = useState(20); // tons
+  const [expenses, setExpenses] = useState(350000); // NGN
+  
+  const avgPricePerTon = 65000;
+  
+  const totalYield = farmSize * yieldPerHa;
+  const revenue = totalYield * avgPricePerTon;
+  const profit = revenue - expenses;
+
+  return (
+    <div className="screen fade-in" style={{display:'flex',flexDirection:'column'}}>
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <button onClick={openDrawer} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Menu size={18} color="var(--text-primary)"/></button>
+        <div>
+          <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>Market & Profits</div>
+          <div style={{color:'var(--text-secondary)',fontSize:12,fontWeight:500,marginTop:2}}>Live prices & calculator</div>
+        </div>
+      </div>
+      
+      <div style={{padding: '20px', overflowY: 'auto'}}>
+        <div style={{display: 'flex', background: 'var(--surface)', borderRadius: 12, padding: 4, marginBottom: 20}}>
+          <button onClick={()=>setTab('prices')} style={{flex: 1, padding: '10px', borderRadius: 8, border: 'none', background: tab === 'prices' ? 'var(--primary-light)' : 'transparent', color: tab === 'prices' ? 'white' : 'var(--text-secondary)', fontWeight: 700, fontSize: 13, cursor: 'pointer', transition: 'all 0.2s'}}>Market Prices</button>
+          <button onClick={()=>setTab('calculator')} style={{flex: 1, padding: '10px', borderRadius: 8, border: 'none', background: tab === 'calculator' ? 'var(--primary-light)' : 'transparent', color: tab === 'calculator' ? 'white' : 'var(--text-secondary)', fontWeight: 700, fontSize: 13, cursor: 'pointer', transition: 'all 0.2s'}}>Profit Calculator</button>
+        </div>
+        
+        {tab === 'prices' && (
+          <div className="fade-in">
+            <div style={{background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 12, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10}}>
+              <span style={{fontSize: 20}}>🟢</span>
+              <div>
+                <div style={{fontSize: 13, fontWeight: 700, color: 'var(--text-primary)'}}>Live Data Active</div>
+                <div style={{fontSize: 11, color: 'var(--text-secondary)', marginTop: 2}}>Source: AFEX Nigeria • Aug 2026</div>
+              </div>
+            </div>
+            
+            <div style={{fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-display)', marginBottom: 12}}>Cassava Tubers (per Ton)</div>
+            {[
+              {loc: 'Ibadan, Oyo', p: '₦65,000', trend: 'up'},
+              {loc: 'Kano Market', p: '₦72,000', trend: 'up'},
+              {loc: 'Aba, Abia', p: '₦68,000', trend: 'down'},
+              {loc: 'Makurdi, Benue', p: '₦58,000', trend: 'flat'}
+            ].map(m => (
+              <div key={m.loc} className="card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', marginBottom: 10}}>
+                <div style={{fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)'}}>{m.loc}</div>
+                <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+                  <span style={{fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-display)'}}>{m.p}</span>
+                  {m.trend === 'up' && <TrendingUp size={16} color="#10b981" />}
+                  {m.trend === 'down' && <TrendingUp size={16} color="var(--accent)" style={{transform: 'rotate(180deg)'}}/>}
+                  {m.trend === 'flat' && <span style={{color: 'var(--text-muted)', fontWeight: 800}}>—</span>}
+                </div>
+              </div>
+            ))}
+            
+            <div style={{fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-display)', marginTop: 24, marginBottom: 12}}>Garri (50kg Bag)</div>
+            {[
+              {loc: 'Lagos (Mile 12)', p: '₦35,000', trend: 'up'},
+              {loc: 'Onitsha Main', p: '₦32,500', trend: 'up'},
+              {loc: 'Ibadan', p: '₦30,000', trend: 'up'}
+            ].map(m => (
+              <div key={m.loc} className="card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', marginBottom: 10}}>
+                <div style={{fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)'}}>{m.loc}</div>
+                <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+                  <span style={{fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-display)'}}>{m.p}</span>
+                  <TrendingUp size={16} color="#10b981" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {tab === 'calculator' && (
+          <div className="fade-in">
+            <div className="card" style={{padding: '20px', marginBottom: 20}}>
+              <div style={{marginBottom: 16}}>
+                <label style={{display: 'block', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 700, marginBottom: 8}}>Farm Size (Hectares)</label>
+                <input type="number" value={farmSize} onChange={e=>setFarmSize(Number(e.target.value))} className="inp" style={{width: '100%'}} />
+              </div>
+              <div style={{marginBottom: 16}}>
+                <label style={{display: 'block', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 700, marginBottom: 8}}>Est. Yield (Tons/ha)</label>
+                <input type="number" value={yieldPerHa} onChange={e=>setYieldPerHa(Number(e.target.value))} className="inp" style={{width: '100%'}} />
+              </div>
+              <div>
+                <label style={{display: 'block', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 700, marginBottom: 8}}>Total Expenses (₦)</label>
+                <input type="number" value={expenses} onChange={e=>setExpenses(Number(e.target.value))} className="inp" style={{width: '100%'}} />
+              </div>
+            </div>
+            
+            <div className="card" style={{background: 'var(--bg-app)', border: '1px solid var(--card-border)', padding: '20px'}}>
+              <div style={{fontSize: 14, fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-display)', marginBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 10}}>Projection</div>
+              
+              <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 12}}>
+                <span style={{color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600}}>Total Yield:</span>
+                <span style={{color: 'var(--text-primary)', fontSize: 13, fontWeight: 800}}>{totalYield.toLocaleString()} Tons</span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 12}}>
+                <span style={{color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600}}>Avg. Market Price:</span>
+                <span style={{color: 'var(--text-primary)', fontSize: 13, fontWeight: 800}}>₦{avgPricePerTon.toLocaleString()}/Ton</span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 16}}>
+                <span style={{color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600}}>Gross Revenue:</span>
+                <span style={{color: 'var(--text-primary)', fontSize: 13, fontWeight: 800}}>₦{revenue.toLocaleString()}</span>
+              </div>
+              
+              <div style={{display: 'flex', justifyContent: 'space-between', background: profit >= 0 ? 'rgba(16,185,129,0.15)' : 'rgba(234,60,26,0.15)', padding: '16px', borderRadius: 12, alignItems: 'center'}}>
+                <span style={{color: profit >= 0 ? '#10b981' : 'var(--accent)', fontSize: 15, fontWeight: 800}}>Net Profit:</span>
+                <span style={{color: profit >= 0 ? '#10b981' : 'var(--accent)', fontSize: 20, fontWeight: 900, fontFamily: 'var(--font-display)'}}>₦{profit.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -1988,6 +2150,7 @@ export default function App() {
   const [adminScans, setAdminScans] = useState([])
   const [adminDebug, setAdminDebug] = useState([])
 
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [screen,  setScreen]  = useState('home');
   const [navHistory, setNavHistory] = useState([]);
   const [params,  setParams]  = useState({})
@@ -2172,7 +2335,7 @@ export default function App() {
   const time = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
   const activeNav = NAV.find(n=>n.id===screen)?.id || 'home'
 
-  const p = { go, goBack, ...params }
+  const p = { go, goBack, openDrawer: () => setIsDrawerOpen(true), ...params }
   const renderScreen = () => {
     if (analyzing) return <AnalyzingScreen/>
     switch(screen) {
@@ -2184,6 +2347,7 @@ export default function App() {
       case 'reminders': return <RemindersScreen {...p} reminders={reminders} onSaveReminder={handleSaveReminder} onDeleteReminder={handleDeleteReminder}/>
       case 'history':   return <HistoryScreen   {...p} scans={scans}/>
       case 'dealers':   return <DealersScreen   {...p}/>
+      case 'market':    return <MarketScreen    {...p} openDrawer={() => setIsDrawerOpen(true)}/>
       case 'profile':   return <ProfileScreen   {...p} profile={profile} scans={scans} onSaveProfile={handleSaveProfile} syncStatus={syncStatus} onTriggerSync={handleTriggerSync} onLogout={handleLogout}/>
       default:          return <HomeScreen {...p} profile={profile} scans={scans} reminders={reminders}/>
     }
@@ -2247,6 +2411,7 @@ export default function App() {
   return (
     <div className="app-shell" data-theme={theme}>
       <div className="phone">
+        <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} go={go} currentScreen={screen} profile={profile} />
         {/* Top app bar */}
         <div style={{
           background: 'var(--bg-app)',
@@ -2275,18 +2440,6 @@ export default function App() {
         <div style={{flex:1,overflow:'hidden',display:'flex',flexDirection:'column'}}>
           {renderScreen()}
         </div>
-        {!analyzing&&(
-          <nav className="bottom-nav">
-            {NAV.map(n=>(
-              <button key={n.id} onClick={()=>go(n.id)} className={`nav-item${activeNav===n.id?' active':''}`}>
-                <div style={{ background: activeNav===n.id ? 'var(--primary-light)' : 'transparent', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s', marginBottom: 2 }}>
-                  <Ic n={n.icon} s={20} c={activeNav===n.id?'white':'var(--text-muted)'}/>
-                </div>
-                {n.label}
-              </button>
-            ))}
-          </nav>
-        )}
       </div>
     </div>
   )
