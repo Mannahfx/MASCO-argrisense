@@ -611,6 +611,7 @@ function DiagnosisScreen({ go, goBack, diseaseId, aiConfidence, allScores }) {
           <button onClick={()=>go('treatment',{diseaseId})} className="btn btn-primary" style={{borderRadius:14,padding:'12px'}}><Ic n="medkit" s={16} c="white"/>Treatment</button>
           <button onClick={()=>go('products',{diseaseId})} className="btn btn-outline" style={{borderRadius:14,padding:'12px'}}><Ic n="flask" s={16} c="var(--text-primary)"/>Products</button>
         </div>
+        <button onClick={()=>go('agronomist',{diseaseId, scanId: params.scanId})} className="btn btn-accent" style={{width:'100%',borderRadius:14,padding:'14px',marginBottom:10,background:'linear-gradient(135deg, var(--text-highlight) 0%, var(--primary-light) 100%)',border:'none',color:'white',boxShadow:'0 4px 12px rgba(16,185,129,0.3)'}}><MessageSquare size={16} color="white" /> Chat with AI Agronomist</button>
         <button onClick={()=>go('dealers')} className="btn" style={{width:'100%',background:'rgba(234,60,26,0.08)',color:'var(--accent)',border:'1px solid rgba(234,60,26,0.2)',borderRadius:14,padding:'14px',marginBottom:10}}><Ic n="location" s={16} c="var(--accent)"/>Find Nearest Dealer</button>
         <button onClick={()=>go('scan')} className="btn" style={{width:'100%',background:'transparent',color:'var(--text-muted)',fontSize:13}}><Ic n="scan" s={15} c="var(--text-muted)"/>Scan another plant</button>
       </div>
@@ -763,6 +764,115 @@ function TreatmentScreen({ go, diseaseId }) {
     </div>
   )
 }
+
+// ── AGRONOMIST CHAT ─────────────────────────────────────────────────────────────
+function AgronomistChatScreen({ go, goBack, scan, profile, onSaveScan }) {
+  const d = DISEASES.find(x => x.id === scan.diseaseId) || { name: 'Unknown' };
+  
+  const initialMessages = [
+    { sender: 'ai', text: `Hello ${profile.full_name || 'there'}! I'm your Manna Expert Agronomist.` },
+    { sender: 'ai', text: `I see your cassava plant in ${profile.location || 'your farm'} has signs of ${d.name}. I'm here to guide you through the treatment process.` }
+  ];
+
+  const [messages, setMessages] = useState(initialMessages);
+  const [input, setInput] = useState('');
+  const chatRef = useRef(null);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    setMessages(prev => [...prev, { sender: 'user', text: input }]);
+    const userMsg = input.toLowerCase();
+    setInput('');
+    
+    setTimeout(() => {
+      let reply = "I'm analyzing your request...";
+      if (userMsg.includes('treat') || userMsg.includes('cure') || userMsg.includes('help')) {
+        reply = `To treat ${d.name}, I recommend: ${d.treatment ? d.treatment[0] : 'Using Manna BioGuard immediately'}. Would you like me to find a local dealer for the required products?`;
+      } else if (userMsg.includes('yes') || userMsg.includes('dealer')) {
+        reply = "Great! You can tap the 'Find Dealer' option from the main menu to see verified Manna stockists near you.";
+      } else if (userMsg.includes('done') || userMsg.includes('applied') || userMsg.includes('finished')) {
+        reply = "Excellent job! I will mark this treatment as complete in your history.";
+        markAsTreated();
+      } else {
+        reply = `I understand. Remember, treating ${d.name} early is key to saving your yield. Let me know if you need step-by-step guidance.`;
+      }
+      setMessages(prev => [...prev, { sender: 'ai', text: reply }]);
+    }, 1000);
+  };
+
+  const markAsTreated = () => {
+    onSaveScan({ ...scan, treated: true });
+  };
+
+  return (
+    <div className="screen fade-in" style={{display:'flex',flexDirection:'column',overflow:'hidden', background:'var(--bg-app)'}}>
+      <div className="hdr" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: 'var(--nav-bg)', zIndex: 10 }}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <button onClick={goBack} style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:'50%',width:38,height:38,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}><Ic n="back" s={18} c="var(--text-primary)"/></button>
+            <div>
+              <div style={{color:'var(--text-primary)',fontSize:18,fontWeight:800,fontFamily:'var(--font-display)'}}>AI Agronomist</div>
+              <div style={{color:'var(--text-highlight)',fontSize:12,fontWeight:600,marginTop:2}}>● Online</div>
+            </div>
+          </div>
+          <button onClick={markAsTreated} disabled={scan.treated} style={{background:scan.treated?'rgba(16,185,129,0.1)':'var(--primary)',border:scan.treated?'1px solid rgba(16,185,129,0.2)':'none',color:scan.treated?'#10b981':'white',padding:'8px 14px',borderRadius:20,fontSize:12,fontWeight:700,cursor:scan.treated?'default':'pointer',transition:'background 0.2s'}}>
+            {scan.treated ? '✓ Treated' : 'Mark as Treated'}
+          </button>
+        </div>
+      </div>
+      
+      <div ref={chatRef} className="content" style={{flex:1, overflowY:'auto', padding:'20px', display:'flex', flexDirection:'column', gap:16}}>
+        {messages.map((m, i) => (
+          <div key={i} style={{
+            alignSelf: m.sender==='ai'?'flex-start':'flex-end',
+            maxWidth: '85%',
+            background: m.sender==='ai'?'var(--card)':'var(--primary-light)',
+            border: m.sender==='ai'?'1px solid var(--card-border)':'none',
+            color: m.sender==='ai'?'var(--text-primary)':'#fff',
+            padding:'12px 16px',
+            borderRadius: m.sender==='ai'?'16px 16px 16px 4px':'16px 16px 4px 16px',
+            fontSize:14,
+            lineHeight:1.5,
+            fontWeight:500,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}>
+            {m.text}
+          </div>
+        ))}
+      </div>
+
+      <div style={{padding:'16px', background:'var(--nav-bg)', borderTop:'1px solid var(--card-border)', display:'flex', gap:10}}>
+        <input 
+          type="text" 
+          value={input} 
+          onChange={e=>setInput(e.target.value)} 
+          onKeyDown={e=>e.key==='Enter'&&handleSend()}
+          placeholder="Ask a question..." 
+          style={{
+            flex:1, 
+            background:'var(--surface)', 
+            border:'1px solid var(--card-border)', 
+            borderRadius:24, 
+            padding:'12px 16px', 
+            color:'var(--text-primary)', 
+            outline:'none',
+            fontSize:14
+          }} 
+        />
+        <button onClick={handleSend} style={{width:44,height:44,borderRadius:'50%',background:'var(--primary-light)',border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
+          <Ic n="message" s={20} c="white" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
 function ProductsScreen({ go, goBack, diseaseId }) {
@@ -1014,7 +1124,7 @@ function HistoryScreen({ go, openDrawer, scans }) {
         {filtered.map(item=>{
           const d=DISEASES.find(x=>x.id===item.diseaseId)||DISEASES[4]
           return (
-            <button key={item.id} onClick={()=>go('diagnosis',{diseaseId:item.diseaseId})} className="card card-interactive" style={{
+            <button key={item.id} onClick={()=>go('diagnosis',{diseaseId:item.diseaseId, scanId:item.id})} className="card card-interactive" style={{
               width:'100%',
               display:'flex',
               alignItems:'center',
@@ -2328,7 +2438,7 @@ export default function App() {
         updatedAt: Date.now()
       };
       handleSaveScan(newScan);
-      go('diagnosis', { diseaseId, aiConfidence: confidence, allScores })
+      go('diagnosis', { diseaseId, aiConfidence: confidence, allScores, scanId: newScan.id })
     }, 2500)
   }
 
@@ -2336,7 +2446,7 @@ export default function App() {
   const time = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
   const activeNav = NAV.find(n=>n.id===screen)?.id || 'home'
 
-  const p = { go, goBack, openDrawer: () => setIsDrawerOpen(true), ...params }
+  const p = { go, goBack, openDrawer: () => setIsDrawerOpen(true), onSaveScan: handleSaveScan, ...params }
   const renderScreen = () => {
     if (analyzing) return <AnalyzingScreen/>
     switch(screen) {
