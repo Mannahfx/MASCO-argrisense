@@ -717,9 +717,9 @@ function TreatmentScreen({ go, diseaseId }) {
           {[
             'Use certified disease-free planting materials every season',
             'Conduct soil tests before planting',
-            'Apply FMN preventive spray from day one',
+            'Apply Manna preventive spray from day one',
             'Keep detailed farm records of all treatments',
-            'Attend FMN farmer training workshops'
+            'Attend Manna farmer training workshops'
           ].map((t,i)=>(
             <div key={i} className="card" style={{display:'flex',gap:12,marginBottom:10,alignItems:'flex-start'}}>
               <div style={{marginTop:3}}><Ic n="check" s={16} c="#10b981"/></div>
@@ -768,7 +768,7 @@ function TreatmentScreen({ go, diseaseId }) {
 function ProductsScreen({ go, goBack, diseaseId }) {
   const [filter, setFilter] = useState('All')
   const d = DISEASES.find(x=>x.id===diseaseId)
-  const recIds = d?.fmnProducts||[]
+  const recIds = d?.mannaProducts||[]
   const cats = ['All','Fertilizer','Fungicide','Insecticide','Foliar','Root Stimulant']
   const filtered = filter==='All' ? PRODUCTS : PRODUCTS.filter(p=>p.cat===filter)
   return (
@@ -930,7 +930,7 @@ function RemindersScreen({ go, openDrawer, reminders, onSaveReminder, onDeleteRe
               <span style={{fontSize:18,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>Add Reminder</span>
               <button onClick={()=>setShowAdd(false)} style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:'var(--text-muted)'}}>✕</button>
             </div>
-            <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="e.g. Apply FMN BioGuard Spray" style={{
+            <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="e.g. Apply Manna BioGuard Spray" style={{
               width:'100%',
               padding:'12px 14px',
               borderRadius:12,
@@ -1366,7 +1366,7 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
           {/* Cloud Sync Manual Trigger */}
           <div style={{display:'flex',alignItems:'center',padding:'12px 0',gap:12}}>
             <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>FMN Cloud Sync</div>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>Manna Cloud Sync</div>
               <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>Status: <span style={{fontWeight:750,color:syncStatus==='synced'?'#10b981':'var(--text-highlight)',textTransform:'capitalize'}}>{syncStatus}</span></div>
             </div>
             <button onClick={onTriggerSync} disabled={syncStatus === 'syncing'} className="btn btn-primary" style={{padding:'8px 14px',fontSize:12,borderRadius:10,width:'auto'}}>
@@ -1375,7 +1375,7 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
           </div>
         </div>
         <div className="card">
-          {[['About FMN AgriSense',<Info size={22} color="var(--text-muted)" />,'about'],['Privacy Policy',<Lock size={22} color="var(--text-muted)" />,'privacy'],['Contact FMN Support',<Headset size={22} color="var(--text-muted)" />,'support'],['Rate the App',<Star size={22} color="var(--text-muted)" />,'rate'],['Share with Farmers',<Share size={22} color="var(--text-muted)" />,'share']].map(([l,e,key],i,arr)=>(
+          {[['About Manna AgriSense',<Info size={22} color="var(--text-muted)" />,'about'],['Privacy Policy',<Lock size={22} color="var(--text-muted)" />,'privacy'],['Contact Manna Support',<Headset size={22} color="var(--text-muted)" />,'support'],['Rate the App',<Star size={22} color="var(--text-muted)" />,'rate'],['Share with Farmers',<Share size={22} color="var(--text-muted)" />,'share']].map(([l,e,key],i,arr)=>(
             <button key={l} onClick={()=>setModal(key)} style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'13px 0',background:'none',border:'none',cursor:'pointer',textAlign:'left',fontFamily:'var(--font)',borderBottom:i<arr.length-1?'1px solid var(--bdcolor)':'none'}}>
               <span style={{display:'flex',alignItems:'center',justifyContent:'center',width:24}}>{e}</span>
               <span style={{flex:1,fontSize:14,color:'var(--text-primary)',fontWeight:500}}>{l}</span>
@@ -1387,8 +1387,8 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
           Sign Out
         </button>
         <div style={{textAlign:'center',fontSize:11,color:'var(--text-muted)',marginTop:20,lineHeight:1.8,fontWeight:500}}>
-          FMN AgriSense  •  Version 1.0.0<br/>
-          Built for FMN Innovation 5.0  •  March 2026
+          Manna AgriSense  •  Version 1.0.0<br/>
+          Built for Manna Innovation 5.0  •  March 2026
         </div>
       </div>
 
@@ -1404,16 +1404,16 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
         <button onClick={()=>{onSaveProfile(form);setModal(null)}} className="btn btn-primary" style={{width:'100%',marginTop:4,borderRadius:12}}>Save Changes</button>
       </Modal>}
 
-      {modal==='about'&&<Modal title={<><Info size={18} style={{verticalAlign:'middle',marginRight:6}}/>About FMN AgriSense</>} onClose={()=>setModal(null)}>
+      {modal==='about'&&<Modal title={<><Info size={18} style={{verticalAlign:'middle',marginRight:6}}/>About Manna AgriSense</>} onClose={()=>setModal(null)}>
         <div style={{textAlign:'center',marginBottom:20}}>
           <Leaf size={56} color="var(--text-highlight)" style={{filter:'drop-shadow(0 4px 10px rgba(0,0,0,0.3))'}} />
-          <div style={{fontSize:20,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginTop:10}}>FMN AgriSense</div>
-          <div style={{fontSize:13,color:'var(--text-secondary)',fontWeight:500,marginTop:4}}>Version 1.0.0  •  FMN Innovation 5.0</div>
+          <div style={{fontSize:20,fontWeight:800,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginTop:10}}>Manna AgriSense</div>
+          <div style={{fontSize:13,color:'var(--text-secondary)',fontWeight:500,marginTop:4}}>Version 1.0.0  •  Manna Innovation 5.0</div>
         </div>
         {[
           [<Bot size={18} color="var(--text-primary)" />, 'Real AI','Powered by EfficientNet trained on 21,367 cassava images from the Kaggle Cassava Disease dataset.'],
           [<Target size={18} color="var(--text-primary)" />, 'Mission','Empowering Nigerian cassava farmers with instant AI disease detection, treatment plans, and product recommendations.'],
-          [<Trophy size={18} color="var(--text-primary)" />, 'Competition','Built for FMN Innovation 5.0 to showcase how technology can protect Nigerian farms and increase yields.']
+          [<Trophy size={18} color="var(--text-primary)" />, 'Competition','Built for Manna Innovation 5.0 to showcase how technology can protect Nigerian farms and increase yields.']
         ].map(([icon, t, d])=>(
           <div key={t} className="card" style={{marginBottom:12, background:'var(--surface)'}}>
             <div style={{display:'flex',alignItems:'center',gap:8,fontWeight:800,fontSize:14,color:'var(--text-primary)',fontFamily:'var(--font-display)',marginBottom:6}}>{icon} {t}</div>
@@ -1426,7 +1426,7 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
         {[
           ['Data We Collect','Farm location, crop photos, and usage data to improve disease detection. No financial data collected.'],
           ['How We Use It','Plant images are processed by AI for diagnosis. Images may be used anonymously to improve the model.'],
-          ['Your Rights','You can request data deletion at any time by contacting FMN support.']
+          ['Your Rights','You can request data deletion at any time by contacting Manna support.']
         ].map(([icon, t, d])=>(
           <div key={t} style={{marginBottom:16,paddingBottom:16,borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
             <div style={{fontWeight:800,fontSize:14,marginBottom:6,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>{t}</div>
@@ -1435,17 +1435,17 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
         ))}
       </Modal>}
 
-      {modal==='support'&&<Modal title={<><Headset size={18} style={{verticalAlign:'middle',marginRight:6}}/>Contact FMN Support</>} onClose={()=>setModal(null)}>
+      {modal==='support'&&<Modal title={<><Headset size={18} style={{verticalAlign:'middle',marginRight:6}}/>Contact Manna Support</>} onClose={()=>setModal(null)}>
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:18,padding:20,textAlign:'center',marginBottom:20}}>
           <UserSquare size={44} color="var(--text-highlight)" style={{marginBottom:6}} />
-          <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>FMN AgriSense Support</div>
+          <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>Manna AgriSense Support</div>
           <div style={{fontSize:12,color:'var(--text-muted)',fontWeight:600,marginTop:4}}>Available Mon–Fri, 8am–5pm</div>
         </div>
         {[
-          [<Phone size={18} />,'0800-FMN-FARM','Toll-free hotline'],
-          [<Mail size={18} />,'agrisense@fmnplc.com','Response within 24 hours'],
-          [<MessageSquare size={18} />,'+234 803 FMN HELP','WhatsApp agronomist'],
-          [<Building size={18} />,'1 Golden Penny Place, Lagos','FMN Head Office']
+          [<Phone size={18} />,'0800-Manna-FARM','Toll-free hotline'],
+          [<Mail size={18} />,'agrisense@manna.com','Response within 24 hours'],
+          [<MessageSquare size={18} />,'+234 803 Manna HELP','WhatsApp agronomist'],
+          [<Building size={18} />,'1 Golden Penny Place, Lagos','Manna Head Office']
         ].map(([ic,c,s])=>(
           <div key={c} style={{display:'flex',alignItems:'center',gap:14,padding:'12px 0',borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
             <div style={{width:44,height:44,borderRadius:12,background:'var(--surface)',border:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,flexShrink:0}}>{ic}</div>
@@ -1457,7 +1457,7 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
         ))}
       </Modal>}
 
-      {modal==='rate'&&<Modal title={<><Star size={18} style={{verticalAlign:'middle',marginRight:6}}/>Rate FMN AgriSense</>} onClose={()=>setModal(null)}>
+      {modal==='rate'&&<Modal title={<><Star size={18} style={{verticalAlign:'middle',marginRight:6}}/>Rate Manna AgriSense</>} onClose={()=>setModal(null)}>
         <div style={{textAlign:'center',padding:'10px 0 10px'}}>
           <Leaf size={56} color="var(--text-highlight)" style={{marginBottom:12}} />
           <div style={{fontSize:16,fontWeight:800,marginBottom:20,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>How would you rate this app?</div>
@@ -1481,12 +1481,12 @@ function ProfileScreen({ go, openDrawer, profile, scans, onSaveProfile, syncStat
       {modal==='share'&&<Modal title={<><Share size={18} style={{verticalAlign:'middle',marginRight:6}}/>Share with Farmers</>} onClose={()=>setModal(null)}>
         <div className="card" style={{padding:20,textAlign:'center',marginBottom:16,background:'var(--surface)'}}>
           <Leaf size={40} color="var(--text-highlight)" style={{marginBottom:6}} />
-          <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>FMN AgriSense</div>
+          <div style={{fontWeight:800,fontSize:16,color:'var(--text-primary)',fontFamily:'var(--font-display)'}}>Manna AgriSense</div>
           <div style={{fontSize:13,color:'var(--text-secondary)',marginTop:6,lineHeight:1.6,fontWeight:500}}>AI-powered cassava disease detection for Nigerian farmers. Free to use!</div>
         </div>
         <div style={{background:'var(--surface)',border:'1px solid var(--card-border)',borderRadius:12,padding:'10px 14px',display:'flex',alignItems:'center',gap:12,marginBottom:20}}>
-          <span style={{flex:1,fontSize:13,color:'var(--text-secondary)',fontFamily:'monospace'}}>fmn-agrisense.vercel.app</span>
-          <button onClick={()=>{navigator.clipboard?.writeText('fmn-agrisense.vercel.app');setCopied(true);setTimeout(()=>setCopied(false),2000)}} style={{
+          <span style={{flex:1,fontSize:13,color:'var(--text-secondary)',fontFamily:'monospace'}}>manna-agrisense.vercel.app</span>
+          <button onClick={()=>{navigator.clipboard?.writeText('manna-agrisense.vercel.app');setCopied(true);setTimeout(()=>setCopied(false),2000)}} style={{
             background:copied?'#10b981':'var(--text-highlight)',
             color:'white',
             border:'none',
@@ -2241,10 +2241,10 @@ export default function App() {
   }
 
   function handleLogout() {
-    localStorage.removeItem('fmn_profile')
-    localStorage.removeItem('fmn_scans')
-    localStorage.removeItem('fmn_reminders')
-    localStorage.removeItem('fmn_profile_pending')
+    localStorage.removeItem('manna_profile')
+    localStorage.removeItem('manna_scans')
+    localStorage.removeItem('manna_reminders')
+    localStorage.removeItem('manna_profile_pending')
     supabase.auth.signOut()
   }
 

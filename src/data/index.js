@@ -6,7 +6,7 @@ export const DISEASES = [
     symptoms:['Yellow-green mosaic patterns on leaves','Leaf distortion and puckering','Stunted plant growth','Reduced tuber size and yield'],
     treatment:['Immediate roguing of infected plants','Deploy yellow sticky traps and Confidor 200 SL','Maintain weed-free field to remove alternative hosts','Source certified CMD-resistant cuttings for next season'],
     prevention:'Use certified disease-free planting material. Control whitefly populations.',
-    fmnProducts:['confidor-200sl','harvest-more-foliar'],
+    mannaProducts:['confidor-200sl','harvest-more-foliar'],
   },
   {
     id:'cbsd', name:'Cassava Brown Streak Disease', short:'CBSD',
@@ -15,7 +15,7 @@ export const DISEASES = [
     symptoms:['Yellow-green chlorosis on leaves','Brown necrotic streaks on stems','Corky rot inside tubers','Premature leaf drop'],
     treatment:['Uproot and burn symptomatic plants immediately','Do not use or sell harvested tubers showing corky necrosis','Disinfect all cutting tools with Virkon S between plants','Do not move any stem cuttings from infected fields'],
     prevention:'Plant CBSD-tolerant varieties. Enforce strict tool sanitation.',
-    fmnProducts:['virkon-s','confidor-200sl'],
+    mannaProducts:['virkon-s','confidor-200sl'],
   },
   {
     id:'cbb', name:'Cassava Bacterial Blight', short:'CBB',
@@ -24,7 +24,7 @@ export const DISEASES = [
     symptoms:['Angular water-soaked leaf spots','Leaf wilting and yellowing','Stem cankers and gum exudate','Shoot tip dieback'],
     treatment:['Rogue heavily blighted plants and burn crop debris','Avoid working in the field when leaves are wet','Implement crop rotation with maize or legumes','Apply Golden Fertilizer NPK to strengthen plant cell walls'],
     prevention:'Use resistant varieties. Disinfect tools with Virkon S.',
-    fmnProducts:['virkon-s','golden-npk'],
+    mannaProducts:['virkon-s','golden-npk'],
   },
   {
     id:'cgm', name:'Cassava Green Mottle', short:'CGM',
@@ -33,7 +33,7 @@ export const DISEASES = [
     symptoms:['Green mottling on young leaves','Mild leaf distortion','Reduced plant vigour','Some yield reduction'],
     treatment:['Remove and destroy stunted or mottled plants','Do not use stems from affected plants for propagation','Apply Harvest More Foliar spray to asymptomatic neighbors'],
     prevention:'Use certified clean planting material. Maintain overall field resilience.',
-    fmnProducts:['harvest-more-foliar','golden-npk'],
+    mannaProducts:['harvest-more-foliar','golden-npk'],
   },
   {
     id:'healthy', name:'Healthy Plant', short:'Healthy',
@@ -42,7 +42,7 @@ export const DISEASES = [
     symptoms:['Deep green uniform leaf colouration','No spots, streaks or distortion','Strong upright stem growth','Good canopy coverage'],
     treatment:['Continue current farming practices!','Apply Harvest More Foliar spray monthly','Maintain weed-free environment','Ensure adequate soil moisture','Plan harvest at 10–14 months'],
     prevention:'Keep applying preventive schedule. Inspect weekly.',
-    fmnProducts:['harvest-more-foliar','golden-npk'],
+    mannaProducts:['harvest-more-foliar','golden-npk'],
   },
 ];
 
