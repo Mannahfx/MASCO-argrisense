@@ -540,7 +540,7 @@ function AnalyzingScreen() {
 }
 
 // ── DIAGNOSIS ────────────────────────────────────────────────────────────────
-function DiagnosisScreen({ go, goBack, diseaseId, aiConfidence, allScores }) {
+function DiagnosisScreen({ go, goBack, diseaseId, aiConfidence, allScores, scanId }) {
   const d = DISEASES.find(x=>x.id===diseaseId) || DISEASES[4]
   const conf = aiConfidence != null ? aiConfidence : d.confidence
   const isReal = aiConfidence != null
@@ -611,7 +611,7 @@ function DiagnosisScreen({ go, goBack, diseaseId, aiConfidence, allScores }) {
           <button onClick={()=>go('treatment',{diseaseId})} className="btn btn-primary" style={{borderRadius:14,padding:'12px'}}><Ic n="medkit" s={16} c="white"/>Treatment</button>
           <button onClick={()=>go('products',{diseaseId})} className="btn btn-outline" style={{borderRadius:14,padding:'12px'}}><Ic n="flask" s={16} c="var(--text-primary)"/>Products</button>
         </div>
-        <button onClick={()=>go('agronomist',{diseaseId, scanId: params.scanId})} className="btn btn-accent" style={{width:'100%',borderRadius:14,padding:'14px',marginBottom:10,background:'linear-gradient(135deg, var(--text-highlight) 0%, var(--primary-light) 100%)',border:'none',color:'white',boxShadow:'0 4px 12px rgba(16,185,129,0.3)'}}><MessageSquare size={16} color="white" /> Chat with AI Agronomist</button>
+        <button onClick={()=>go('agronomist',{diseaseId, scanId})} className="btn btn-accent" style={{width:'100%',borderRadius:14,padding:'14px',marginBottom:10,background:'linear-gradient(135deg, var(--text-highlight) 0%, var(--primary-light) 100%)',border:'none',color:'white',boxShadow:'0 4px 12px rgba(16,185,129,0.3)'}}><MessageSquare size={16} color="white" /> Chat with AI Agronomist</button>
         <button onClick={()=>go('dealers')} className="btn" style={{width:'100%',background:'rgba(234,60,26,0.08)',color:'var(--accent)',border:'1px solid rgba(234,60,26,0.2)',borderRadius:14,padding:'14px',marginBottom:10}}><Ic n="location" s={16} c="var(--accent)"/>Find Nearest Dealer</button>
         <button onClick={()=>go('scan')} className="btn" style={{width:'100%',background:'transparent',color:'var(--text-muted)',fontSize:13}}><Ic n="scan" s={15} c="var(--text-muted)"/>Scan another plant</button>
       </div>
