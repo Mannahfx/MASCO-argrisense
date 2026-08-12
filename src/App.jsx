@@ -819,7 +819,7 @@ function AgronomistChatScreen({ go, goBack, scan, profile, onSaveScan }) {
       
       // Fallback for local testing if API isn't running or key is missing
       setTimeout(() => {
-        let reply = "I'm having trouble connecting to my brain right now! Please make sure the GROQ_API_KEY is set in Vercel.";
+        let reply = "I'm having trouble connecting to my brain right now! Please make sure the GROQ_API_KEY_AGRISENSE is set in Vercel.";
         const userMsg = userText.toLowerCase();
         if (userMsg.includes('done') || userMsg.includes('applied') || userMsg.includes('finished')) {
           reply = "Excellent job! I will mark this treatment as complete in your history.";

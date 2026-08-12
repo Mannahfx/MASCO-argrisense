@@ -6,9 +6,9 @@ export default async function handler(req, res) {
   try {
     const { messages, context } = req.body;
     
-    // Fallback if no GROQ_API_KEY is provided.
-    if (!process.env.GROQ_API_KEY) {
-      return res.status(500).json({ error: 'Missing GROQ_API_KEY environment variable. Please add it to your Vercel project.' });
+    // Fallback if no GROQ_API_KEY_AGRISENSE is provided.
+    if (!process.env.GROQ_API_KEY_AGRISENSE) {
+      return res.status(500).json({ error: 'Missing GROQ_API_KEY_AGRISENSE environment variable. Please add it to your Vercel project.' });
     }
 
     const systemPrompt = `You are a friendly, highly professional, and expert Manna Agronomist. 
@@ -41,7 +41,7 @@ Your goal:
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+        "Authorization": `Bearer ${process.env.GROQ_API_KEY_AGRISENSE}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(payload)
