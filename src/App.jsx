@@ -784,28 +784,53 @@ function AgronomistChatScreen({ go, goBack, scan, profile, onSaveScan }) {
     }
   }, [messages]);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
-    setMessages(prev => [...prev, { sender: 'user', text: input }]);
-    const userMsg = input.toLowerCase();
-    setInput('');
-    
-    setTimeout(() => {
-      let reply = "I'm analyzing your request...";
-      if (userMsg.includes('treat') || userMsg.includes('cure') || userMsg.includes('help')) {
-        reply = `To treat ${d.name}, I recommend: ${d.treatment ? d.treatment[0] : 'Using Manna BioGuard immediately'}. Would you like me to find a local dealer for the required products?`;
-      } else if (userMsg.includes('yes') || userMsg.includes('dealer')) {
-        reply = "Great! You can tap the 'Find Dealer' option from the main menu to see verified Manna stockists near you.";
-      } else if (userMsg.includes('done') || userMsg.includes('applied') || userMsg.includes('finished')) {
-        reply = "Excellent job! I will mark this treatment as complete in your history.";
-        markAsTreated();
-      } else {
-        reply = `I understand. Remember, treating ${d.name} early is key to saving your yield. Let me know if you need step-by-step guidance.`;
-      }
-      setMessages(prev => [...prev, { sender: 'ai', text: reply }]);
-    }, 1000);
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+    const userText = input.trim();
+    const newMessages = [...messages, { sender: 'user', text: userText }];
+    setMessages(newMessages);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: newMessages,
+          context: {
+            profile,
+            disease: d,
+            scan
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setMessages(prev => [...prev, { sender: 'ai', text: data.text || data.error }]);
+    } catch (error) {
+      console.error("Chat error:", error);
+      
+      // Fallback for local testing if API isn't running or key is missing
+      setTimeout(() => {
+        let reply = "I'm having trouble connecting to my brain right now! Please make sure the GROQ_API_KEY is set in Vercel.";
+        const userMsg = userText.toLowerCase();
+        if (userMsg.includes('done') || userMsg.includes('applied') || userMsg.includes('finished')) {
+          reply = "Excellent job! I will mark this treatment as complete in your history.";
+          markAsTreated();
+        }
+        setMessages(prev => [...prev, { sender: 'ai', text: reply }]);
+      }, 500);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const markAsTreated = () => {
     onSaveScan({ ...scan, treated: true });
   };
