@@ -809,7 +809,14 @@ function AgronomistChatScreen({ go, goBack, scan, profile, onSaveScan }) {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        let errMsg = 'Network response was not ok';
+        try {
+          const errData = await response.json();
+          errMsg = errData.error || `HTTP ${response.status}`;
+        } catch (e) {
+          errMsg = `HTTP ${response.status}`;
+        }
+        throw new Error(errMsg);
       }
 
       const data = await response.json();
