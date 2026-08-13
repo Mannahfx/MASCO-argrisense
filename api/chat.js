@@ -26,7 +26,7 @@ Your goal:
 
     // Construct the payload matching OpenAI's format (which Groq uses)
     const payload = {
-      model: "llama3-8b-8192", // Fast and free Groq model
+      model: "llama-3.1-8b-instant", // Fast and free Groq model
       messages: [
         { role: "system", content: systemPrompt },
         ...messages.map(m => ({
