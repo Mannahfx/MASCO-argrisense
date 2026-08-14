@@ -8,9 +8,11 @@ import {
   Shield,
   Leaf,
   PlayCircle,
+  X,
+  MapPin
 } from "lucide-react";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
-
+import mapImg from "@/assets/map.jpg";
 
 const steps = [
   {
@@ -44,6 +46,7 @@ const products = [
 
 function TreatmentScreen() {
   const [cart, setCart] = useState([]);
+  const [showMap, setShowMap] = useState(false);
 
   return (
     <div>
@@ -118,7 +121,10 @@ function TreatmentScreen() {
                 >
                   {inCart ? "In cart" : "Add to Cart"}
                 </PillButton>
-                <button className="mt-2 text-[0.65rem] text-muted-foreground underline-offset-2 hover:underline">
+                <button 
+                  onClick={() => setShowMap(true)}
+                  className="mt-3 text-[0.65rem] text-muted-foreground underline-offset-2 hover:underline"
+                >
                   Find dealer nearby
                 </button>
               </GlassCard>
@@ -126,6 +132,51 @@ function TreatmentScreen() {
           })}
         </div>
       </section>
+
+      {/* Map Modal */}
+      {showMap && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-sm animate-in fade-in">
+          <div className="glass-strong h-[85vh] w-full rounded-t-[2rem] p-5 shadow-2xl flex flex-col animate-in slide-in-from-bottom">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Nearby Agro-Dealers</h2>
+              <button 
+                onClick={() => setShowMap(false)}
+                className="flex size-8 items-center justify-center rounded-full bg-white/10"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            
+            <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-4 border border-glass-border">
+              <img src={mapImg} alt="Map of nearby dealers" className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-3 pb-20">
+              {[
+                { name: "Saro AgroSciences Hub", dist: "2.4 km away", inStock: true },
+                { name: "Jubaili Agrotec Store", dist: "4.1 km away", inStock: true },
+                { name: "Local Coop Farm Store", dist: "6.8 km away", inStock: false },
+              ].map((dealer, i) => (
+                <GlassCard key={i} className="flex items-center justify-between p-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-10 items-center justify-center rounded-full bg-primary/10">
+                      <MapPin className="size-4 text-primary" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold">{dealer.name}</p>
+                      <p className="text-[0.65rem] text-muted-foreground">{dealer.dist}</p>
+                    </div>
+                  </div>
+                  <Chip className={dealer.inStock ? "border-primary/30 text-primary" : "border-destructive/30 text-destructive"}>
+                    {dealer.inStock ? "In Stock" : "Out of Stock"}
+                  </Chip>
+                </GlassCard>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
