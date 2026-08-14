@@ -1,5 +1,6 @@
 import { Link } from "@/components/Link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getLocalProfile, saveLocalProfile, triggerSync } from "../utils/sync";
 import {
   ChevronLeft,
   ShoppingCart,
@@ -45,8 +46,18 @@ const products = [
 ];
 
 function TreatmentScreen() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => getLocalProfile().cart || []);
   const [showMap, setShowMap] = useState(false);
+
+  const toggleCartItem = (name) => {
+    setCart((prevCart) => {
+      const newCart = prevCart.includes(name) ? prevCart.filter((x) => x !== name) : [...prevCart, name];
+      const profile = getLocalProfile();
+      saveLocalProfile({ ...profile, cart: newCart });
+      triggerSync(); // Sync cart to Supabase silently in background
+      return newCart;
+    });
+  };
 
   return (
     <div>
@@ -116,7 +127,7 @@ function TreatmentScreen() {
                 <p className="mt-2 font-display text-base font-semibold text-primary">{p.price}</p>
                 <PillButton
                   variant={inCart ? "glass" : "primary"}
-                  onClick={() => setCart((c) => (inCart ? c.filter((x) => x !== p.name) : [...c, p.name]))}
+                  onClick={() => toggleCartItem(p.name)}
                   className="mt-3 w-full px-3 py-2 text-[0.7rem]"
                 >
                   {inCart ? "In cart" : "Add to Cart"}
