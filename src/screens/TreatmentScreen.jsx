@@ -13,7 +13,8 @@ import {
   Check,
   ShieldAlert,
   AlertTriangle,
-  Info
+  Info,
+  ExternalLink
 } from "lucide-react";
 import { saveLocalScan, triggerSync } from "../utils/sync";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
