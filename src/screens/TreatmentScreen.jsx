@@ -8,12 +8,11 @@ import {
   Shield,
   Leaf,
   PlayCircle,
-  ShieldAlert,
-  AlertTriangle,
-  Info,
   MapPin,
-  X
+  X,
+  Check
 } from "lucide-react";
+import { saveLocalScan, triggerSync } from "../utils/sync";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
 
 const diseaseData = {
@@ -125,7 +124,7 @@ const allProducts = [
 ];
 
 function TreatmentScreen({ params = {} }) {
-  const { profile } = useContext(NavContext);
+  const { profile, scans, setScans } = useContext(NavContext);
   const [showMap, setShowMap] = useState(false);
   const [activeDealer, setActiveDealer] = useState(null);
 
@@ -133,6 +132,25 @@ function TreatmentScreen({ params = {} }) {
   const data = diseaseData[diseaseId] || diseaseData['cmd'];
   
   const recommendedProducts = allProducts.filter(p => data.products.includes(p.name));
+
+  const currentScan = scans?.find(s => s.id === params.scanId);
+  const completedSteps = currentScan?.completedSteps || [];
+
+  const handleToggleStep = (stepTitle) => {
+    if (!currentScan) return;
+    
+    let newCompleted;
+    if (completedSteps.includes(stepTitle)) {
+      newCompleted = completedSteps.filter(t => t !== stepTitle);
+    } else {
+      newCompleted = [...completedSteps, stepTitle];
+    }
+    
+    const updatedScan = { ...currentScan, completedSteps: newCompleted };
+    const newScans = saveLocalScan(updatedScan);
+    setScans(newScans);
+    triggerSync();
+  };
 
   const handleMapRedirect = (dealer) => {
     setActiveDealer(dealer);
@@ -197,17 +215,33 @@ function TreatmentScreen({ params = {} }) {
       <section className="px-5 pt-6">
         <h2 className="text-base font-semibold">Step-by-step Action</h2>
         <div className="mt-3 space-y-3">
-          {data.steps.map((s, i) => (
-            <GlassCard key={s.title} className="flex gap-3 p-4">
-              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
-                {i + 1}
-              </span>
-              <div>
-                <p className="text-sm font-semibold">{s.title}</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{s.body}</p>
-              </div>
-            </GlassCard>
-          ))}
+          {data.steps.map((s, i) => {
+            const isDone = completedSteps.includes(s.title);
+            return (
+              <GlassCard 
+                key={s.title} 
+                className="flex gap-3 p-4 cursor-pointer transition-all active:scale-[0.98] select-none"
+                onClick={() => handleToggleStep(s.title)}
+              >
+                <div className="relative flex size-7 shrink-0 items-center justify-center">
+                  <span className={`absolute inset-0 rounded-full transition-colors ${isDone ? 'bg-primary text-primary-foreground' : 'bg-primary/15 text-primary'}`}>
+                  </span>
+                  <span className={`relative z-10 text-xs font-bold transition-opacity ${isDone ? 'opacity-0' : 'opacity-100'}`}>
+                    {i + 1}
+                  </span>
+                  <Check className={`absolute z-10 size-4 transition-opacity ${isDone ? 'opacity-100 text-background' : 'opacity-0'}`} strokeWidth={3} />
+                </div>
+                <div>
+                  <p className={`text-sm font-semibold transition-all ${isDone ? 'text-muted-foreground line-through opacity-60' : ''}`}>
+                    {s.title}
+                  </p>
+                  <p className={`mt-1 text-xs leading-relaxed transition-all ${isDone ? 'text-muted-foreground/50 line-through' : 'text-muted-foreground'}`}>
+                    {s.body}
+                  </p>
+                </div>
+              </GlassCard>
+            );
+          })}
         </div>
       </section>
 
@@ -278,7 +312,7 @@ function TreatmentScreen({ params = {} }) {
 
             <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-4 border border-glass-border">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15858.118933575997!2d3.360144!3d6.454955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2eb5963925%3A0xc3b9ff066498bb9!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1715000000000!5m2!1sen!2sus"
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(activeDealer + ' agro dealer near me')}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
