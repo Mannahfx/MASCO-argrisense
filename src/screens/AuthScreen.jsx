@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 
 function AuthScreen() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState("signin");
   const [role, setRole] = useState("farmer");
   const [remember, setRemember] = useState(true);
   const [showPass, setShowPass] = useState(false);

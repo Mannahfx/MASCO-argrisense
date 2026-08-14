@@ -43,7 +43,7 @@ const products = [
 ];
 
 function TreatmentScreen() {
-  const [cart, setCart] = useState<string[]>([]);
+  const [cart, setCart] = useState([]);
 
   return (
     <div>
