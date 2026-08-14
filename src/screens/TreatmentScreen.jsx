@@ -47,24 +47,8 @@ const products = [
 ];
 
 function TreatmentScreen() {
-  const { profile, setProfile } = useContext(NavContext);
-  const [cart, setCart] = useState([]);
+  const { profile } = useContext(NavContext);
   const [showMap, setShowMap] = useState(false);
-
-  useEffect(() => {
-    if (profile?.cart) setCart(profile.cart);
-  }, [profile]);
-
-  const toggleCartItem = (name) => {
-    const newCart = cart.includes(name) ? cart.filter((x) => x !== name) : [...cart, name];
-    setCart(newCart);
-    if (profile) {
-      const updatedProfile = { ...profile, cart: newCart };
-      setProfile(updatedProfile); // Update global app state immediately
-      saveLocalProfile(updatedProfile); // Save to local storage queue
-      triggerSync(); // Sync to Supabase silently
-    }
-  };
 
   return (
     <div>
@@ -76,14 +60,6 @@ function TreatmentScreen() {
           <h1 className="text-base font-semibold">Treatment Plan</h1>
           <p className="text-[0.68rem] text-muted-foreground">Cassava Mosaic Disease · Plot B</p>
         </div>
-        <span className="glass relative flex size-9 items-center justify-center rounded-full">
-          <ShoppingCart className="size-4" />
-          {cart.length > 0 ? (
-            <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[0.6rem] font-bold text-primary-foreground">
-              {cart.length}
-            </span>
-          ) : null}
-        </span>
       </header>
 
       <section className="px-5 pt-5">
@@ -123,7 +99,6 @@ function TreatmentScreen() {
         <div className="mt-3 grid grid-cols-2 gap-3">
           {products.map((p) => {
             const Icon = p.icon;
-            const inCart = cart.includes(p.name);
             return (
               <GlassCard key={p.name} className="flex flex-col p-4">
                 <span className="flex size-11 items-center justify-center rounded-2xl bg-accent/15">
@@ -133,18 +108,12 @@ function TreatmentScreen() {
                 <p className="text-[0.65rem] text-muted-foreground">{p.sub}</p>
                 <p className="mt-2 font-display text-base font-semibold text-primary">{p.price}</p>
                 <PillButton
-                  variant={inCart ? "glass" : "primary"}
-                  onClick={() => toggleCartItem(p.name)}
+                  variant="primary"
+                  onClick={() => setShowMap(true)}
                   className="mt-3 w-full px-3 py-2 text-[0.7rem]"
                 >
-                  {inCart ? "In cart" : "Add to Cart"}
-                </PillButton>
-                <button 
-                  onClick={() => setShowMap(true)}
-                  className="mt-3 text-[0.65rem] text-muted-foreground underline-offset-2 hover:underline"
-                >
                   Find dealer nearby
-                </button>
+                </PillButton>
               </GlassCard>
             );
           })}

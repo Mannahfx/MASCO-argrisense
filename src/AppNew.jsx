@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react'
-import { getLocalProfile, getLocalScans, initSyncEngine, triggerSync, saveLocalScan } from './utils/sync'
+import { getLocalProfile, getLocalScans, getLocalReminders, initSyncEngine, triggerSync, saveLocalScan, saveLocalReminder } from './utils/sync'
 import { supabase } from './lib/supabase'
 
 import IndexScreen from './screens/IndexScreen'
@@ -27,6 +27,7 @@ export default function AppNew() {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
   const [scans, setScans] = useState([])
+  const [reminders, setReminders] = useState([])
   const [syncStatus, setSyncStatus] = useState('idle')
   const [isDark, setIsDark] = useState(true)
 
@@ -104,9 +105,25 @@ export default function AppNew() {
       
       const updated = saveLocalScan(newScan)
       setScans(updated)
+
+      if (diseaseId !== 'healthy' && diseaseId !== 'OK') {
+        const newTask = {
+          id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+          title: `Treat ${inputField.trim()} for ${diseaseId.toUpperCase()}`,
+          time: '72 Hours',
+          days: 'Soon',
+          icon: 'Sprout',
+          enabled: true,
+          next_due: new Date(Date.now() + (72 * 60 * 60 * 1000)).toISOString()
+        }
+        const updatedReminders = saveLocalReminder(newTask)
+        setReminders(updatedReminders)
+      }
+
       triggerSync(() => {
         setProfile(getLocalProfile())
         setScans(getLocalScans())
+        setReminders(getLocalReminders())
       }, setSyncStatus)
       
       setParams({ diseaseId, aiConfidence: confidence, allScores, scanId: newScan.id })
@@ -119,7 +136,7 @@ export default function AppNew() {
     if (analyzing) return <div className="flex h-screen items-center justify-center text-primary text-xl font-display animate-pulse">Analyzing image...</div>
     
     switch (activeScreen) {
-      case 'home': return <IndexScreen profile={profile} scans={scans} />
+      case 'home': return <IndexScreen profile={profile} scans={scans} reminders={reminders} />
       case 'scan': return <ScanScreen startAnalyzing={startAnalyzing} />
       case 'diagnosis': return <DiagnosisScreen profile={profile} params={params} />
       case 'chat': return <ChatScreen />
@@ -128,7 +145,7 @@ export default function AppNew() {
       case 'profile': return <ProfileScreen profile={profile} onLogout={handleLogout} />
       case 'admin': return <AdminScreen />
       case 'auth': return <AuthScreen />
-      default: return <IndexScreen profile={profile} scans={scans} />
+      default: return <IndexScreen profile={profile} scans={scans} reminders={reminders} />
     }
   }
 

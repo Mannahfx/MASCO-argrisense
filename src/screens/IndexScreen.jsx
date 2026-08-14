@@ -29,8 +29,7 @@ const getNameForDisease = (diseaseId) => {
   return 'Healthy';
 };
 
-function Dashboard({ profile, scans = [] }) {
-  const [tasks, setTasks] = useState(initialTasks);
+function Dashboard({ profile, scans = [], reminders = [] }) {
   const [online, setOnline] = useState(true);
 
   return (
@@ -135,41 +134,33 @@ function Dashboard({ profile, scans = [] }) {
       <section className="px-5 pt-7">
         <h2 className="text-base font-semibold">Upcoming Tasks</h2>
         <GlassCard className="mt-3 divide-y divide-white/5">
-          {tasks.map((t) => {
-            const Icon = t.icon;
+          {reminders.length > 0 ? reminders.slice(0, 5).map((t) => {
+            const Icon = t.icon === 'Sprout' ? Sprout : t.icon === 'Droplets' ? Droplets : Bug;
             return (
-              <button
-                key={t.id}
-                onClick={() =>
-                  setTasks((prev) =>
-                    prev.map((p) => (p.id === t.id ? { ...p, done: !p.done } : p)),
-                  )
-                }
-                className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
-              >
+              <div key={t.id} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
                 <span className="glass flex size-9 items-center justify-center rounded-full">
                   <Icon className="size-4 text-accent" />
                 </span>
                 <span className="flex-1">
-                  <span
-                    className={`block text-sm font-medium ${t.done ? "text-muted-foreground line-through" : ""}`}
-                  >
-                    {t.label}
+                  <span className={`block text-sm font-medium ${!t.enabled ? "text-muted-foreground line-through" : ""}`}>
+                    {t.title}
                   </span>
-                  <span className="block text-[0.68rem] text-muted-foreground">{t.when}</span>
+                  <span className="block text-[0.68rem] text-muted-foreground">{t.time}</span>
                 </span>
                 <span
                   className={`flex size-6 items-center justify-center rounded-full border ${
-                    t.done
+                    !t.enabled
                       ? "border-primary bg-primary text-primary-foreground shadow-[0_0_16px_-2px_var(--primary)]"
                       : "border-glass-border"
                   }`}
                 >
-                  {t.done ? <Check className="size-3.5" strokeWidth={3} /> : null}
+                  {!t.enabled ? <Check className="size-3.5" strokeWidth={3} /> : null}
                 </span>
-              </button>
+              </div>
             );
-          })}
+          }) : (
+            <div className="p-5 text-center text-sm text-muted-foreground">No pending treatment tasks.</div>
+          )}
         </GlassCard>
       </section>
 
