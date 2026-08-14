@@ -8,11 +8,6 @@ import scanHealthy from "@/assets/scan-healthy.jpg";
 import scanPest from "@/assets/scan-pest.jpg";
 
 
-const recentScans = [
-  { img: scanStreak, name: "Brown Streak", date: "12 Aug", status: "Treated" },
-  { img: scanPest, name: "Mealybug", date: "09 Aug", status: "In progress" },
-  { img: scanHealthy, name: "Healthy", date: "04 Aug", status: "Treated" },
-];
 
 const initialTasks = [
   { id: 1, label: "Spray Confidor on Plot B", when: "Today · 4:00 PM", icon: Droplets, done: false },
@@ -20,7 +15,20 @@ const initialTasks = [
   { id: 3, label: "Re-scan treated cassava rows", when: "Sat, 15 Aug", icon: Sprout, done: true },
 ];
 
-function Dashboard() {
+const getImageForDisease = (diseaseId) => {
+  if (diseaseId === 'healthy') return scanHealthy;
+  return scanStreak;
+};
+
+const getNameForDisease = (diseaseId) => {
+  if (diseaseId === 'cmd') return 'Mosaic Disease';
+  if (diseaseId === 'cbb') return 'Bacterial Blight';
+  if (diseaseId === 'cgm') return 'Green Mite';
+  if (diseaseId === 'cbsd') return 'Brown Streak';
+  return 'Healthy';
+};
+
+function Dashboard({ profile, scans = [] }) {
   const [tasks, setTasks] = useState(initialTasks);
   const [online, setOnline] = useState(true);
 
@@ -31,7 +39,7 @@ function Dashboard() {
           <img src={logo} alt="Manna AgriSense logo" width={512} height={512} className="size-9" />
           <div>
             <p className="text-xs text-muted-foreground">Manna AgriSense</p>
-            <h1 className="text-lg font-semibold">Hello, Yinka</h1>
+            <h1 className="text-lg font-semibold">Hello, {profile?.full_name?.split(' ')[0] || 'Farmer'}</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -83,35 +91,43 @@ function Dashboard() {
           <span className="text-xs text-muted-foreground">Last 14 days</span>
         </div>
         <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto px-5 pb-1">
-          {recentScans.map((s) => (
-            <Link
-              key={s.name}
-              to="/diagnosis"
-              className="glass w-40 shrink-0 rounded-3xl p-2.5 transition-transform active:scale-[0.98]"
-            >
-              <img
-                src={s.img}
-                alt={`${s.name} cassava scan`}
-                loading="lazy"
-                width={640}
-                height={640}
-                className="h-24 w-full rounded-2xl object-cover"
-              />
-              <p className="mt-2.5 text-sm font-semibold">{s.name}</p>
-              <div className="mt-1.5 flex items-center justify-between">
-                <span className="text-[0.65rem] text-muted-foreground">{s.date}</span>
-                <Chip
-                  className={
-                    s.status === "Treated"
-                      ? "border-primary/30 text-primary"
-                      : "border-warning/30 text-warning"
-                  }
-                >
-                  {s.status}
-                </Chip>
-              </div>
-            </Link>
-          ))}
+          {scans.length > 0 ? (
+            scans.slice(0, 5).map((s) => (
+              <Link
+                key={s.id}
+                to="/diagnosis"
+                className="glass w-40 shrink-0 rounded-3xl p-2.5 transition-transform active:scale-[0.98]"
+              >
+                <img
+                  src={getImageForDisease(s.diseaseId)}
+                  alt={`${s.diseaseId} cassava scan`}
+                  loading="lazy"
+                  width={640}
+                  height={640}
+                  className="h-24 w-full rounded-2xl object-cover"
+                />
+                <p className="mt-2.5 text-sm font-semibold">{getNameForDisease(s.diseaseId)}</p>
+                <div className="mt-1.5 flex items-center justify-between">
+                  <span className="text-[0.65rem] text-muted-foreground">{s.date}</span>
+                  <Chip
+                    className={
+                      s.treated
+                        ? "border-primary/30 text-primary"
+                        : "border-warning/30 text-warning"
+                    }
+                  >
+                    {s.treated ? "Treated" : "Needs Action"}
+                  </Chip>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <div className="glass flex w-full flex-col items-center justify-center rounded-3xl p-6 text-center text-muted-foreground">
+              <Camera className="size-8 opacity-50 mb-2" />
+              <p className="text-sm">No recent scans</p>
+              <p className="text-xs mt-1">Tap 'Scan Crop' to get started</p>
+            </div>
+          )}
         </div>
       </section>
 
