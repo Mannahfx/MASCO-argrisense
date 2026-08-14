@@ -11,6 +11,7 @@ import ProfileScreen from './screens/ProfileScreen'
 import AdminScreen from './screens/AdminScreen'
 import AuthScreen from './screens/AuthScreen'
 import ScanScreen from './screens/ScanScreen'
+import { MobileShell } from './components/mobile-shell'
 
 export default function AppNew() {
   const [analyzing, setAnalyzing] = useState(false)
@@ -119,7 +120,13 @@ export default function AppNew() {
 
   return (
     <div className="dark h-[100dvh] w-full bg-background text-foreground overflow-hidden">
-      {renderScreen()}
+      {session ? (
+        <MobileShell activeScreen={activeScreen}>
+          {renderScreen()}
+        </MobileShell>
+      ) : (
+        renderScreen()
+      )}
     </div>
   )
 }
