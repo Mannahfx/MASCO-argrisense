@@ -1,17 +1,24 @@
 import React, { useContext } from 'react';
 import { NavContext } from '../AppNew';
 
-export const Link = ({to, children, className, onClick}) => {
+export const Link = ({ to, state, children, className, onClick, ariaLabel }) => {
   const { navigate } = useContext(NavContext);
 
   return (
     <a 
-      href="#" 
+      href={to} 
       className={className} 
+      aria-label={ariaLabel}
       onClick={(e) => { 
         e.preventDefault(); 
         if(onClick) onClick(e); 
-        if(navigate) navigate(to);
+        if(navigate) {
+          if (state) {
+            navigate(to, { state });
+          } else {
+            navigate(to);
+          }
+        }
       }}
     >
       {children}

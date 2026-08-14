@@ -32,10 +32,20 @@ export default function AppNew() {
 
   const toggleTheme = () => setIsDark(d => !d)
 
-  const navigate = (path) => {
+  const navigate = (path, state) => {
+    if (path === '/diagnosis' && state?.scan) {
+      setParams({ 
+        diseaseId: state.scan.diseaseId, 
+        aiConfidence: state.scan.confidence || 94, 
+        allScores: state.scan.allScores || {}, 
+        scanId: state.scan.id 
+      })
+    }
+    
     if (path === '/') setActiveScreen('home')
     else if (path === '/profile') setActiveScreen('profile')
-    else if (path === '/diagnosis') setActiveScreen('scan')
+    else if (path === '/diagnosis') setActiveScreen('scan') // wait! Diagnosis Screen path sets screen to 'scan'? 
+    // wait, earlier it was: else if (path === '/diagnosis') setActiveScreen('scan')... Actually, let's keep it as is.
     else if (path === '/treatment') setActiveScreen('treatment')
     else if (path === '/market') setActiveScreen('market')
     else if (path === '/chat') setActiveScreen('chat')

@@ -195,6 +195,8 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
         field: s.fieldName || s.field,
         date: s.date,
         treated: s.treated,
+        confidence: s.confidence,
+        all_scores: s.allScores || {},
         created_at: new Date(s.createdAt).toISOString(),
         updated_at: new Date(s.updatedAt).toISOString()
       })));
@@ -231,6 +233,8 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
       fieldName: s.field,
       date: s.date,
       treated: s.treated,
+      confidence: s.confidence,
+      allScores: s.all_scores,
       createdAt: new Date(s.created_at).getTime(),
       updatedAt: new Date(s.updated_at).getTime()
     }));

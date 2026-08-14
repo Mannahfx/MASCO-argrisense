@@ -96,6 +96,7 @@ function Dashboard({ profile, scans = [] }) {
               <Link
                 key={s.id}
                 to="/diagnosis"
+                state={{ scan: s }}
                 className="glass w-40 shrink-0 rounded-3xl p-2.5 transition-transform active:scale-[0.98]"
               >
                 <img
