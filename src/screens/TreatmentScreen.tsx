@@ -1,3 +1,4 @@
+import { Link } from "@/components/Link";
 import { useState } from "react";
 import {
   ChevronLeft,
@@ -9,13 +10,6 @@ import {
   PlayCircle,
 } from "lucide-react";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
-
-// Replaced Link
-const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
-
-
-
-
 
 
 const steps = [

@@ -1,3 +1,4 @@
+import { Link } from "@/components/Link";
 import { useState } from "react";
 import {
   Users,
@@ -10,13 +11,6 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { GlassCard, Chip, PillButton } from "@/components/ui-kit";
-
-// Replaced Link
-const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
-
-
-
-
 
 
 const stats = [
