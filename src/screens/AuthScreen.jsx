@@ -6,16 +6,38 @@ import logo from "@/assets/logo.png";
 
 
 
+import { supabase } from "../lib/supabase";
+
 function AuthScreen() {
   const [mode, setMode] = useState("signin");
   const [role, setRole] = useState("farmer");
   const [remember, setRemember] = useState(true);
   const [showPass, setShowPass] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    const to = role === "admin" && mode === "signup" ? "/admin" : "/";
-    window.dispatchEvent(new CustomEvent('navigate', {detail: to}));
+    setLoading(true);
+
+    try {
+      if (mode === "signup") {
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        alert("Account created successfully!");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      }
+      
+      const to = role === "admin" && mode === "signup" ? "/admin" : "/";
+      window.dispatchEvent(new CustomEvent('navigate', {detail: to}));
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -93,6 +115,8 @@ function AuthScreen() {
               type="email"
               required
               maxLength={255}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
               autoComplete="email"
               className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
@@ -105,6 +129,8 @@ function AuthScreen() {
               required
               minLength={6}
               maxLength={72}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               autoComplete={mode === "signin" ? "current-password" : "new-password"}
               className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
@@ -141,8 +167,8 @@ function AuthScreen() {
             <span className="text-xs text-accent">Forgot password?</span>
           </div>
 
-          <PillButton className="mt-2 w-full" type="submit">
-            {mode === "signin" ? "Sign In" : "Create Account"}
+          <PillButton className="mt-2 w-full" type="submit" disabled={loading}>
+            {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create Account"}
           </PillButton>
         </form>
       </GlassCard>
