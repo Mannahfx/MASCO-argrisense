@@ -10,7 +10,10 @@ import {
   PlayCircle,
   MapPin,
   X,
-  Check
+  Check,
+  ShieldAlert,
+  AlertTriangle,
+  Info
 } from "lucide-react";
 import { saveLocalScan, triggerSync } from "../utils/sync";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
