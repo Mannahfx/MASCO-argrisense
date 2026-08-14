@@ -11,6 +11,7 @@ import ProfileScreen from './screens/ProfileScreen'
 import AdminScreen from './screens/AdminScreen'
 import AuthScreen from './screens/AuthScreen'
 import ScanScreen from './screens/ScanScreen'
+import VideoScreen from './screens/VideoScreen'
 import { MobileShell } from './components/mobile-shell'
 
 export const NavContext = createContext({

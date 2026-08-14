@@ -222,6 +222,8 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
         full_name: user.user_metadata?.full_name || '',
         role: user.user_metadata?.role || 'client'
       };
+    } else {
+      if (!profileData.cart) profileData.cart = getLocalProfile().cart || [];
     }
     let scansData = (scanRes.data || []).map(s => ({
       id: s.id,
