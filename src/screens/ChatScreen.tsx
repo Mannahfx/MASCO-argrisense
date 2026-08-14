@@ -5,6 +5,10 @@ import { ChevronLeft, CheckCircle2, ArrowUp } from "lucide-react";
 import { Chip } from "@/components/ui-kit";
 import logo from "@/assets/logo.png";
 
+// Replaced Link
+const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
+
+
 
 
 type Msg = { id: number; role: "ai" | "user"; text: string };

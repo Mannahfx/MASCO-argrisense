@@ -5,6 +5,10 @@ import { Bell, CloudDownload, Moon, LifeBuoy, LogOut, MapPin, Ruler, Leaf } from
 import { GlassCard, Chip, PillButton } from "@/components/ui-kit";
 import logo from "@/assets/logo.png";
 
+// Replaced Link
+const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
+
+
 
 
 function Toggle({

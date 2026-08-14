@@ -8,6 +8,10 @@ import scanStreak from "@/assets/scan-streak.jpg";
 import scanHealthy from "@/assets/scan-healthy.jpg";
 import scanPest from "@/assets/scan-pest.jpg";
 
+// Replaced Link
+const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
+
+
 
 
 const recentScans = [
