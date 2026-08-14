@@ -118,7 +118,7 @@ export default function AppNew() {
 
   return (
     <NavContext.Provider value={{ navigate }}>
-      <div className="dark h-[100dvh] w-full bg-background text-foreground overflow-hidden">
+      <div className="dark min-h-screen w-full bg-background text-foreground">
         {session ? (
           <MobileShell activeScreen={activeScreen}>
             {renderScreen()}

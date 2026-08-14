@@ -110,4 +110,4 @@ function ProfileScreen() {
   );
 }
 
-export default Toggle;
+export default ProfileScreen;
