@@ -27,7 +27,7 @@ function MarketScreen() {
   const pricePerTonne = 248000;
   const revenue = yieldTonnes * pricePerTonne;
   const profit = revenue - inputCost;
-  const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
+  const naira = (n) => `₦${n.toLocaleString("en-NG")}`;
 
   return (
     <div>
@@ -78,7 +78,7 @@ function MarketScreen() {
                     fontSize: 12,
                     color: "var(--foreground)",
                   }}
-                  formatter={(v: number) => [`₦${v},000`, "Price/tonne"]}
+                  formatter={(v) => [`₦${v},000`, "Price/tonne"]}
                 />
                 <Area
                   type="monotone"

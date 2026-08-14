@@ -13,7 +13,7 @@ function AuthScreen() {
   const [remember, setRemember] = useState(true);
   const [showPass, setShowPass] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = (e) => {
     e.preventDefault();
     navigate({ to: role === "admin" && mode === "signup" ? "/admin" : "/" });
   };
