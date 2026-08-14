@@ -14,7 +14,9 @@ import ScanScreen from './screens/ScanScreen'
 import { MobileShell } from './components/mobile-shell'
 
 export const NavContext = createContext({
-  navigate: (to) => {}
+  navigate: (to) => {},
+  isDark: true,
+  toggleTheme: () => {}
 });
 
 export default function AppNew() {
@@ -25,6 +27,9 @@ export default function AppNew() {
   const [profile, setProfile] = useState(null)
   const [scans, setScans] = useState([])
   const [syncStatus, setSyncStatus] = useState('idle')
+  const [isDark, setIsDark] = useState(true)
+
+  const toggleTheme = () => setIsDark(d => !d)
 
   const navigate = (path) => {
     if (path === '/') setActiveScreen('home')
@@ -117,8 +122,8 @@ export default function AppNew() {
   }
 
   return (
-    <NavContext.Provider value={{ navigate }}>
-      <div className="dark min-h-screen w-full bg-background text-foreground">
+    <NavContext.Provider value={{ navigate, isDark, toggleTheme }}>
+      <div className={`${isDark ? 'dark' : ''} min-h-screen w-full bg-background text-foreground`}>
         {session ? (
           <MobileShell activeScreen={activeScreen}>
             {renderScreen()}
