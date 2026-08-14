@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, createContext } from 'react'
 import { getLocalProfile, getLocalScans, initSyncEngine, triggerSync, saveLocalScan } from './utils/sync'
 import { supabase } from './lib/supabase'
 
@@ -13,6 +13,10 @@ import AuthScreen from './screens/AuthScreen'
 import ScanScreen from './screens/ScanScreen'
 import { MobileShell } from './components/mobile-shell'
 
+export const NavContext = createContext({
+  navigate: (to) => {}
+});
+
 export default function AppNew() {
   const [analyzing, setAnalyzing] = useState(false)
   const [params, setParams] = useState({})
@@ -22,21 +26,15 @@ export default function AppNew() {
   const [scans, setScans] = useState([])
   const [syncStatus, setSyncStatus] = useState('idle')
 
-  // Global navigation listener from stripped Tanstack links
-  useEffect(() => {
-    const handleNav = (e) => {
-      const path = e.detail;
-      if (path === '/') setActiveScreen('home')
-      else if (path === '/profile') setActiveScreen('profile')
-      else if (path === '/diagnosis') setActiveScreen('scan') // direct diagnosis btn opens scanner
-      else if (path === '/treatment') setActiveScreen('treatment')
-      else if (path === '/market') setActiveScreen('market')
-      else if (path === '/chat') setActiveScreen('chat')
-      else setActiveScreen(path.replace('/', ''))
-    }
-    window.addEventListener('navigate', handleNav)
-    return () => window.removeEventListener('navigate', handleNav)
-  }, [])
+  const navigate = (path) => {
+    if (path === '/') setActiveScreen('home')
+    else if (path === '/profile') setActiveScreen('profile')
+    else if (path === '/diagnosis') setActiveScreen('scan')
+    else if (path === '/treatment') setActiveScreen('treatment')
+    else if (path === '/market') setActiveScreen('market')
+    else if (path === '/chat') setActiveScreen('chat')
+    else setActiveScreen(path.replace('/', ''))
+  }
 
   // Setup Supabase & Sync
   useEffect(() => {
@@ -119,14 +117,16 @@ export default function AppNew() {
   }
 
   return (
-    <div className="dark h-[100dvh] w-full bg-background text-foreground overflow-hidden">
-      {session ? (
-        <MobileShell activeScreen={activeScreen}>
-          {renderScreen()}
-        </MobileShell>
-      ) : (
-        renderScreen()
-      )}
-    </div>
+    <NavContext.Provider value={{ navigate }}>
+      <div className="dark h-[100dvh] w-full bg-background text-foreground overflow-hidden">
+        {session ? (
+          <MobileShell activeScreen={activeScreen}>
+            {renderScreen()}
+          </MobileShell>
+        ) : (
+          renderScreen()
+        )}
+      </div>
+    </NavContext.Provider>
   )
 }
