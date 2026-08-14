@@ -1,6 +1,7 @@
 import { Link } from "@/components/Link";
-import { useState, useEffect } from "react";
-import { getLocalProfile, saveLocalProfile, triggerSync } from "../utils/sync";
+import { useState, useContext, useEffect } from "react";
+import { NavContext } from "../AppNew";
+import { saveLocalProfile, triggerSync } from "../utils/sync";
 import {
   ChevronLeft,
   ShoppingCart,
@@ -10,10 +11,10 @@ import {
   Leaf,
   PlayCircle,
   X,
-  MapPin
+  MapPin,
+  ExternalLink
 } from "lucide-react";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
-import mapImg from "@/assets/map.jpg";
 
 const steps = [
   {
@@ -46,17 +47,23 @@ const products = [
 ];
 
 function TreatmentScreen() {
-  const [cart, setCart] = useState(() => getLocalProfile().cart || []);
+  const { profile, setProfile } = useContext(NavContext);
+  const [cart, setCart] = useState([]);
   const [showMap, setShowMap] = useState(false);
 
+  useEffect(() => {
+    if (profile?.cart) setCart(profile.cart);
+  }, [profile]);
+
   const toggleCartItem = (name) => {
-    setCart((prevCart) => {
-      const newCart = prevCart.includes(name) ? prevCart.filter((x) => x !== name) : [...prevCart, name];
-      const profile = getLocalProfile();
-      saveLocalProfile({ ...profile, cart: newCart });
-      triggerSync(); // Sync cart to Supabase silently in background
-      return newCart;
-    });
+    const newCart = cart.includes(name) ? cart.filter((x) => x !== name) : [...cart, name];
+    setCart(newCart);
+    if (profile) {
+      const updatedProfile = { ...profile, cart: newCart };
+      setProfile(updatedProfile); // Update global app state immediately
+      saveLocalProfile(updatedProfile); // Save to local storage queue
+      triggerSync(); // Sync to Supabase silently
+    }
   };
 
   return (
@@ -152,7 +159,7 @@ function TreatmentScreen() {
               <h2 className="text-lg font-semibold">Nearby Agro-Dealers</h2>
               <button 
                 onClick={() => setShowMap(false)}
-                className="flex size-8 items-center justify-center rounded-full bg-white/10"
+                className="flex size-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
               >
                 <X className="size-4" />
               </button>
@@ -178,20 +185,30 @@ function TreatmentScreen() {
                 { name: "Jubaili Agrotec Store", dist: "4.1 km away", inStock: true },
                 { name: "Local Coop Farm Store", dist: "6.8 km away", inStock: false },
               ].map((dealer, i) => (
-                <GlassCard key={i} className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-10 items-center justify-center rounded-full bg-primary/10">
-                      <MapPin className="size-4 text-primary" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold">{dealer.name}</p>
-                      <p className="text-[0.65rem] text-muted-foreground">{dealer.dist}</p>
+                <a 
+                  key={i} 
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dealer.name + ' near me')}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <GlassCard className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer active:scale-[0.98]">
+                    <div className="flex items-center gap-3">
+                      <span className="flex size-10 items-center justify-center rounded-full bg-primary/10">
+                        <MapPin className="size-4 text-primary" />
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold flex items-center gap-1.5">
+                          {dealer.name} <ExternalLink className="size-3 text-muted-foreground opacity-50" />
+                        </p>
+                        <p className="text-[0.65rem] text-muted-foreground">{dealer.dist} · Tap for directions</p>
+                      </div>
                     </div>
-                  </div>
-                  <Chip className={dealer.inStock ? "border-primary/30 text-primary" : "border-destructive/30 text-destructive"}>
-                    {dealer.inStock ? "In Stock" : "Out of Stock"}
-                  </Chip>
-                </GlassCard>
+                    <Chip className={dealer.inStock ? "border-primary/30 text-primary" : "border-destructive/30 text-destructive"}>
+                      {dealer.inStock ? "In Stock" : "Out of Stock"}
+                    </Chip>
+                  </GlassCard>
+                </a>
               ))}
             </div>
           </div>

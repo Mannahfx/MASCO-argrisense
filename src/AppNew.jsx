@@ -123,7 +123,7 @@ export default function AppNew() {
   }
 
   return (
-    <NavContext.Provider value={{ navigate, isDark, toggleTheme }}>
+    <NavContext.Provider value={{ navigate, isDark, toggleTheme, profile, setProfile }}>
       <div className={`${isDark ? 'dark' : ''} min-h-screen w-full bg-background text-foreground`}>
         {session ? (
           <MobileShell activeScreen={activeScreen}>
