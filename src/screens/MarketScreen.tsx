@@ -4,6 +4,10 @@ import { TrendingUp, Radio } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, YAxis, XAxis } from "recharts";
 import { GlassCard, Chip, PillButton } from "@/components/ui-kit";
 
+// Replaced Link
+const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
+
+
 
 
 const series = [

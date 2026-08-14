@@ -1,5 +1,3 @@
-// Replaced Link
-const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
 import { useState } from "react";
 import { Camera, Cloud, CloudOff, Check, Droplets, Sprout, Bug, UserRound } from "lucide-react";
 import { GlassCard, Chip, PillButton } from "@/components/ui-kit";
@@ -10,6 +8,8 @@ import scanPest from "@/assets/scan-pest.jpg";
 
 // Replaced Link
 const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
+
+
 
 
 

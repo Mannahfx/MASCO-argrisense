@@ -1,11 +1,11 @@
-// Replaced Link
-const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
 import { AlertTriangle, ChevronLeft, Sparkle, MapPin, CalendarClock } from "lucide-react";
 import { GlassCard, Chip, PillButton, ConfidenceRing } from "@/components/ui-kit";
 import leafScan from "@/assets/leaf-scan.jpg";
 
 // Replaced Link
 const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
+
+
 
 
 

@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { Camera, Menu, ChevronLeft } from 'lucide-react';
 import { loadModel, runAI } from '../lib/ai';
 
+// Replaced Link
+const Link = ({to, children, className, onClick}) => <a href="#" className={className} onClick={(e) => { e.preventDefault(); if(onClick) onClick(e); window.dispatchEvent(new CustomEvent('navigate', {detail: to})) }}>{children}</a>;
+
+
 const CLASS_MAP = { 0:'cbb', 1:'cbsd', 2:'cgm', 3:'cmd', 4:'healthy' };
 
 export default function ScanScreen({ startAnalyzing }) {
