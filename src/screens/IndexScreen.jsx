@@ -6,8 +6,7 @@ import logo from "@/assets/logo.png";
 import scanStreak from "@/assets/scan-streak.jpg";
 import scanHealthy from "@/assets/scan-healthy.jpg";
 import scanPest from "@/assets/scan-pest.jpg";
-
-
+import leafScan from "@/assets/leaf-scan.jpg";
 
 const initialTasks = [
   { id: 1, label: "Spray Confidor on Plot B", when: "Today · 4:00 PM", icon: Droplets, done: false },
@@ -17,7 +16,9 @@ const initialTasks = [
 
 const getImageForDisease = (diseaseId) => {
   if (diseaseId === 'healthy') return scanHealthy;
-  return scanStreak;
+  if (diseaseId === 'cgm') return scanPest;
+  if (diseaseId === 'cbsd') return scanStreak;
+  return leafScan;
 };
 
 const getNameForDisease = (diseaseId) => {
@@ -88,7 +89,6 @@ function Dashboard({ profile, scans = [] }) {
       <section className="pt-7">
         <div className="flex items-center justify-between px-5">
           <h2 className="text-base font-semibold">Recent Scans</h2>
-          <span className="text-xs text-muted-foreground">Last 14 days</span>
         </div>
         <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto px-5 pb-1">
           {scans.length > 0 ? (
