@@ -114,21 +114,43 @@ export default function AppNew() {
       setScans(updated)
 
       if (diseaseId !== 'healthy' && diseaseId !== 'OK') {
-        const newTask = {
-          id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-          title: `Treat ${inputField.trim()} for ${diseaseId.toUpperCase()}`,
-          time: '72 Hours',
-          days: 'Soon',
-          icon: 'Sprout',
-          enabled: true,
-          next_due: new Date(Date.now() + (72 * 60 * 60 * 1000)).toISOString()
+        const title = `Treat ${inputField.trim()} for ${diseaseId.toUpperCase()}`;
+        
+        // Prevent creating duplicate tasks for the exact same field and disease
+        const existingReminders = getLocalReminders();
+        const isDuplicate = existingReminders.some(r => r.title === title);
+
+        if (!isDuplicate) {
+          const newTask = {
+            id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            title,
+            time: '72 Hours',
+            days: 'Soon',
+            icon: 'Sprout',
+            enabled: true,
+            next_due: new Date(Date.now() + (72 * 60 * 60 * 1000)).toISOString()
+          }
+          const updatedReminders = saveLocalReminder(newTask)
+          setReminders(updatedReminders)
         }
-        const updatedReminders = saveLocalReminder(newTask)
-        setReminders(updatedReminders)
       }
 
       triggerSync(() => {
         setProfile(getLocalProfile())
+        // Cleanup existing duplicate tasks
+        const localReminders = getLocalReminders()
+        const uniqueTitles = new Set()
+        const cleanReminders = []
+        for (const r of localReminders) {
+          if (!uniqueTitles.has(r.title)) {
+            uniqueTitles.add(r.title)
+            cleanReminders.push(r)
+          }
+        }
+        if (cleanReminders.length !== localReminders.length) {
+          localStorage.setItem('fmn_reminders', JSON.stringify(cleanReminders))
+        }
+
         setScans(getLocalScans())
         setReminders(getLocalReminders())
       }, setSyncStatus)
