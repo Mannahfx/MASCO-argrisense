@@ -43,7 +43,8 @@ function ProfileScreen({ profile, onLogout }) {
   const [formData, setFormData] = useState({
     location: profile?.location || "",
     farm_size: profile?.farm_size || "",
-    crops: profile?.crops || ""
+    crops: profile?.crops || "",
+    avatar: profile?.avatar || ""
   });
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -54,7 +55,8 @@ function ProfileScreen({ profile, onLogout }) {
       setFormData({
         location: profile.location || "",
         farm_size: profile.farm_size || "",
-        crops: profile.crops || ""
+        crops: profile.crops || "",
+        avatar: profile.avatar || ""
       });
     }
   }, [profile]);
@@ -62,6 +64,16 @@ function ProfileScreen({ profile, onLogout }) {
   const handleChange = (key, value) => {
     setFormData(prev => ({ ...prev, [key]: value }));
     setSaved(false);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      handleChange("avatar", reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSave = () => {
@@ -93,13 +105,19 @@ function ProfileScreen({ profile, onLogout }) {
       <section className="flex flex-col items-center px-5 pt-7">
         <div className="relative">
           <div className="absolute inset-0 rounded-full bg-primary/30 blur-2xl" />
-          <img
-            src={logo}
-            alt={`${profile?.full_name || 'Farmer'} profile avatar`}
-            width={512}
-            height={512}
-            className="glass relative size-24 rounded-full object-cover p-3"
-          />
+          <label className="relative block cursor-pointer">
+            <img
+              src={formData.avatar || logo}
+              alt={`${profile?.full_name || 'Farmer'} profile avatar`}
+              width={512}
+              height={512}
+              className="glass relative size-24 rounded-full object-cover p-1"
+            />
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity hover:opacity-100">
+              <span className="text-xs font-semibold text-white">Edit</span>
+            </div>
+            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+          </label>
         </div>
         <h2 className="mt-4 font-display text-xl font-semibold">{profile?.full_name || 'AgriSense Farmer'}</h2>
         <Chip className="mt-2 border-primary/30 text-primary">{formData.farm_size || 'N/A'} · {formData.crops || 'N/A'}</Chip>
