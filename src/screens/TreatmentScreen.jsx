@@ -274,7 +274,17 @@ function TreatmentScreen({ params = {} }) {
                 <X className="size-4" />
               </button>
             </div>
-            
+            <p className="mb-4 text-sm text-muted-foreground">Showing suppliers for {activeDealer}</p>
+
+            <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-4 border border-glass-border">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15858.118933575997!2d3.360144!3d6.454955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2eb5963925%3A0xc3b9ff066498bb9!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1715000000000!5m2!1sen!2sus"
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0 h-full w-full opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all"
               ></iframe>
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
