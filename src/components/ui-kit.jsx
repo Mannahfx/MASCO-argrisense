@@ -1,14 +1,11 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
-
-type Variant = "primary" | "accent" | "glass";
 
 export function PillButton({
   variant = "primary",
   className,
   children,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
+}) {
   return (
     <button
       className={cn(
@@ -27,23 +24,11 @@ export function PillButton({
   );
 }
 
-export function GlassCard({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+export function GlassCard({ className, children }) {
   return <div className={cn("glass rounded-3xl", className)}>{children}</div>;
 }
 
-export function Chip({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+export function Chip({ className, children }) {
   return (
     <span
       className={cn(
@@ -56,7 +41,7 @@ export function Chip({
   );
 }
 
-export function ConfidenceRing({ value, size = 84 }: { value: number; size?: number }) {
+export function ConfidenceRing({ value, size = 84 }) {
   const stroke = 7;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;

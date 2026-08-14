@@ -5,12 +5,11 @@ import { GlassCard, PillButton } from "@/components/ui-kit";
 import logo from "@/assets/logo.png";
 
 
-type Role = "farmer" | "admin";
 
 function AuthScreen() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [role, setRole] = useState<Role>("farmer");
+  const [role, setRole] = useState("farmer");
   const [remember, setRemember] = useState(true);
   const [showPass, setShowPass] = useState(false);
 
@@ -38,7 +37,7 @@ function AuthScreen() {
 
       <GlassCard className="w-full p-5">
         <div className="glass flex rounded-full p-1">
-          {(["signin", "signup"] as const).map((m) => (
+          {(["signin", "signup"]).map((m) => (
             <button
               key={m}
               type="button"
@@ -62,7 +61,7 @@ function AuthScreen() {
                 [
                   { key: "farmer", label: "I am a Farmer", sub: "Client", icon: Sprout },
                   { key: "admin", label: "I am a Manna", sub: "Admin", icon: ShieldCheck },
-                ] as const
+                ]
               ).map((r) => {
                 const Icon = r.icon;
                 const active = role === r.key;

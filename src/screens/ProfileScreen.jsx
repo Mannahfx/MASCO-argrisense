@@ -9,10 +9,6 @@ function Toggle({
   label,
   icon: Icon,
   defaultOn = false,
-}: {
-  label: string;
-  icon: typeof Bell;
-  defaultOn?: boolean;
 }) {
   const [on, setOn] = useState(defaultOn);
   return (
