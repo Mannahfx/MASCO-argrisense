@@ -206,8 +206,9 @@ export async function triggerSync(onStateUpdated, onSyncStatusChanged) {
 
     const remindersUpsert = getPendingQueue('fmn_reminders_pending_upsert');
     if (remindersUpsert.length > 0) {
-      await supabase.from('reminders').upsert(remindersUpsert.map(r => ({ ...r, user_id: userId })));
-      localStorage.removeItem('fmn_reminders_pending_upsert');
+      const { error } = await supabase.from('reminders').upsert(remindersUpsert.map(r => ({ ...r, user_id: userId })));
+      if (error) console.error('Failed to upsert reminders:', error);
+      else localStorage.removeItem('fmn_reminders_pending_upsert');
     }
 
     // 4. Fetch Fresh Data from Supabase

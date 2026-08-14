@@ -2,6 +2,7 @@ import { Link } from "@/components/Link";
 import { useState, useContext, useEffect } from "react";
 import { NavContext } from "../AppNew";
 import { saveLocalProfile, triggerSync } from "../utils/sync";
+import { supabase } from "../lib/supabase";
 import { Bell, CloudDownload, Moon, LifeBuoy, LogOut, MapPin, Ruler, Leaf, Check } from "lucide-react";
 import { GlassCard, Chip, PillButton } from "@/components/ui-kit";
 import logo from "@/assets/logo.png";
@@ -37,7 +38,29 @@ function Toggle({
 }
 
 function ProfileScreen({ profile, onLogout }) {
-  const { isDark, toggleTheme } = useContext(NavContext);
+  const { isDark, toggleTheme, setScans, setReminders } = useContext(NavContext);
+  
+  const handleClearHistory = async () => {
+    if (window.confirm("Are you sure you want to delete all past scans and tasks? This will give you a clean slate.")) {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from('scans').delete().eq('user_id', user.id);
+          await supabase.from('reminders').delete().eq('user_id', user.id);
+        }
+        localStorage.removeItem('fmn_scans');
+        localStorage.removeItem('fmn_reminders');
+        localStorage.removeItem('fmn_scans_pending_upsert');
+        localStorage.removeItem('fmn_reminders_pending_upsert');
+        if (setScans) setScans([]);
+        if (setReminders) setReminders([]);
+        alert("History completely cleared!");
+      } catch (err) {
+        console.error(err);
+        alert("Failed to clear history on server, but local history cleared.");
+      }
+    }
+  };
   
   // Local state for editable fields
   const [formData, setFormData] = useState({
@@ -170,6 +193,9 @@ function ProfileScreen({ profile, onLogout }) {
       </section>
 
       <section className="space-y-3 px-5 pt-7">
+        <PillButton variant="glass" className="w-full" onClick={handleClearHistory}>
+          Clear Scan & Task History
+        </PillButton>
         <PillButton variant="glass" className="w-full">
           <LifeBuoy className="size-4" /> Contact Manna Support
         </PillButton>
