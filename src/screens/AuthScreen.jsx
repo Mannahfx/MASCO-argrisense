@@ -7,7 +7,6 @@ import logo from "@/assets/logo.png";
 
 
 function AuthScreen() {
-  const navigate = useNavigate();
   const [mode, setMode] = useState("signin");
   const [role, setRole] = useState("farmer");
   const [remember, setRemember] = useState(true);
@@ -15,7 +14,8 @@ function AuthScreen() {
 
   const submit = (e) => {
     e.preventDefault();
-    navigate({ to: role === "admin" && mode === "signup" ? "/admin" : "/" });
+    const to = role === "admin" && mode === "signup" ? "/admin" : "/";
+    window.dispatchEvent(new CustomEvent('navigate', {detail: to}));
   };
 
   return (
