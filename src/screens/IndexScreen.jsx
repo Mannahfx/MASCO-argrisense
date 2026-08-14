@@ -94,7 +94,7 @@ function Dashboard({ profile, scans = [], reminders = [] }) {
             scans.slice(0, 5).map((s) => (
               <Link
                 key={s.id}
-                to="/diagnosis"
+                to="/treatment"
                 state={{ scan: s }}
                 className="glass w-40 shrink-0 rounded-3xl p-2.5 transition-transform active:scale-[0.98]"
               >
@@ -136,8 +136,15 @@ function Dashboard({ profile, scans = [], reminders = [] }) {
         <GlassCard className="mt-3 divide-y divide-white/5">
           {reminders.length > 0 ? reminders.slice(0, 5).map((t) => {
             const Icon = t.icon === 'Sprout' ? Sprout : t.icon === 'Droplets' ? Droplets : Bug;
+            
+            // extract diseaseId from title using a heuristic or just pass default cmd
+            let detectedDisease = 'cmd';
+            if (t.title.includes('CBSD')) detectedDisease = 'cbsd';
+            else if (t.title.includes('CBB')) detectedDisease = 'cbb';
+            else if (t.title.includes('CGM')) detectedDisease = 'cgm';
+            
             return (
-              <div key={t.id} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+              <Link key={t.id} to="/treatment" state={{ diseaseId: detectedDisease }} className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-white/5 active:bg-white/10">
                 <span className="glass flex size-9 items-center justify-center rounded-full">
                   <Icon className="size-4 text-accent" />
                 </span>
@@ -156,7 +163,7 @@ function Dashboard({ profile, scans = [], reminders = [] }) {
                 >
                   {!t.enabled ? <Check className="size-3.5" strokeWidth={3} /> : null}
                 </span>
-              </div>
+              </Link>
             );
           }) : (
             <div className="p-5 text-center text-sm text-muted-foreground">No pending treatment tasks.</div>

@@ -42,6 +42,13 @@ export default function AppNew() {
         scanId: state.scan.id 
       })
     }
+    if (path === '/treatment') {
+      if (state?.scan) {
+        setParams({ diseaseId: state.scan.diseaseId, scanId: state.scan.id })
+      } else if (state?.diseaseId) {
+        setParams({ diseaseId: state.diseaseId })
+      }
+    }
     
     if (path === '/') setActiveScreen('home')
     else if (path === '/profile') setActiveScreen('profile')
@@ -140,7 +147,7 @@ export default function AppNew() {
       case 'scan': return <ScanScreen startAnalyzing={startAnalyzing} />
       case 'diagnosis': return <DiagnosisScreen profile={profile} params={params} />
       case 'chat': return <ChatScreen />
-      case 'treatment': return <TreatmentScreen />
+      case 'treatment': return <TreatmentScreen params={params} />
       case 'market': return <MarketScreen />
       case 'profile': return <ProfileScreen profile={profile} onLogout={handleLogout} />
       case 'admin': return <AdminScreen />

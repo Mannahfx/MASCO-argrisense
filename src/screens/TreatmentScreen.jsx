@@ -1,64 +1,153 @@
 import { Link } from "@/components/Link";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { NavContext } from "../AppNew";
-import { saveLocalProfile, triggerSync } from "../utils/sync";
 import {
   ChevronLeft,
-  ShoppingCart,
   SprayCan,
   FlaskConical,
   Shield,
   Leaf,
   PlayCircle,
-  X,
+  ShieldAlert,
+  AlertTriangle,
+  Info,
   MapPin,
-  ExternalLink
+  X
 } from "lucide-react";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
 
-const steps = [
-  {
-    title: "Rogue infected plants",
-    body: "Uproot and burn every cassava stand showing mosaic mottling. Do not leave stems in the field.",
+const diseaseData = {
+  cmd: {
+    name: "Cassava Mosaic Disease",
+    subtitle: "Viral · spread by whiteflies",
+    severity: "High",
+    icon: ShieldAlert,
+    symptoms: [
+      "Yellow-green mosaic patterns on leaves",
+      "Leaf distortion and puckering",
+      "Stunted plant growth",
+      "Reduced tuber size and yield"
+    ],
+    steps: [
+      { title: "Rogue infected plants", body: "Uproot and burn every cassava stand showing mosaic mottling." },
+      { title: "Control vectors", body: "Deploy yellow sticky traps and apply Confidor 200 SL to control whiteflies." },
+      { title: "Support healthy plants", body: "Apply Harvest More Foliar to help asymptomatic plants recover vigour." },
+      { title: "Weed control", body: "Maintain a weed-free field to remove alternative hosts." }
+    ],
+    prevention: "Use certified disease-free, CMD-resistant cuttings for the next season. Continuously control whitefly populations.",
+    products: ["Confidor 200 SL", "Harvest More Foliar"]
   },
-  {
-    title: "Control the whitefly vector",
-    body: "Spray Confidor 200 SL at 100 ml/ha in 200 L water, early morning or after 5 PM.",
+  cbsd: {
+    name: "Cassava Brown Streak Disease",
+    subtitle: "Viral · causes root necrosis",
+    severity: "Critical",
+    icon: AlertTriangle,
+    symptoms: [
+      "Yellow-green chlorosis on leaves",
+      "Brown necrotic streaks on stems",
+      "Corky rot inside tubers",
+      "Premature leaf drop"
+    ],
+    steps: [
+      { title: "Immediate destruction", body: "Uproot and burn symptomatic plants immediately. Do not sell affected tubers." },
+      { title: "Strict sanitation", body: "Disinfect all cutting tools with Virkon S (1% solution) between plants." },
+      { title: "Vector control", body: "Apply Confidor 200 SL to control insect vectors." }
+    ],
+    prevention: "Plant CBSD-tolerant varieties. Enforce strict tool sanitation protocols using Virkon S.",
+    products: ["Virkon S", "Confidor 200 SL"]
   },
-  {
-    title: "Disinfect tools & hands",
-    body: "Soak cutlasses and hoes in Virkon S solution between rows to stop mechanical spread.",
+  cbb: {
+    name: "Cassava Bacterial Blight",
+    subtitle: "Bacterial · spreads in rain",
+    severity: "High",
+    icon: ShieldAlert,
+    symptoms: [
+      "Angular water-soaked leaf spots",
+      "Leaf wilting and yellowing",
+      "Stem cankers and gum exudate",
+      "Shoot tip dieback"
+    ],
+    steps: [
+      { title: "Rogue and burn", body: "Rogue heavily blighted plants and completely burn crop debris." },
+      { title: "Dry field operations", body: "Avoid working in the field when leaves are wet to prevent bacterial spread." },
+      { title: "Tool sanitation", body: "Disinfect all farming tools with Virkon S." },
+      { title: "Boost resilience", body: "Apply Golden Fertilizer NPK (200kg/ha) to strengthen plant cell walls." }
+    ],
+    prevention: "Use resistant varieties and practice strict tool hygiene. Implement crop rotation with legumes.",
+    products: ["Virkon S", "Golden Fertilizer NPK"]
   },
-  {
-    title: "Replant clean material",
-    body: "Use certified disease-free cuttings (TME 419, TMS 30572) in the gaps you created.",
+  cgm: {
+    name: "Cassava Green Mite",
+    subtitle: "Pest · extracts fluid",
+    severity: "Moderate",
+    icon: Info,
+    symptoms: [
+      "Green mottling on young leaves",
+      "Mild leaf distortion",
+      "Reduced plant vigour",
+      "Some yield reduction"
+    ],
+    steps: [
+      { title: "Remove affected plants", body: "Remove and destroy stunted or heavily mottled plants." },
+      { title: "Select clean stems", body: "Do not use stems from affected plants for propagation." },
+      { title: "Boost immunity", body: "Apply Harvest More Foliar spray and Golden Fertilizer NPK to neighboring plants." }
+    ],
+    prevention: "Use certified clean planting material. Ensure adequate soil nutrition to maintain strong plants.",
+    products: ["Harvest More Foliar", "Golden Fertilizer NPK"]
   },
-  {
-    title: "Re-scan after 10 days",
-    body: "Run a follow-up scan on Plot B to confirm the infection curve is falling.",
-  },
+  healthy: {
+    name: "Healthy Plant",
+    subtitle: "No issues detected",
+    severity: "Good",
+    icon: Shield,
+    symptoms: [
+      "Deep green uniform leaf colouration",
+      "No spots, streaks, or distortion",
+      "Strong upright stem growth",
+      "Good canopy coverage"
+    ],
+    steps: [
+      { title: "Maintain practices", body: "Continue current farming practices." },
+      { title: "Routine nutrition", body: "Apply Harvest More Foliar spray monthly." },
+      { title: "Field maintenance", body: "Maintain a weed-free environment and ensure adequate soil moisture." },
+      { title: "Weekly inspection", body: "Inspect fields weekly to catch any early signs of pests or disease." }
+    ],
+    prevention: "Keep plants healthy by maintaining soil nutrients and proper watering.",
+    products: ["Harvest More Foliar", "Golden Fertilizer NPK"]
+  }
+};
+
+const allProducts = [
+  { name: "Confidor 200 SL", desc: "Insecticide · 1 L", price: "₦9,800", img: "https://images.unsplash.com/photo-1585255474447-df5076a086cf?w=400&h=400&fit=crop" },
+  { name: "Virkon S", desc: "Disinfectant · 500 g", price: "₦6,400", img: "https://images.unsplash.com/photo-1584744982491-665216d95f8b?w=400&h=400&fit=crop" },
+  { name: "Harvest More Foliar", desc: "Nutrient spray · 1 L", price: "₦4,200", img: "https://images.unsplash.com/photo-1628187807755-e40f6b4904d9?w=400&h=400&fit=crop" },
+  { name: "Golden Fertilizer NPK", desc: "Soil enhancer · 50 kg", price: "₦22,000", img: "https://images.unsplash.com/photo-1627885449563-3151df2f6f4c?w=400&h=400&fit=crop" },
 ];
 
-const products = [
-  { name: "Confidor 200 SL", sub: "Insecticide · 1 L", price: "₦9,800", icon: SprayCan },
-  { name: "Virkon S", sub: "Disinfectant · 500 g", price: "₦6,400", icon: FlaskConical },
-  { name: "Neem Guard Bio", sub: "Botanical spray · 1 L", price: "₦4,200", icon: Leaf },
-  { name: "TME 419 Cuttings", sub: "Clean stems · bundle", price: "₦12,000", icon: Shield },
-];
-
-function TreatmentScreen() {
+function TreatmentScreen({ params = {} }) {
   const { profile } = useContext(NavContext);
   const [showMap, setShowMap] = useState(false);
+  const [activeDealer, setActiveDealer] = useState(null);
+
+  const diseaseId = params.diseaseId || 'cmd';
+  const data = diseaseData[diseaseId] || diseaseData['cmd'];
+  
+  const recommendedProducts = allProducts.filter(p => data.products.includes(p.name));
+
+  const handleMapRedirect = (dealer) => {
+    setActiveDealer(dealer);
+    setShowMap(true);
+  };
 
   return (
-    <div>
+    <div className="pb-8">
       <header className="glass-strong sticky top-0 z-30 flex items-center gap-3 rounded-b-3xl px-4 py-4">
-        <Link to="/diagnosis" className="glass flex size-9 items-center justify-center rounded-full">
+        <Link to="/" className="glass flex size-9 items-center justify-center rounded-full">
           <ChevronLeft className="size-4.5" />
         </Link>
         <div className="flex-1">
           <h1 className="text-base font-semibold">Treatment Plan</h1>
-          <p className="text-[0.68rem] text-muted-foreground">Cassava Mosaic Disease · Plot B</p>
+          <p className="text-[0.68rem] text-muted-foreground">{data.name} · {profile?.location || 'Your Farm'}</p>
         </div>
       </header>
 
@@ -78,9 +167,37 @@ function TreatmentScreen() {
       </section>
 
       <section className="px-5 pt-6">
-        <h2 className="text-base font-semibold">Step-by-step cure</h2>
+        <GlassCard className="p-5">
+          <div className="flex items-start gap-4">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/20 text-primary">
+              <data.icon className="size-5" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-primary">{data.severity === 'Good' ? 'Healthy Status' : 'Immediate Action'}</h2>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                {data.subtitle}
+              </p>
+            </div>
+          </div>
+        </GlassCard>
+      </section>
+
+      <section className="px-5 pt-6">
+        <h2 className="text-base font-semibold">Symptoms & Indicators</h2>
+        <div className="mt-3 space-y-2">
+          {data.symptoms.map((sym, i) => (
+            <GlassCard key={i} className="px-4 py-3 flex items-center gap-3">
+              <div className="size-1.5 rounded-full bg-accent shrink-0" />
+              <p className="text-sm text-foreground/90">{sym}</p>
+            </GlassCard>
+          ))}
+        </div>
+      </section>
+
+      <section className="px-5 pt-6">
+        <h2 className="text-base font-semibold">Step-by-step Action</h2>
         <div className="mt-3 space-y-3">
-          {steps.map((s, i) => (
+          {data.steps.map((s, i) => (
             <GlassCard key={s.title} className="flex gap-3 p-4">
               <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
                 {i + 1}
@@ -94,26 +211,50 @@ function TreatmentScreen() {
         </div>
       </section>
 
+      <section className="px-5 pt-6">
+        <h2 className="text-base font-semibold">Prevention</h2>
+        <GlassCard className="mt-3 p-4">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {data.prevention}
+          </p>
+        </GlassCard>
+      </section>
+
       <section className="px-5 pt-7">
-        <h2 className="text-base font-semibold">Recommended products</h2>
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          {products.map((p) => {
-            const Icon = p.icon;
+        <h3 className="text-base font-semibold">Recommended Agrochemicals</h3>
+        <p className="mb-4 mt-1 text-[0.68rem] text-muted-foreground">
+          Purchase directly from verified local suppliers
+        </p>
+
+        <div className="space-y-4">
+          {recommendedProducts.map((p) => {
             return (
-              <GlassCard key={p.name} className="flex flex-col p-4">
-                <span className="flex size-11 items-center justify-center rounded-2xl bg-accent/15">
-                  <Icon className="size-5 text-accent" />
-                </span>
-                <p className="mt-3 text-sm font-semibold leading-tight">{p.name}</p>
-                <p className="text-[0.65rem] text-muted-foreground">{p.sub}</p>
-                <p className="mt-2 font-display text-base font-semibold text-primary">{p.price}</p>
-                <PillButton
-                  variant="primary"
-                  onClick={() => setShowMap(true)}
-                  className="mt-3 w-full px-3 py-2 text-[0.7rem]"
-                >
-                  Find dealer nearby
-                </PillButton>
+              <GlassCard key={p.name} className="flex gap-4 p-4">
+                <img
+                  src={p.img}
+                  alt={p.name}
+                  className="size-20 rounded-2xl object-cover bg-accent/10"
+                />
+                <div className="flex flex-1 flex-col justify-between py-0.5">
+                  <div>
+                    <div className="flex items-start justify-between">
+                      <h4 className="font-medium text-sm leading-tight">{p.name}</h4>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                      {p.desc}
+                    </p>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <p className="font-display font-semibold text-primary">{p.price}</p>
+                    <PillButton 
+                      variant="glass" 
+                      onClick={() => handleMapRedirect(p.name)}
+                      className="px-3 py-1.5 text-[0.65rem]"
+                    >
+                      Locate
+                    </PillButton>
+                  </div>
+                </div>
               </GlassCard>
             );
           })}
@@ -128,21 +269,12 @@ function TreatmentScreen() {
               <h2 className="text-lg font-semibold">Nearby Agro-Dealers</h2>
               <button 
                 onClick={() => setShowMap(false)}
-                className="flex size-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                className="flex size-8 items-center justify-center rounded-full bg-white/10"
               >
                 <X className="size-4" />
               </button>
             </div>
             
-            <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-4 border border-glass-border">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15858.118933575997!2d3.360144!3d6.454955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2eb5963925%3A0xc3b9ff066498bb9!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1715000000000!5m2!1sen!2sus"
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen="" 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0 h-full w-full opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all"
               ></iframe>
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
