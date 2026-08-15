@@ -119,7 +119,7 @@ function ProfileScreen({ profile, onLogout }) {
   ];
 
   return (
-    <div className="pb-6">
+    <div className="pb-28">
       <header className="glass-strong sticky top-0 z-30 flex items-center justify-between rounded-b-3xl px-5 py-4">
         <h1 className="text-lg font-semibold">Profile</h1>
         <Chip className="border-primary/30 text-primary">Farmer</Chip>
