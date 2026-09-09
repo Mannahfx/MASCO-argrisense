@@ -45,9 +45,9 @@ function ChatScreen() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col h-[100dvh] max-h-[100dvh] overflow-hidden">
       {/* Header */}
-      <header className="glass-strong sticky top-0 z-30 flex items-center gap-3 rounded-b-3xl px-5 py-4">
+      <header className="glass-strong z-30 flex items-center gap-3 rounded-b-3xl px-5 py-4 shrink-0">
         <Link to="/" className="glass flex size-10 items-center justify-center rounded-full">
           <ChevronLeft className="size-5" />
         </Link>
@@ -75,8 +75,8 @@ function ChatScreen() {
         ))}
       </div>
 
-      {/* Input */}
-      <div className="glass-strong flex items-center gap-3 rounded-t-3xl px-5 py-4">
+      {/* Input - pinned to bottom */}
+      <div className="glass-strong flex items-center gap-3 rounded-t-3xl px-5 py-4 shrink-0 mb-16">
         <input
           type="text"
           value={input}
