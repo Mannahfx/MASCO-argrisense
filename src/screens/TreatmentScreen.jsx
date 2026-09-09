@@ -123,12 +123,13 @@ const diseaseData = {
 import confidorImg from "../assets/products/confidor.jpg";
 import virkonImg from "../assets/products/virkon.jpg";
 import harvestMoreImg from "../assets/products/harvest_more.jpg";
+import goldenFertilizerImg from "../assets/products/golden_fertilizer.jpg";
 
 const allProducts = [
   { name: "Confidor 200 SL", desc: "Insecticide · 1 L", price: "₦9,800", img: confidorImg },
   { name: "Virkon S", desc: "Disinfectant · 500 g", price: "₦6,400", img: virkonImg },
   { name: "Harvest More Foliar", desc: "Nutrient spray · 1 L", price: "₦4,200", img: harvestMoreImg },
-  { name: "Golden Fertilizer NPK", desc: "Soil enhancer · 50 kg", price: "₦22,000", img: "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?w=400&h=400&fit=crop" },
+  { name: "Golden Fertilizer NPK", desc: "Soil enhancer · 50 kg", price: "₦22,000", img: goldenFertilizerImg },
 ];
 
 function TreatmentScreen({ params = {} }) {

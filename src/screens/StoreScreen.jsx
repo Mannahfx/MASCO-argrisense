@@ -14,6 +14,9 @@ import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
 import confidorImg from "../assets/products/confidor.jpg";
 import virkonImg from "../assets/products/virkon.jpg";
 import harvestMoreImg from "../assets/products/harvest_more.jpg";
+import goldenFertilizerImg from "../assets/products/golden_fertilizer.jpg";
+import cassavaCuttingsImg from "../assets/products/cassava_cuttings.jpg";
+import knapsackSprayerImg from "../assets/products/knapsack_sprayer.jpg";
 
 const categories = ["All", "Insecticides", "Fertilizers", "Disinfectants", "Seeds", "Tools"];
 
@@ -78,7 +81,7 @@ const products = [
     rating: 4.6,
     reviews: 342,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?w=400&h=400&fit=crop", // sack of fertilizer
+    img: goldenFertilizerImg,
     suppliers: [
       { name: "Saro AgroSciences Hub", dist: "2.4 km", inStock: true },
       { name: "Jubaili Agrotec Store", dist: "4.1 km", inStock: false },
@@ -95,7 +98,7 @@ const products = [
     rating: 4.9,
     reviews: 567,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1596328227092-28c06f1eb3d1?w=400&h=400&fit=crop", // cassava stem/roots
+    img: cassavaCuttingsImg,
     suppliers: [
       { name: "IITA Certified Outlet", dist: "3.6 km", inStock: true },
       { name: "Local Coop Farm Store", dist: "6.8 km", inStock: true },
@@ -111,7 +114,7 @@ const products = [
     rating: 4.4,
     reviews: 76,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=400&h=400&fit=crop", // agricultural tool/equipment
+    img: knapsackSprayerImg,
     suppliers: [
       { name: "Jubaili Agrotec Store", dist: "4.1 km", inStock: true },
       { name: "Green Valley Agro", dist: "9.3 km", inStock: true },
