@@ -67,9 +67,25 @@ export default function AppNew() {
       if (session) setActiveScreen('home')
     })
     
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
-      if (session) setActiveScreen('home')
+      if (session) {
+        // On fresh sign-in, clear previous user's local data before syncing new user's data
+        if (event === 'SIGNED_IN') {
+          localStorage.removeItem('fmn_profile')
+          localStorage.removeItem('fmn_scans')
+          localStorage.removeItem('fmn_reminders')
+          localStorage.removeItem('fmn_profile_pending')
+          localStorage.removeItem('fmn_scans_pending_upsert')
+          localStorage.removeItem('fmn_scans_pending_delete')
+          localStorage.removeItem('fmn_reminders_pending_upsert')
+          localStorage.removeItem('fmn_reminders_pending_delete')
+          setProfile(null)
+          setScans([])
+          setReminders([])
+        }
+        setActiveScreen('home')
+      }
       else setActiveScreen('auth')
     })
 
@@ -85,6 +101,21 @@ export default function AppNew() {
   }, [])
 
   const handleLogout = async () => {
+    // Clear all user-specific data so next login starts fresh
+    localStorage.removeItem('fmn_profile')
+    localStorage.removeItem('fmn_scans')
+    localStorage.removeItem('fmn_reminders')
+    localStorage.removeItem('fmn_profile_pending')
+    localStorage.removeItem('fmn_scans_pending_upsert')
+    localStorage.removeItem('fmn_scans_pending_delete')
+    localStorage.removeItem('fmn_reminders_pending_upsert')
+    localStorage.removeItem('fmn_reminders_pending_delete')
+    
+    // Reset in-memory state
+    setProfile(null)
+    setScans([])
+    setReminders([])
+    
     await supabase.auth.signOut()
     setActiveScreen('auth')
   }
