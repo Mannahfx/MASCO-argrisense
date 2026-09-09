@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 import { GlassCard, PillButton, Chip } from "@/components/ui-kit";
 
+// Import local product images
+import confidorImg from "../assets/products/confidor.jpg";
+import virkonImg from "../assets/products/virkon.jpg";
+import harvestMoreImg from "../assets/products/harvest_more.jpg";
+
 const categories = ["All", "Insecticides", "Fertilizers", "Disinfectants", "Seeds", "Tools"];
 
 const products = [
@@ -23,7 +28,7 @@ const products = [
     rating: 4.7,
     reviews: 128,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1585255474447-df5076a086cf?w=400&h=400&fit=crop",
+    img: confidorImg,
     suppliers: [
       { name: "Saro AgroSciences Hub", dist: "2.4 km", inStock: true },
       { name: "Jubaili Agrotec Store", dist: "4.1 km", inStock: true },
@@ -40,7 +45,7 @@ const products = [
     rating: 4.5,
     reviews: 89,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1584744982491-665216d95f8b?w=400&h=400&fit=crop",
+    img: virkonImg,
     suppliers: [
       { name: "Saro AgroSciences Hub", dist: "2.4 km", inStock: true },
       { name: "Harvest Field Supplies", dist: "5.2 km", inStock: true },
@@ -56,7 +61,7 @@ const products = [
     rating: 4.8,
     reviews: 215,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1628187807755-e40f6b4904d9?w=400&h=400&fit=crop",
+    img: harvestMoreImg,
     suppliers: [
       { name: "Jubaili Agrotec Store", dist: "4.1 km", inStock: true },
       { name: "Local Coop Farm Store", dist: "6.8 km", inStock: true },
@@ -73,7 +78,7 @@ const products = [
     rating: 4.6,
     reviews: 342,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1627885449563-3151df2f6f4c?w=400&h=400&fit=crop",
+    img: "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?w=400&h=400&fit=crop", // sack of fertilizer
     suppliers: [
       { name: "Saro AgroSciences Hub", dist: "2.4 km", inStock: true },
       { name: "Jubaili Agrotec Store", dist: "4.1 km", inStock: false },
@@ -90,7 +95,7 @@ const products = [
     rating: 4.9,
     reviews: 567,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop",
+    img: "https://images.unsplash.com/photo-1596328227092-28c06f1eb3d1?w=400&h=400&fit=crop", // cassava stem/roots
     suppliers: [
       { name: "IITA Certified Outlet", dist: "3.6 km", inStock: true },
       { name: "Local Coop Farm Store", dist: "6.8 km", inStock: true },
@@ -106,7 +111,7 @@ const products = [
     rating: 4.4,
     reviews: 76,
     inStock: true,
-    img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
+    img: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=400&h=400&fit=crop", // agricultural tool/equipment
     suppliers: [
       { name: "Jubaili Agrotec Store", dist: "4.1 km", inStock: true },
       { name: "Green Valley Agro", dist: "9.3 km", inStock: true },
