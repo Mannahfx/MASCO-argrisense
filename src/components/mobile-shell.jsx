@@ -13,13 +13,13 @@ const tabs = [
   { to: "/", label: "Home", icon: Home },
   { to: "/diagnosis", label: "Diagnose", icon: ScanLine },
   { to: "/chat", label: "AI", icon: MessageCircle },
-  { to: "/treatment", label: "Store", icon: ShoppingBag },
+  { to: "/store", label: "Store", icon: ShoppingBag },
   { to: "/market", label: "Market", icon: LineChart },
   { to: "/profile", label: "Profile", icon: UserRound },
 ];
 
 export function MobileShell({ children, activeScreen = "home" }) {
-  const pathMap = { home: "/", scan: "/diagnosis", chat: "/chat", treatment: "/treatment", market: "/market", profile: "/profile" };
+  const pathMap = { home: "/", scan: "/diagnosis", chat: "/chat", treatment: "/treatment", store: "/store", market: "/market", profile: "/profile" };
   const currentPath = pathMap[activeScreen] || "/";
   const chromeless = activeScreen === "auth" || activeScreen === "admin";
 

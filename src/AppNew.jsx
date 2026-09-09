@@ -6,6 +6,7 @@ import IndexScreen from './screens/IndexScreen'
 import DiagnosisScreen from './screens/DiagnosisScreen'
 import ChatScreen from './screens/ChatScreen'
 import TreatmentScreen from './screens/TreatmentScreen'
+import StoreScreen from './screens/StoreScreen'
 import MarketScreen from './screens/MarketScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import AdminScreen from './screens/AdminScreen'
@@ -55,6 +56,7 @@ export default function AppNew() {
     else if (path === '/diagnosis') setActiveScreen('scan') // wait! Diagnosis Screen path sets screen to 'scan'? 
     // wait, earlier it was: else if (path === '/diagnosis') setActiveScreen('scan')... Actually, let's keep it as is.
     else if (path === '/treatment') setActiveScreen('treatment')
+    else if (path === '/store') setActiveScreen('store')
     else if (path === '/market') setActiveScreen('market')
     else if (path === '/chat') setActiveScreen('chat')
     else setActiveScreen(path.replace('/', ''))
@@ -201,6 +203,7 @@ export default function AppNew() {
       case 'diagnosis': return <DiagnosisScreen profile={profile} params={params} />
       case 'chat': return <ChatScreen />
       case 'treatment': return <TreatmentScreen params={params} />
+      case 'store': return <StoreScreen />
       case 'market': return <MarketScreen />
       case 'profile': return <ProfileScreen profile={profile} onLogout={handleLogout} />
       case 'admin': return <AdminScreen />
