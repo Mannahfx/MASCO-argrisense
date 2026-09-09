@@ -1,14 +1,14 @@
-# 🌿 FMN AgriSense
+#  MASCO AgriSense
 
 AI-powered cassava disease detection app built for FMN Innovation 5.0.
 
 ## Features
-- 🤖 Real AI detection (EfficientNet trained on 21,367 images)
-- 🌿 5 disease classes detected
-- 💊 FMN product recommendations
-- 📍 Dealer locator
-- 🔔 Farm reminders
-- 👨🏾‍🌾 Farmer profile
+-  Real AI detection (EfficientNet trained on 21,367 images)
+-  5 disease classes detected
+-  MASCO product recommendations
+-  Dealer locator
+-  Farm reminders
+-  Farmer profile
 
 ## Tech Stack
 - React 18 + Vite 5
